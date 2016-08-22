@@ -14,7 +14,7 @@
 
 int main()
 {
-    Shape * shapes[4];
+    Shape* shapes[4];
     Circle circle(2.0);
     Rectangle rectangle(3.0, 4.0);
     Square square1(5.0);
