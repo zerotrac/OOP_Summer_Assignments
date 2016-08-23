@@ -7,9 +7,15 @@
 //
 
 #include <iostream>
+#include "Calc24.h"
 
-int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
+int main()
+{
+    Calc24* calc24 = new Calc24();
+    calc24->init();
+    calc24->execute();
+    calc24->outit();
+    delete calc24;
+    
     return 0;
 }
