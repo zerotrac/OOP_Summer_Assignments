@@ -76,7 +76,7 @@ void Calc24::findResults(int restNums, Expression* expressions)
 {
     if (restNums == 1)
     {
-        if (fabs(expressions[0].value - 24) < 1e-6)
+        if (std::fabs(expressions[0].value - 24) < 1e-6)
         {
             results.push_back(expressions[0].expr);
         }
@@ -88,7 +88,7 @@ void Calc24::findResults(int restNums, Expression* expressions)
     {
         for (int j = 0; j < restNums; ++j)
         {
-            if (i != j && (fabs(expressions[i].value - expressions[j].value) > 1e-6 || i < j))
+            if (i != j && (std::fabs(expressions[i].value - expressions[j].value) > 1e-6 || i < j))
             {
                 for (int op = 0; op < 4; ++op)
                 {
@@ -112,7 +112,7 @@ void Calc24::findResults(int restNums, Expression* expressions)
                     }
                     else if (op == 3)
                     {
-                        if (fabs(expressions[j].value) < 1e-6) continue;
+                        if (std::fabs(expressions[j].value) < 1e-6) continue;
                         dummy = expressions[i].value / expressions[j].value;
                         st = "/";
                     }
