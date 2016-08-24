@@ -1,0 +1,47 @@
+chenshuxindeMacBook-Pro:HW3-P1 chenshuxin$ ./main 32 50000
+way = 0 running time = 9.028s average time = 0.000s
+way = 1 running time = 9.739s average time = 0.000s
+way = 2 running time = 9.211s average time = 0.000s
+way = 3 running time = 11.359s average time = 0.000s
+way = 4 running time = 13.812s average time = 0.000s
+way = 5 running time = 18.408s average time = 0.000s
+
+chenshuxindeMacBook-Pro:HW3-P1 chenshuxin$ ./main 64 10000
+way = 0 running time = 13.652s average time = 0.001s
+way = 1 running time = 14.356s average time = 0.001s
+way = 2 running time = 14.377s average time = 0.001s
+way = 3 running time = 20.769s average time = 0.002s
+way = 4 running time = 31.539s average time = 0.003s
+way = 5 running time = 30.420s average time = 0.003s
+
+chenshuxindeMacBook-Pro:HW3-P1 chenshuxin$ ./main 128 2000
+way = 0 running time = 23.058s average time = 0.012s
+way = 1 running time = 25.055s average time = 0.013s
+way = 2 running time = 30.135s average time = 0.015s
+way = 3 running time = 71.847s average time = 0.036s
+way = 4 running time = 66.705s average time = 0.033s
+way = 5 running time = 93.411s average time = 0.047s
+
+chenshuxindeMacBook-Pro:HW3-P1 chenshuxin$ ./main 256 200
+way = 0 running time = 18.472s average time = 0.092s
+way = 1 running time = 44.282s average time = 0.221s
+way = 2 running time = 22.747s average time = 0.114s
+way = 3 running time = 324.953s average time = 1.625s
+way = 4 running time = 94.322s average time = 0.472s
+way = 5 running time = 702.644s average time = 3.513s
+
+chenshuxindeMacBook-Pro:HW3-P1 chenshuxin$ ./main 512 25
+way = 0 running time = 18.013s average time = 0.721s
+way = 1 running time = 47.307s average time = 1.892s
+way = 2 running time = 18.565s average time = 0.743s
+way = 3 running time = 549.359s average time = 21.974s
+way = 4 running time = 152.060s average time = 6.082s
+way = 5 running time = 1062.936s average time = 42.517s
+
+chenshuxindeMacBook-Pro:HW3-P1 chenshuxin$ ./main 1024 3
+way = 0 running time = 16.938s average time = 5.646s
+way = 1 running time = 77.604s average time = 25.868s
+way = 2 running time = 17.598s average time = 5.866s
+way = 3 running time = 1243.117s average time = 414.372s
+way = 4 running time = 208.806s average time = 69.602s
+way = 5 running time = 1625.269s average time = 541.756s
