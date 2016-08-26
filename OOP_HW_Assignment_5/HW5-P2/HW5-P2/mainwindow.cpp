@@ -15,7 +15,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QHBoxLayout* lineLayout = new QHBoxLayout();
     QString date = QString("现在是  2016 年  08 月  26 日");
     QStringList dateList = date.split("  ");
-    std::cout << "size = " << dateList.size() << std::endl;
     labels = new QLabel*[4];
     for (int i = 0; i < 4; ++i)
     {
