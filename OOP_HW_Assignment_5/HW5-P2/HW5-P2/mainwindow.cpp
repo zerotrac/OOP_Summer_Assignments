@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,7 +17,6 @@ MainWindow::MainWindow(QWidget *parent) :
     labels = new QLabel*[4];
     for (int i = 0; i < 4; ++i)
     {
-        std::cout << "i = " << i << std::endl;
         labels[i] = new QLabel(widget);
         labels[i]->setText(dateList.at(i));
         lineLayout->addWidget(labels[i]);
