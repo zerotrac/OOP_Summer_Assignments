@@ -1,0 +1,8 @@
+要开始写大作业了，所以就不用LaTeX写（lai）报（zhuang）告（bi）了= =
+
+Problem 1
+用QGridBox布局，QLCDNumber显示数字，占两行。数字按钮使用QPushButton的数组方便管理，每个按钮占一行。数字按钮与显示之间的响应用QSignalMapper方便实现，除此之外还有两个按钮Help和AC。按钮Help会弹出QMessageBox显示帮助信息，AC会清零，这两个按钮响应直接用普通的connect实现。
+
+Problem 2
+每个温度盘QDial和数字QLCDNumber放在一个QGroupBox中，布局方式使用QVBox。两个温度部件用QHBox布局。在两个QDial之间添加响应，并改变QLCDNumber显示的数值。注意要判断修改的值与当前的值是否相等，如果相等要跳出slot，否则会无限循环。
+
