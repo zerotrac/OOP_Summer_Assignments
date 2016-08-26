@@ -8,8 +8,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     this->setFixedSize(QSize(300, 250));
+    this->setWindowTitle("Number Display");
+
     widget = new QWidget();
     widget->setFixedSize(QSize(300, 250));
 
