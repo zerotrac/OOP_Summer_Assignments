@@ -67,7 +67,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::lcdAppend(int)
+void MainWindow::lcdAppend(int digit)
 {
     if (value.length() > 9) return;
     value.append(QString::number(digit));

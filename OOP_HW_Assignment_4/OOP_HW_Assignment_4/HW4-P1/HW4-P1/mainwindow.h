@@ -30,7 +30,7 @@ private:
     QString value;
 
 private slots:
-    void lcdAppend(int);
+    void lcdAppend(int digit);
     void lcdClear();
     void showHelpDialog();
 
