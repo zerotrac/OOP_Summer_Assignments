@@ -1,0 +1,8 @@
+Problem 1
+Edit1用的是QLineEdit，Edit2用的是QListWidget，这样可以使得每一次添加的文字都会显示在一行内，不会因为太长而自动换到下一行。响应没用用EventFilter写，当Edit1发出回车signal的时候用append()放到Edit2中，并把Edit1清空。然后用setCurrentRow()把Edit2的当前位置放到最后一行，这样当信息超过一面的时候，Edit2就会自动向下滚动了。
+
+Problem 2
+判断日期合法性可以直接使用Qt中封装的QDateEdit类。菜单用MenuBar->Menu->Action手写，然后加入QMainWindow中。弹出对话框的顺序是QDialog（设置日期）->QMessageBox（提示设置成功）->对话框全部关闭，更改日期。QMessageBox默认是模式窗口，但Dialog不是，所以要setModal(true)一下。
+
+Problem 3
+用QPixmap类存储图片，用QPushButton里的setIcon()插入图片，setIconSize()调整图片的大小。题目要求点击图片切换到下一张，除了这点，为了方便还在图片左右两个各做了一个按钮，用来切换到上一张和下一张。图片都是从舍友那里copy过来的，因为懒，这个应该不算抄袭吧= =
