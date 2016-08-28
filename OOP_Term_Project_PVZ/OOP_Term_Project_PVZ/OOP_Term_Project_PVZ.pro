@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+CONFIG   += c++11
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,8 +14,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    paireliminate.cpp \
+    logic.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    paireliminate.h \
+    const.h \
+    logic.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    paireliminate.ui

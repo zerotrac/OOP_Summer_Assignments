@@ -2,6 +2,9 @@
 #define LOGIC_H
 
 #include <QObject>
+#include "const.h"
+#include "mainwindow.h"
+#include "paireliminate.h"
 
 class Logic : public QObject
 {
@@ -9,9 +12,12 @@ class Logic : public QObject
 public:
     explicit Logic(QObject *parent = 0);
 
-signals:
+public:
+    MainWindow* mainwindow;
+    PairEliminate* pairEliminate;
 
-public slots:
+public:
+    void execute();
 };
 
 #endif // LOGIC_H
