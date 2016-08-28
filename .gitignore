@@ -4,3 +4,8 @@
 *.xcodeproj
 /*/*/*/*Debug
 /*/*/*/*Release
+/*/*/*Debug
+/*/*/*Release
+/*/*Debug
+/*/*Release
+cloc
