@@ -1,13 +1,12 @@
 #include <QApplication>
 #include <ctime>
-
 #include "logic.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    std::srand(time(nullptr));
 
-    srand(time(nullptr));
+    QApplication a(argc, argv);
 
     Logic* logic = new Logic();
     logic->execute();

@@ -65,18 +65,6 @@ PairEliminate::PairEliminate(QWidget *parent) :
 
     gamePreparation();
     makeConnections();
-    /*buttonPairs = new QPushButton**[PAIR_WIDTH_COUNT];
-    for (int i = 0; i < PAIR_WIDTH_COUNT; ++i)
-    {
-        buttonPairs[i] = new QPushButton*[PAIR_HEIGHT_COUNT];
-        for (int j = 0; j < PAIR_HEIGHT_COUNT; ++j)
-        {
-            buttonPairs[i][j] = new QPushButton(this);
-            buttonPairs[i][j]->setText(QString::number(rand() % 10));
-            buttonPairs[i][j]->setGeometry(PAIR_START_X + PAIR_WIDTH * i, PAIR_START_Y + PAIR_HEIGHT * j, PAIR_WIDTH, PAIR_HEIGHT);
-            if (!((i + j) & 1)) buttonPairs[i][j]->setStyleSheet("QPushButton{""border:3px solid orange;}");
-        }
-    }*/
 
     ui->timeDisplay->setMaximum(MAX_TIME_DISPLAY);
     ui->timeDisplay->setEnabled(false);
@@ -111,6 +99,20 @@ void PairEliminate::paintEvent(QPaintEvent* event)
         painter->setBrush(Qt::NoBrush);
         painter->drawRect(80, 565, 300, 20);
     }
+
+    painter->setPen(QPen(Qt::white, 4));
+    for (int i = pathHead; i <= pathTail; ++i)
+    {
+        for (int j = 0; j < paths[i].size() - 1; ++j)
+        {
+            painter->drawLine(PAIR_START_X + PAIR_WIDTH * (paths[i][j].y + 0.5), PAIR_START_Y + PAIR_HEIGHT * (paths[i][j].x + 0.5),
+                              PAIR_START_X + PAIR_WIDTH * (paths[i][j + 1].y + 0.5), PAIR_START_Y + PAIR_HEIGHT * (paths[i][j + 1].x + 0.5));
+        }
+        painter->setBrush(Qt::white);
+        painter->drawEllipse(QPoint(PAIR_START_X + PAIR_WIDTH * (paths[i][0].y + 0.5), PAIR_START_Y + PAIR_HEIGHT * (paths[i][0].x + 0.5)), 3, 3);
+        int d = paths[i].size() - 1;
+        painter->drawEllipse(QPoint(PAIR_START_X + PAIR_WIDTH * (paths[i][d].y + 0.5), PAIR_START_Y + PAIR_HEIGHT * (paths[i][d].x + 0.5)), 3, 3);
+    }
     delete painter;
 }
 
@@ -118,7 +120,7 @@ void PairEliminate::timerEvent(QTimerEvent *event)
 {
     ++intervalCount;
     --timeProgressing;
-    if (timeProgressing == 0)
+    if (timeProgressing <= 0)
     {
         failMsgbox->show();
         if (failMsgbox->exec() == QMessageBox::Ok)
@@ -126,7 +128,13 @@ void PairEliminate::timerEvent(QTimerEvent *event)
             gamePreparation();
         }
     }
-    ui->timeDisplay->setValue(timeProgressing);
+    // ui->timeDisplay->setValue(timeProgressing);
+
+    //std::cout << "tevent = " << pathHead << " " << pathTail << std::endl;
+    while (pathHead <= pathTail && intervalCount - eliminateTime[pathHead] >= LINE_TIME)
+    {
+        ++pathHead;
+    }
     this->update();
 }
 
@@ -197,6 +205,8 @@ void PairEliminate::makeConnections()
     QObject::connect(ui->buttonRestart, SIGNAL(clicked(bool)), this, SLOT(gamePreparation()));
     QObject::connect(ui->buttonHelp, SIGNAL(clicked(bool)), helpMsgbox, SLOT(show()));
     QObject::connect(ui->buttonExit, SIGNAL(clicked(bool)), qApp, SLOT(quit()));
+    QObject::connect(ui->buttonHint, SIGNAL(clicked(bool)), this, SLOT(useHint()));
+    QObject::connect(ui->buttonShuffle, SIGNAL(clicked(bool)), this, SLOT(useShuffle()));
     QObject::connect(mp, SIGNAL(mapped(int)), this, SLOT(cardPick(int)));
 }
 
@@ -212,7 +222,31 @@ QString PairEliminate::getSplitColor()
 
 void PairEliminate::baseShuffle()
 {
-
+    int dummy = -1;
+    for (int i = 0; i < PAIR_HEIGHT_COUNT; ++i)
+    {
+        for (int j = 0; j < PAIR_WIDTH_COUNT; ++j)
+        {
+            if (gameButtons[i][j]->isVisible())
+            {
+                ++dummy;
+                randomInts[dummy] = gameInts[i][j];
+            }
+        }
+    }
+    std::random_shuffle(randomInts, randomInts + dummy + 1);
+    for (int i = 0; i < PAIR_HEIGHT_COUNT; ++i)
+    {
+        for (int j = 0; j < PAIR_WIDTH_COUNT; ++j)
+        {
+            if (gameButtons[i][j]->isVisible())
+            {
+                gameButtons[i][j]->setIcon(*cardPics[randomInts[dummy]]);
+                gameInts[i][j] = randomInts[dummy];
+                --dummy;
+            }
+        }
+    }
 }
 
 void PairEliminate::gameShuffle()
@@ -220,28 +254,179 @@ void PairEliminate::gameShuffle()
     while (true)
     {
         baseShuffle();
-        if (findHint()) break;
+        existSolution = findHint();
+        if (existSolution) break;
     }
     ui->labelRed->hide();
 }
 
 bool PairEliminate::findHint()
 {
+    std::vector<Pos> queue;
+    std::vector<int> level;
+    int head = 0;
+    int tail = -1;
+    bool success = false;
 
+    for (int i = 0; i < PAIR_HEIGHT_COUNT; ++i)
+    {
+        for (int j = 0; j < PAIR_WIDTH_COUNT; ++j)
+        {
+            if (gameButtons[i][j]->isVisible())
+            {
+                queue.clear();
+                level.clear();
+                std::memset(used, false, sizeof(used));
+                head = 0;
+                tail = 0;
+                queue.push_back(Pos(i, j));
+                level.push_back(0);
+                used[i + 1][j + 1] = true;
+            }
+            else
+            {
+                continue;
+            }
+            while (head <= tail)
+            {
+                Pos curPos = queue[head];
+                int curLevel = level[head++];
+                int xx = curPos.x;
+                int yy = curPos.y;
+
+                // U
+                for (int k = 1;; ++k)
+                {
+                    if (xx - k < -1) break;
+                    if (xx - k > -1 && xx - k < PAIR_HEIGHT_COUNT && yy > -1 && yy < PAIR_WIDTH_COUNT && gameButtons[xx - k][yy]->isVisible())
+                    {
+                        if (!(xx - k == i && yy == j) && gameInts[i][j] == gameInts[xx - k][yy])
+                        {
+                            success = true;
+                            hint1 = gameButtons[i][j];
+                            hint2 = gameButtons[xx - k][yy];
+                            hint1Pos = Pos(i, j);
+                            hint2Pos = Pos(xx - k, yy);
+                        }
+                        break;
+                    }
+                    else if (curLevel < 2 && !used[xx - k + 1][yy + 1])
+                    {
+                        ++tail;
+                        queue.push_back(Pos(xx - k, yy));
+                        level.push_back(curLevel + 1);
+                        used[xx - k + 1][yy + 1] = true;
+                    }
+                }
+                if (success) break;
+
+                // D
+                for (int k = 1;; ++k)
+                {
+                    if (xx + k > PAIR_HEIGHT_COUNT) break;
+                    if (xx + k > -1 && xx + k < PAIR_HEIGHT_COUNT && yy > -1 && yy < PAIR_WIDTH_COUNT && gameButtons[xx + k][yy]->isVisible())
+                    {
+                        if (!(xx + k == i && yy == j) && gameInts[i][j] == gameInts[xx + k][yy])
+                        {
+                            success = true;
+                            hint1 = gameButtons[i][j];
+                            hint2 = gameButtons[xx + k][yy];
+                            hint1Pos = Pos(i, j);
+                            hint2Pos = Pos(xx + k, yy);
+                        }
+                        break;
+                    }
+                    else if (curLevel < 2 && !used[xx + k + 1][yy + 1])
+                    {
+                        ++tail;
+                        queue.push_back(Pos(xx + k, yy));
+                        level.push_back(curLevel + 1);
+                        used[xx + k + 1][yy + 1] = true;
+                    }
+                }
+                if (success) break;
+
+                // L
+                for (int k = 1;; ++k)
+                {
+                    if (yy - k < -1) break;
+                    if (xx > -1 && xx < PAIR_HEIGHT_COUNT && yy - k > -1 && yy - k < PAIR_WIDTH_COUNT && gameButtons[xx][yy - k]->isVisible())
+                    {
+                        if (!(xx == i && yy - k == j) && gameInts[i][j] == gameInts[xx][yy - k])
+                        {
+                            success = true;
+                            hint1 = gameButtons[i][j];
+                            hint2 = gameButtons[xx][yy - k];
+                            hint1Pos = Pos(i, j);
+                            hint2Pos = Pos(xx, yy - k);
+                        }
+                        break;
+                    }
+                    else if (curLevel < 2 && !used[xx + 1][yy - k + 1])
+                    {
+                        ++tail;
+                        queue.push_back(Pos(xx, yy - k));
+                        level.push_back(curLevel + 1);
+                        used[xx + 1][yy - k + 1] = true;
+                    }
+                }
+                if (success) break;
+
+                // R
+                for (int k = 1;; ++k)
+                {
+                    if (yy + k > PAIR_WIDTH_COUNT) break;
+                    if (xx > -1 && xx < PAIR_HEIGHT_COUNT && yy + k > -1 && yy + k < PAIR_WIDTH_COUNT && gameButtons[xx][yy + k]->isVisible())
+                    {
+                        if (!(xx == i && yy + k == j) && gameInts[i][j] == gameInts[xx][yy + k])
+                        {
+                            success = true;
+                            hint1 = gameButtons[i][j];
+                            hint2 = gameButtons[xx][yy + k];
+                            hint1Pos = Pos(i, j);
+                            hint2Pos = Pos(xx, yy + k);
+                        }
+                        break;
+                    }
+                    else if (curLevel < 2 && !used[xx + 1][yy + k + 1])
+                    {
+                        ++tail;
+                        queue.push_back(Pos(xx, yy + k));
+                        level.push_back(curLevel + 1);
+                        used[xx + 1][yy + k + 1] = true;
+                    }
+                }
+                if (success) break;
+            }
+            if (success) break;
+        }
+        if (success) break;
+    }
+
+    queue.clear();
+    level.clear();
+    return success;
 }
 
 void PairEliminate::eliminateHint()
 {
     checkPath(hint1Pos, hint2Pos);
-    eliminatePair(hint1, hint2);
+    eliminatePair(hint1, hint2, hint1Pos, hint2Pos);
 }
 
-void PairEliminate::eliminatePair(QPushButton *x, QPushButton *y)
+void PairEliminate::eliminatePair(QPushButton*& x, QPushButton*& y, Pos xPos, Pos yPos)
 {
+    std::cout << "good" << std::endl;
     x->hide();
     y->hide();
+    gameInts[xPos.x][xPos.y] = -1;
+    gameInts[yPos.x][yPos.y] = -1;
     selectCard = nullptr;
+    selectPos.clear();
     cardCount -= 2;
+    timeProgressing += ELIMINATE_PRIZE;
+    if (timeProgressing > MAX_TIME_DISPLAY) timeProgressing = MAX_TIME_DISPLAY;
+    std::cout << "good2" << std::endl;
     if (cardCount == 0)
     {
         this->killTimer(myTimerId);
@@ -254,7 +439,9 @@ void PairEliminate::eliminatePair(QPushButton *x, QPushButton *y)
     }
     else
     {
-        if (findHint())
+        std::cout << "good3" << std::endl;
+        existSolution = findHint();
+        if (existSolution)
         {
             ui->labelRed->hide();
 
@@ -263,12 +450,175 @@ void PairEliminate::eliminatePair(QPushButton *x, QPushButton *y)
         {
             ui->labelRed->show();
         }
+        std::cout << "good4" << std::endl;
+        std::cout << "ht = " << pathHead << " " << pathTail << std::endl;
     }
 }
 
 bool PairEliminate::checkPath(Pos s, Pos t)
 {
+    std::vector<Pos> queue;
+    std::vector<int> level;
+    std::vector<int> prev;
+    std::memset(used, false, sizeof(used));
+    int head = 0;
+    int tail = 0;
+    bool success = false;
 
+    queue.push_back(s);
+    level.push_back(0);
+    prev.push_back(-1);
+    used[s.x + 1][s.y + 1] = true;
+
+    while (head <= tail)
+    {
+        Pos curPos = queue[head];
+        int curLevel = level[head++];
+        int xx = curPos.x;
+        int yy = curPos.y;
+
+        // U
+        for (int k = 1;; ++k)
+        {
+            if (xx - k < -1) break;
+            if (xx - k > -1 && xx - k < PAIR_HEIGHT_COUNT && yy > -1 && yy < PAIR_WIDTH_COUNT && gameButtons[xx - k][yy]->isVisible())
+            {
+                if (xx - k == t.x && yy == t.y)
+                {
+                    success = true;
+                    std::vector<Pos> path;
+                    path.push_back(Pos(t.x, t.y));
+                    int where = head - 1;
+                    while (where != -1)
+                    {
+                        path.push_back(queue[where]);
+                        where = prev[where];
+                    }
+                    ++pathTail;
+                    paths.push_back(path);
+                    eliminateTime.push_back(intervalCount);
+                }
+                break;
+            }
+            else if (curLevel < 2 && !used[xx - k + 1][yy + 1])
+            {
+                ++tail;
+                queue.push_back(Pos(xx - k, yy));
+                level.push_back(curLevel + 1);
+                prev.push_back(head - 1);
+                used[xx - k + 1][yy + 1] = true;
+            }
+        }
+        if (success) break;
+
+        // D
+        for (int k = 1;; ++k)
+        {
+            if (xx + k > PAIR_HEIGHT_COUNT) break;
+            if (xx + k > -1 && xx + k < PAIR_HEIGHT_COUNT && yy > -1 && yy < PAIR_WIDTH_COUNT && gameButtons[xx + k][yy]->isVisible())
+            {
+                if (xx + k == t.x && yy == t.y)
+                {
+                    success = true;
+                    std::vector<Pos> path;
+                    path.push_back(Pos(t.x, t.y));
+                    int where = head - 1;
+                    while (where != -1)
+                    {
+                        path.push_back(queue[where]);
+                        where = prev[where];
+                    }
+                    ++pathTail;
+                    paths.push_back(path);
+                    eliminateTime.push_back(intervalCount);
+                }
+                break;
+            }
+            else if (curLevel < 2 && !used[xx + k + 1][yy + 1])
+            {
+                ++tail;
+                queue.push_back(Pos(xx + k, yy));
+                level.push_back(curLevel + 1);
+                prev.push_back(head - 1);
+                used[xx + k + 1][yy + 1] = true;
+            }
+        }
+        if (success) break;
+
+        // L
+        for (int k = 1;; ++k)
+        {
+            if (yy - k < -1) break;
+            if (xx > -1 && xx < PAIR_HEIGHT_COUNT && yy - k > -1 && yy - k < PAIR_WIDTH_COUNT && gameButtons[xx][yy - k]->isVisible())
+            {
+                if (xx == t.x && yy - k == t.y)
+                {
+                    success = true;
+                    std::vector<Pos> path;
+                    path.push_back(Pos(t.x, t.y));
+                    int where = head - 1;
+                    while (where != -1)
+                    {
+                        path.push_back(queue[where]);
+                        where = prev[where];
+                    }
+                    ++pathTail;
+                    paths.push_back(path);
+                    eliminateTime.push_back(intervalCount);
+                }
+                break;
+            }
+            else if (curLevel < 2 && !used[xx + 1][yy - k + 1])
+            {
+                ++tail;
+                queue.push_back(Pos(xx, yy - k));
+                level.push_back(curLevel + 1);
+                prev.push_back(head - 1);
+                used[xx + 1][yy - k + 1] = true;
+            }
+        }
+        if (success) break;
+
+        // R
+        for (int k = 1;; ++k)
+        {
+            if (yy + k > PAIR_WIDTH_COUNT) break;
+            if (xx > -1 && xx < PAIR_HEIGHT_COUNT && yy + k > -1 && yy + k < PAIR_WIDTH_COUNT && gameButtons[xx][yy + k]->isVisible())
+            {
+                if (xx == t.x && yy + k == t.y)
+                {
+                    success = true;
+                    std::vector<Pos> path;
+                    path.push_back(Pos(t.x, t.y));
+                    int where = head - 1;
+                    while (where != -1)
+                    {
+                        path.push_back(queue[where]);
+                        where = prev[where];
+                    }
+                    ++pathTail;
+                    paths.push_back(path);
+                    eliminateTime.push_back(intervalCount);
+                }
+                break;
+            }
+            else if (curLevel < 2 && !used[xx + 1][yy + k + 1])
+            {
+                ++tail;
+                queue.push_back(Pos(xx, yy + k));
+                level.push_back(curLevel + 1);
+                prev.push_back(head - 1);
+                used[xx + 1][yy + k + 1] = true;
+            }
+        }
+        if (success) break;
+    }
+
+    queue.clear();
+    level.clear();
+    prev.clear();
+    std::cout << "success = " << success << std::endl;
+    return success;
 }
 
 void PairEliminate::gamePreparation()
@@ -289,8 +639,12 @@ void PairEliminate::gamePreparation()
     curTemplate = 0;
     showTemplate();
     hideGame();
-    this->update();
+    paths.clear();
+    eliminateTime.clear();
+    pathHead = 0;
+    pathTail = -1;
 
+    this->update();
     this->killTimer(myTimerId);
 }
 
@@ -323,7 +677,8 @@ void PairEliminate::gameStart()
         randomInts[i] = dummy;
         randomInts[i + 1] = dummy;
     }
-    std::random_shuffle(randomInts, randomInts + cardCount);
+
+    std::random_shuffle(randomInts, randomInts + cardCount + 1);
     int curCount = -1;
     for (int i = 0; i < PAIR_HEIGHT_COUNT; ++i)
     {
@@ -335,10 +690,14 @@ void PairEliminate::gameStart()
                 gameButtons[i][j]->setIcon(*cardPics[randomInts[curCount]]);
                 gameButtons[i][j]->setIconSize(QSize(PAIR_WIDTH, PAIR_HEIGHT));
                 gameButtons[i][j]->setStyleSheet("QPushButton {background-color: black; color: white; border-radius: 10px; border: 2px groove gray; border-style: outset;}"
-                                                 "QPushButton: hover {background-color: white; color: black;}"
-                                                 "QPushButton: pressed {background-color: white; border-style: inset;}"
+                                                 "QPushButton:hover {background-color: white; color: black;}"
+                                                 "QPushButton:pressed {background-color: white; border-style: inset;}"
                                                 );
                 gameInts[i][j] = randomInts[curCount];
+            }
+            else
+            {
+                gameInts[i][j] = -1;
             }
         }
     }
@@ -354,11 +713,9 @@ void PairEliminate::gameStart()
     hint2 = nullptr;
     hint1Pos.clear();
     hint2Pos.clear();
-    paths.clear();
-    eliminateTime.clear();
-    pathHead = 0;
-    pathTail = -1;
-    if (findHint())
+    existSolution = findHint();
+
+    if (existSolution)
     {
         ui->labelRed->hide();
     }
@@ -391,13 +748,18 @@ void PairEliminate::cardPick(int p0)
 {
     int xx = p0 / PAIR_WIDTH_COUNT;
     int yy = p0 % PAIR_WIDTH_COUNT;
+    if (xx == selectPos.x && yy == selectPos.y)
+    {
+        return;
+    }
+
     if (selectCard == nullptr)
     {
         selectCard = gameButtons[xx][yy];
         selectPos.modify(xx, yy);
         selectCard->setStyleSheet("QPushButton {background-color: black; color: white; border-radius: 10px; border: 4px orange; border-style: outset;}"
-                                  "QPushButton: hover {background-color: white; color: black;}"
-                                  "QPushButton: pressed {background-color: white; border-style: inset;}"
+                                  "QPushButton:hover {background-color: white; color: black;}"
+                                  "QPushButton:pressed {background-color: white; border-style: inset;}"
                                  );
     }
     else
@@ -407,43 +769,57 @@ void PairEliminate::cardPick(int p0)
             bool check = checkPath(selectPos, Pos(xx, yy));
             if (check)
             {
-                eliminatePair(selectCard, gameButtons[xx][yy]);
-                if (selectCard->isHidden()) selectCard = nullptr;
+                eliminatePair(selectCard, gameButtons[xx][yy], selectPos, Pos(xx, yy));
+                std::cout << "good4.5" << std::endl;
             }
             else
             {
                 selectCard->setStyleSheet("QPushButton {background-color: black; color: white; border-radius: 10px; border: 2px groove gray; border-style: outset;}"
-                                          "QPushButton: hover {background-color: white; color: black;}"
-                                          "QPushButton: pressed {background-color: white; border-style: inset;}"
+                                          "QPushButton:hover {background-color: white; color: black;}"
+                                          "QPushButton:pressed {background-color: white; border-style: inset;}"
                                          );
                 selectCard = gameButtons[xx][yy];
+                selectPos = Pos(xx, yy);
                 selectCard->setStyleSheet("QPushButton {background-color: black; color: white; border-radius: 10px; border: 4px orange; border-style: outset;}"
-                                          "QPushButton: hover {background-color: white; color: black;}"
-                                          "QPushButton: pressed {background-color: white; border-style: inset;}"
+                                          "QPushButton:hover {background-color: white; color: black;}"
+                                          "QPushButton:pressed {background-color: white; border-style: inset;}"
                                          );
             }
         }
         else
         {
             selectCard->setStyleSheet("QPushButton {background-color: black; color: white; border-radius: 10px; border: 2px groove gray; border-style: outset;}"
-                                      "QPushButton: hover {background-color: white; color: black;}"
-                                      "QPushButton: pressed {background-color: white; border-style: inset;}"
+                                      "QPushButton:hover {background-color: white; color: black;}"
+                                      "QPushButton:pressed {background-color: white; border-style: inset;}"
                                      );
             selectCard = gameButtons[xx][yy];
+            selectPos = Pos(xx, yy);
             selectCard->setStyleSheet("QPushButton {background-color: black; color: white; border-radius: 10px; border: 4px orange; border-style: outset;}"
-                                      "QPushButton: hover {background-color: white; color: black;}"
-                                      "QPushButton: pressed {background-color: white; border-style: inset;}"
+                                      "QPushButton:hover {background-color: white; color: black;}"
+                                      "QPushButton:pressed {background-color: white; border-style: inset;}"
                                      );
         }
     }
+    std::cout << "good5" << std::endl;
 }
 
 void PairEliminate::useHint()
 {
-
+    if (existSolution)
+    {
+        eliminateHint();
+        timeProgressing -= HINT_COST;
+        selectCard = nullptr;
+        selectPos.clear();
+    }
 }
 
 void PairEliminate::useShuffle()
 {
-
+    gameShuffle();
+    int decTime = timeProgressing * SHUFFLE_COST;
+    decTime = std::max(decTime, 5 * 1000 / TIME_ELAPSE);
+    timeProgressing -= decTime;
+    selectCard = nullptr;
+    selectPos.clear();
 }

@@ -9,7 +9,9 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <cmath>
 #include <vector>
+#include <cstring>
 
 namespace Ui {
 class PairEliminate;
@@ -30,15 +32,16 @@ private:
     static const int PAIR_HEIGHT = PAIR_WIDTH * 1.2;
     static const int PAIR_START_X = 115;
     static const int PAIR_START_Y = 100;
-    static const int TEMPLATE_COUNT = 10;
+    static const int TEMPLATE_COUNT = 11;
     static const int CARD_COUNT = 24;
 
     static const int TIME_ELAPSE = 50; // 刷新间隔
-    static const int MAX_TIME = 10; // 游戏时间
+    static const int MAX_TIME = 60; // 游戏时间
     static const int MAX_TIME_DISPLAY = 1000 / TIME_ELAPSE * MAX_TIME; // 进度条长度
+    static const int LINE_TIME = 0.5 * 1000 / TIME_ELAPSE;
 
-    static const int ELIMINATE_PRIZE = 2 * 1000 / TIME_ELAPSE;
-    static const int HINT_COST = 6 * 1000 / TIME_ELAPSE;
+    static const int ELIMINATE_PRIZE = 1 * 1000 / TIME_ELAPSE;
+    static const int HINT_COST = 5 * 1000 / TIME_ELAPSE;
     static constexpr double SHUFFLE_COST = 1.0 / 3;
 
 private:
@@ -75,8 +78,9 @@ private:
 
     std::vector<std::vector<Pos>> paths;
     std::vector<int> eliminateTime;
-    int pathHead;
-    int pathTail;
+    bool used[PAIR_HEIGHT_COUNT + 2][PAIR_WIDTH_COUNT + 2];
+    int pathHead = 0;
+    int pathTail = -1;
 
     int curTemplate;
     int timeProgressing;
@@ -97,7 +101,7 @@ private:
     void gameShuffle();
     bool findHint();
     void eliminateHint();
-    void eliminatePair(QPushButton*, QPushButton*);
+    void eliminatePair(QPushButton*&, QPushButton*&, Pos xPos, Pos yPos);
     bool checkPath(Pos s, Pos t);
 
 private slots:
