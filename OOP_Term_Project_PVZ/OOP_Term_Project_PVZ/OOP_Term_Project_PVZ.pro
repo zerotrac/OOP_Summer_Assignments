@@ -16,12 +16,18 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     paireliminate.cpp \
-    logic.cpp
+    logic.cpp \
+    qunit.cpp \
+    qplant.cpp \
+    qzombie.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
     const.h \
-    logic.h
+    logic.h \
+    qunit.h \
+    qplant.h \
+    qzombie.h
 
 FORMS    += mainwindow.ui \
     paireliminate.ui
