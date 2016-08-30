@@ -2,6 +2,7 @@
 #define QUNIT_H
 
 #include <QObject>
+#include <vector>
 
 // 用std::set存储当前所有存活的单位的编号(id)
 // 用std::vector存储所有存在过的单位指针
@@ -10,6 +11,7 @@
 class QUnit : public QObject
 {
     Q_OBJECT
+
 public:
     explicit QUnit(QObject *parent = 0);
     virtual ~QUnit();
@@ -37,11 +39,20 @@ private:
     double posX; // 位置
     double posY;
 
+    QBaseWeapon* weapon; //弹道
+
+public:
+    //vector<...> pics; // 单位的动画
+    int currentPic;
+
+public:
     virtual bool canAttack() = 0; // 该单位是否可以攻击，要考虑当前cd
     virtual QWeapon* attack() = 0; // 若可以攻击，返回一个弹道
+    virtual void move() = 0;
     virtual bool isPlant() = 0;
     virtual bool isZombie() = 0;
     bool isDead(); // hp为0或者bullet为0时死亡
+    virtual void updateInfo() = 0; // 每一帧更新单位信息
 };
 
 #endif // QUNIT_H
