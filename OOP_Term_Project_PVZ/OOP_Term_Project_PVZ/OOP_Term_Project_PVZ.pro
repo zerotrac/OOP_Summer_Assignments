@@ -25,7 +25,10 @@ SOURCES += main.cpp\
     qinitialinterface.cpp \
     qpeashooter.cpp \
     qgamedayinterface.cpp \
-    qpeaweapon.cpp
+    qpeaweapon.cpp \
+    qdoublepea.cpp \
+    qsnowpea.cpp \
+    qgatlingpea.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
@@ -39,7 +42,10 @@ HEADERS  += mainwindow.h \
     qinitialinterface.h \
     qpeashooter.h \
     qgamedayinterface.h \
-    qpeaweapon.h
+    qpeaweapon.h \
+    qdoublepea.h \
+    qsnowpea.h \
+    qgatlingpea.h
 
 FORMS    += mainwindow.ui \
     paireliminate.ui \

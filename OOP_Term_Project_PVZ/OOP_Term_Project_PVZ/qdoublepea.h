@@ -1,16 +1,16 @@
-#ifndef QPEASHOOTER_H
-#define QPEASHOOTER_H
+#ifndef QDOUBLEPEA_H
+#define QDOUBLEPEA_H
 
 #include "qplant.h"
 #include "qpeaweapon.h"
 
-class QPeashooter: public QPlant
+class QDoublePea: public QPlant
 {
     Q_OBJECT
 
 public:
-    QPeashooter(int _id);
-    virtual ~QPeashooter();
+    QDoublePea(int _id);
+    virtual ~QDoublePea();
 
 public:
     virtual bool canAttack();
@@ -22,4 +22,4 @@ public:
     virtual void updateInfo();
 };
 
-#endif // QPEASHOOTER_H
+#endif // QDOUBLEPEA_H

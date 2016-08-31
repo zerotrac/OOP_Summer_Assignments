@@ -20,12 +20,12 @@ public:
     QUnit();
     virtual ~QUnit();
 
-protected:
+public:
     int id; // 表示单位的编号
 
+protected:
     // 下面所有的参数带base的表示基础参数值
     // 不带base的在每一帧自动变化，为计算buff和debuff之后的参数值
-
     int atk; // 攻击力
     int baseAtk;
     int hp; // 血量

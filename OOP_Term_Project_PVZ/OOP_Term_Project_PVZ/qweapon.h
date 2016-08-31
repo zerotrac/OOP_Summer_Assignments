@@ -18,6 +18,7 @@ public:
 protected:
     int duration; // 持续时间
     int bullet;
+    int litID = -1;
     double spdX;
     double spdY;
 

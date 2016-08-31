@@ -3,8 +3,13 @@
 
 #include <QWidget>
 #include <vector>
+#include <unordered_set>
 #include <QTimerEvent>
 #include "qpeashooter.h"
+#include "qsnowpea.h"
+#include "qdoublepea.h"
+#include "qgatlingpea.h"
+#include "qplant.h"
 #include "qweapon.h"
 
 namespace Ui {
@@ -20,10 +25,8 @@ public:
     ~QGameDayInterface();
 
 private:
-    QPeashooter* pea;
-    std::vector<QWeapon*> weapons;
-    int head = 0;
-    int tail = -1;
+    QPlant* plants[6];
+    std::unordered_set<QWeapon*> weapons;
     int timerID;
 
 private:

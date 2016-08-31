@@ -21,6 +21,7 @@ public:
     virtual bool canGenerateSunshine() = 0; // 是否是阳光类植物
     virtual QSunshine* generateSunshine() = 0; // 生成阳光
     virtual bool isMushroom() = 0; // 是否是蘑菇（蘑菇类只有在晚上可以使用）
+    virtual bool canLitUp() = 0; // 判断是不是火炬树桩
     virtual void updateInfo() = 0;
 };
 

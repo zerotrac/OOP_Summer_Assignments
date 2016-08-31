@@ -1,6 +1,6 @@
-#include "qpeashooter.h"
+#include "qdoublepea.h"
 
-QPeashooter::QPeashooter(int _id)
+QDoublePea::QDoublePea(int _id)
 {
     id = _id;
     atk = baseAtk = 20;
@@ -15,56 +15,56 @@ QPeashooter::QPeashooter(int _id)
     countPic = 1;
     for (int i = 0; i < countPic; ++i)
     {
-        QMovie* dummy = new QMovie("Resources/plants/peashooter/" + QString::number(i) + ".gif");
+        QMovie* dummy = new QMovie("Resources/plants/doublepea/" + QString::number(i) + ".gif");
         dummy->start();
         pics.push_back(dummy);
     }
     currentPic = 0;
-    this->setFixedSize(QPixmap("Resources/plants/peashooter/0.gif").size());
+    this->setFixedSize(QPixmap("Resources/plants/doublepea/0.gif").size());
     this->setMovie(pics[currentPic]);
 }
 
-QPeashooter::~QPeashooter()
+QDoublePea::~QDoublePea()
 {
 
 }
 
-bool QPeashooter::canAttack()
+bool QDoublePea::canAttack()
 {
     if (cd <= 0) return true;
     return false;
 }
 
-std::vector<QWeapon*> QPeashooter::attack()
+std::vector<QWeapon*> QDoublePea::attack()
 {
     ++shell;
     std::vector<QWeapon*> weapons;
     weapons.push_back(new QPeaWeapon(1));
-    cd = baseCd;
+    if (shell % 2 == 0) cd = baseCd; else cd = 0.2 * 1000 / TIME_ELAPSE;
     return weapons;
 }
 
-bool QPeashooter::canGenerateSunshine()
+bool QDoublePea::canGenerateSunshine()
 {
     return false;
 }
 
-QSunshine* QPeashooter::generateSunshine()
+QSunshine* QDoublePea::generateSunshine()
 {
     return nullptr;
 }
 
-bool QPeashooter::isMushroom()
+bool QDoublePea::isMushroom()
 {
     return false;
 }
 
-bool QPeashooter::canLitUp()
+bool QDoublePea::canLitUp()
 {
     return false;
 }
 
-void QPeashooter::updateInfo()
+void QDoublePea::updateInfo()
 {
     --cd;
 }
