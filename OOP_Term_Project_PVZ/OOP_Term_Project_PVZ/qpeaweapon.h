@@ -6,8 +6,11 @@
 class QPeaWeapon: public QWeapon
 {
 public:
-    QPeaWeapon();
+    QPeaWeapon(int _currentPic);
     virtual ~QPeaWeapon();
+
+public:
+    virtual bool inRange(QUnit *unit);
 };
 
 #endif // QPEAWEAPON_H

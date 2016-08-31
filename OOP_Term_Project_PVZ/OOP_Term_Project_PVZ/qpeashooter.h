@@ -2,6 +2,7 @@
 #define QPEASHOOTER_H
 
 #include "qplant.h"
+#include "qpeaweapon.h"
 
 class QPeashooter: public QPlant
 {

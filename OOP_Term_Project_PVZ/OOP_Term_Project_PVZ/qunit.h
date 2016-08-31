@@ -41,8 +41,6 @@ protected:
     double spdY;
     double baseSpdX;
     double baseSpdY;
-    double posX; // 位置
-    double posY;
 
     QWeapon* weapon; //弹道
 
@@ -59,6 +57,7 @@ public:
     virtual bool isZombie() = 0;
     bool isDead(); // hp为0或者bullet为0时死亡
     virtual void updateInfo() = 0; // 每一帧更新单位信息
+    void setAxis(double dx, double dy); // 这里的(dx, dy)是左下角的坐标
 };
 
 #endif // QUNIT_H

@@ -1,33 +1,35 @@
 #ifndef QWEAPON_H
 #define QWEAPON_H
 
-#include <QObject>
+#include <QLabel>
 #include <QPixmap>
 #include <vector>
 #include "const.h"
 
 class QUnit;
-class QWeapon : public QObject
+class QWeapon : public QLabel
 {
     Q_OBJECT
 
 public:
-    explicit QWeapon(QObject *parent = 0);
+    QWeapon();
     virtual ~QWeapon();
 
 protected:
     int duration; // 持续时间
-    double posX;
-    double posY;
+    int bullet;
     double spdX;
     double spdY;
 
     std::vector<QPixmap> pics;
-    int currentpic;
+    int countPic;
+    int currentPic;
 
 public:
     virtual bool inRange(QUnit* unit) = 0;
     bool outofDuration();
+    void updateInfo();
+    void setAxis(double dx, double dy);
 };
 
 #endif // QWEAPON_H

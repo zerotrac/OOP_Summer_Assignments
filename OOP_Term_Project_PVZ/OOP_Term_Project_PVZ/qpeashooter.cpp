@@ -5,12 +5,12 @@ QPeashooter::QPeashooter(int _id)
     id = _id;
     atk = baseAtk = 20;
     hp = baseHp = 300;
-    cd = baseCd = 7.5 * 1000 / TIME_ELAPSE;
+    cd = baseCd = 1.4 * 1000 / TIME_ELAPSE;
     rng = baserng = 99999999;
     bullet = 99999999;
     shell = 0;
     spdX = spdY = baseSpdX = baseSpdY = 0;
-    weapon = nullptr;
+    weapon = new QPeaWeapon(1);
 
     countPic = 1;
     for (int i = 0; i < countPic; ++i)
@@ -31,12 +31,16 @@ QPeashooter::~QPeashooter()
 
 bool QPeashooter::canAttack()
 {
+    if (cd <= 0) return true;
     return false;
 }
 
 std::vector<QWeapon*> QPeashooter::attack()
 {
+    ++shell;
     std::vector<QWeapon*> weapons;
+    weapons.push_back(new QPeaWeapon(1));
+    cd = baseCd;
     return weapons;
 }
 
