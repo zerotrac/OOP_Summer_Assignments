@@ -24,5 +24,9 @@ QPeaWeapon::~QPeaWeapon()
 
 bool QPeaWeapon::inRange(QUnit *unit)
 {
-    return true;
+    double centerX = this->pos().x() + this->width() / 2.0;
+    double centerY = this->pos().y() + this->height() / 2.0;
+    if (centerX >= unit->pos().x() && centerX <= unit->pos().x() + unit->width()
+     && centerY >= unit->pos().y() && centerY <= unit->pos().y() + unit->height()) return true;
+    return false;
 }

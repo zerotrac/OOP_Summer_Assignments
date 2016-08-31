@@ -5,6 +5,7 @@
 #include <QPixmap>
 #include <vector>
 #include "const.h"
+#include "qunit.h"
 
 class QUnit;
 class QWeapon : public QLabel
@@ -31,6 +32,7 @@ public:
     bool outofDuration();
     void updateInfo();
     void setAxis(double dx, double dy);
+    void setLit(int _litID);
 };
 
 #endif // QWEAPON_H

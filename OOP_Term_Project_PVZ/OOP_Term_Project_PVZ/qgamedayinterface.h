@@ -9,6 +9,7 @@
 #include "qsnowpea.h"
 #include "qdoublepea.h"
 #include "qgatlingpea.h"
+#include "qtorchwood.h"
 #include "qplant.h"
 #include "qweapon.h"
 
@@ -25,7 +26,7 @@ public:
     ~QGameDayInterface();
 
 private:
-    QPlant* plants[6];
+    QPlant* plants[11];
     std::unordered_set<QWeapon*> weapons;
     int timerID;
 

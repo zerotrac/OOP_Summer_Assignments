@@ -12,6 +12,7 @@
 // 用std::vector存储所有存在过的单位指针
 // 在需要遍历所有存活的单位的时候，扫一遍std::set即可
 
+class QWeapon;
 class QUnit : public QLabel
 {
     Q_OBJECT

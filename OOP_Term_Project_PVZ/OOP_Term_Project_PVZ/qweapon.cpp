@@ -28,3 +28,12 @@ void QWeapon::setAxis(double dx, double dy)
     this->setGeometry(dx, dy - this->height(), 0, 0);
 }
 
+void QWeapon::setLit(int _litID)
+{
+    if (litID != _litID && currentPic < countPic - 1)
+    {
+        litID = _litID;
+        ++currentPic;
+        this->setPixmap(pics[currentPic]);
+    }
+}
