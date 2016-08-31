@@ -10,6 +10,11 @@ QUnit::~QUnit()
 
 }
 
+void QUnit::move()
+{
+    posX += spdX;
+    posY += spdY;
+}
 
 bool QUnit::isDead()
 {

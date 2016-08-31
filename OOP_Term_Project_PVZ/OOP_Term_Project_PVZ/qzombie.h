@@ -12,14 +12,13 @@ public:
     ~QZombie();
 
 private:
-    int freezeDebuff; // 僵尸被冰冻，移动速度变慢
-    int stunDebuff; // 僵尸被眩晕，移动速度为0
+    int freezeDebuff; // 僵尸被冰冻，移动速度减少50%，奇数帧不会动
+    int stunDebuff; // 僵尸被眩晕，移动速度为0，所有帧都不会动
     int rageBuff; // 僵尸发怒了，移动速度变快
 
 private:
     virtual bool canAttack() = 0;
     virtual QWeapon* attack() = 0;
-    virtual void move();
     virtual bool isPlant();
     virtual bool isZombie();
     virtual bool canGenerateSunshine() = 0; // 是否是阳光类植物

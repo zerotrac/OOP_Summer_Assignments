@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <vector>
+#include "qweapon.h"
 
 // 用std::set存储当前所有存活的单位的编号(id)
 // 用std::vector存储所有存在过的单位指针
@@ -16,7 +17,7 @@ public:
     explicit QUnit(QObject *parent = 0);
     virtual ~QUnit();
 
-private:
+protected:
     int id; // 表示单位的编号
 
     // 下面所有的参数带base的表示基础参数值
@@ -39,16 +40,16 @@ private:
     double posX; // 位置
     double posY;
 
-    QBaseWeapon* weapon; //弹道
+    QWeapon* weapon; //弹道
 
-public:
+protected:
     //vector<...> pics; // 单位的动画
     int currentPic;
 
 public:
     virtual bool canAttack() = 0; // 该单位是否可以攻击，要考虑当前cd
     virtual QWeapon* attack() = 0; // 若可以攻击，返回一个弹道
-    virtual void move() = 0;
+    void move();
     virtual bool isPlant() = 0;
     virtual bool isZombie() = 0;
     bool isDead(); // hp为0或者bullet为0时死亡

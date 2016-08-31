@@ -204,7 +204,7 @@ void PairEliminate::makeConnections()
     QObject::connect(ui->buttonStart, SIGNAL(clicked(bool)), this, SLOT(gameStart()));
     QObject::connect(ui->buttonRestart, SIGNAL(clicked(bool)), this, SLOT(gamePreparation()));
     QObject::connect(ui->buttonHelp, SIGNAL(clicked(bool)), helpMsgbox, SLOT(show()));
-    QObject::connect(ui->buttonExit, SIGNAL(clicked(bool)), qApp, SLOT(quit()));
+    QObject::connect(ui->buttonExit, SIGNAL(clicked(bool)), this, SLOT(slotQuit()));
     QObject::connect(ui->buttonHint, SIGNAL(clicked(bool)), this, SLOT(useHint()));
     QObject::connect(ui->buttonShuffle, SIGNAL(clicked(bool)), this, SLOT(useShuffle()));
     QObject::connect(mp, SIGNAL(mapped(int)), this, SLOT(cardPick(int)));
@@ -822,4 +822,9 @@ void PairEliminate::useShuffle()
     timeProgressing -= decTime;
     selectCard = nullptr;
     selectPos.clear();
+}
+
+void PairEliminate::slotQuit()
+{
+    emit signalWidget(QString("main"));
 }

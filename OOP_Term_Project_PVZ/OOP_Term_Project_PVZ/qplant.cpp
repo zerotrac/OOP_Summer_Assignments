@@ -2,18 +2,15 @@
 
 QPlant::QPlant()
 {
-
+    spdX = 0.0;
+    spdY = 0.0;
+    baseSpdX = 0.0;
+    baseSpdY = 0.0;
 }
 
 QPlant::~QPlant()
 {
 
-}
-
-void QPlant::move()
-{
-    // 什么都不做
-    // 因为植物无法移动
 }
 
 bool QPlant::isPlant()

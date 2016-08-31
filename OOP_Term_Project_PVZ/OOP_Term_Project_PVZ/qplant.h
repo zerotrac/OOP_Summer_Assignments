@@ -2,6 +2,7 @@
 #define QPLANT_H
 
 #include "qunit.h"
+#include "qsunshine.h"
 
 class QPlant: public QUnit
 {
@@ -14,7 +15,6 @@ public:
 public:
     virtual bool canAttack() = 0;
     virtual QWeapon* attack() = 0;
-    virtual void move();
     virtual bool isPlant();
     virtual bool isZombie();
     virtual bool canGenerateSunshine() = 0; // 是否是阳光类植物

@@ -17,17 +17,24 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     paireliminate.cpp \
     logic.cpp \
-    qunit.cpp \
     qplant.cpp \
-    qzombie.cpp
+    qunit.cpp \
+    qzombie.cpp \
+    qweapon.cpp \
+    qsunshine.cpp \
+    qinitialinterface.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
     const.h \
     logic.h \
-    qunit.h \
     qplant.h \
-    qzombie.h
+    qunit.h \
+    qzombie.h \
+    qweapon.h \
+    qsunshine.h \
+    qinitialinterface.h
 
 FORMS    += mainwindow.ui \
-    paireliminate.ui
+    paireliminate.ui \
+    qinitialinterface.ui

@@ -30,9 +30,9 @@ private:
     static const int PAIR_HEIGHT_COUNT = 11;
     static const int PAIR_WIDTH = 30;
     static const int PAIR_HEIGHT = PAIR_WIDTH * 1.2;
-    static const int PAIR_START_X = 115;
+    static const int PAIR_START_X = 165;
     static const int PAIR_START_Y = 100;
-    static const int TEMPLATE_COUNT = 11;
+    static const int TEMPLATE_COUNT = 10;
     static const int CARD_COUNT = 24;
 
     static const int TIME_ELAPSE = 50; // 刷新间隔
@@ -104,8 +104,13 @@ private:
     void eliminatePair(QPushButton*&, QPushButton*&, Pos xPos, Pos yPos);
     bool checkPath(Pos s, Pos t);
 
-private slots:
+signals:
+    void signalWidget(QString);
+
+public slots:
     void gamePreparation();
+
+private slots:
     void gameStart();
     void templateInc();
     void templateDec();
@@ -114,6 +119,7 @@ private slots:
     void cardPick(int p0);
     void useHint();
     void useShuffle();
+    void slotQuit();
 
 private:
     Ui::PairEliminate *ui;

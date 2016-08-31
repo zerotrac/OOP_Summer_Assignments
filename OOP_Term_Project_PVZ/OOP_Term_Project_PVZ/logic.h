@@ -2,8 +2,10 @@
 #define LOGIC_H
 
 #include <QObject>
+#include <string>
 #include "const.h"
 #include "mainwindow.h"
+#include "qinitialinterface.h"
 #include "paireliminate.h"
 
 class Logic : public QObject
@@ -14,10 +16,20 @@ public:
 
 public:
     MainWindow* mainwindow;
+    QInitialInterface* initialInterface;
     PairEliminate* pairEliminate;
+
+private:
+    void makeConnections();
 
 public:
     void execute();
+
+signals:
+    void signalWidget(QString);
+
+private slots:
+    void slotSetWidget(QString);
 };
 
 #endif // LOGIC_H
