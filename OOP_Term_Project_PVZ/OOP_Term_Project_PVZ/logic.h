@@ -6,6 +6,7 @@
 #include "const.h"
 #include "mainwindow.h"
 #include "qinitialinterface.h"
+#include "qgamedayinterface.h"
 #include "paireliminate.h"
 
 class Logic : public QObject
@@ -17,6 +18,7 @@ public:
 public:
     MainWindow* mainwindow;
     QInitialInterface* initialInterface;
+    QGameDayInterface* gameDayInterface;
     PairEliminate* pairEliminate;
 
 private:

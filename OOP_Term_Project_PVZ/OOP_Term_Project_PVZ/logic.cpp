@@ -6,11 +6,12 @@ Logic::Logic(QObject *parent) : QObject(parent)
     mainwindow->setFixedSize(QSize(WINDOW_WIDTH, WINDOW_HEIGHT));
 
     initialInterface = new QInitialInterface();
+    gameDayInterface = new QGameDayInterface();
     pairEliminate = new PairEliminate();
 
     makeConnections();
 
-    emit signalWidget(QString("main"));
+    emit signalWidget(QString("day"));
 }
 
 void Logic::makeConnections()
@@ -35,5 +36,9 @@ void Logic::slotSetWidget(QString s)
     {
         pairEliminate->gamePreparation();
         mainwindow->setCentralWidget(pairEliminate);
+    }
+    if (s.toLower() == QString("day"))
+    {
+        mainwindow->setCentralWidget(gameDayInterface);
     }
 }

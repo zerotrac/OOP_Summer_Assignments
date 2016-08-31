@@ -8,6 +8,7 @@ QPeashooter::QPeashooter(int _id)
     cd = baseCd = 7.5 * 1000 / TIME_ELAPSE;
     rng = baserng = 99999999;
     bullet = 99999999;
+    shell = 0;
     spdX = spdY = baseSpdX = baseSpdY = 0;
     weapon = nullptr;
 
@@ -19,6 +20,8 @@ QPeashooter::QPeashooter(int _id)
         pics.push_back(dummy);
     }
     currentPic = 0;
+    this->setFixedSize(QPixmap("Resources/plants/peashooter/0.gif").size());
+    this->setMovie(pics[currentPic]);
 }
 
 QPeashooter::~QPeashooter()

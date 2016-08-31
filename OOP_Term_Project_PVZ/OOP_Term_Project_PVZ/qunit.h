@@ -1,7 +1,8 @@
 #ifndef QUNIT_H
 #define QUNIT_H
 
-#include <QObject>
+#include <QLabel>
+#include <QPixmap>
 #include <vector>
 #include "qweapon.h"
 #include "qmovie.h"
@@ -11,12 +12,12 @@
 // 用std::vector存储所有存在过的单位指针
 // 在需要遍历所有存活的单位的时候，扫一遍std::set即可
 
-class QUnit : public QObject
+class QUnit : public QLabel
 {
     Q_OBJECT
 
 public:
-    explicit QUnit(QObject *parent = 0);
+    QUnit();
     virtual ~QUnit();
 
 protected:
@@ -34,6 +35,7 @@ protected:
     int rng; // 攻击距离
     int baserng;
     int bullet; // 武器装填数量，一般只有1和无限两种
+    int shell; // 武器使用数量，和cd有关
 
     double spdX; // 移动速度，分x（水平）和y（垂直）方向
     double spdY;

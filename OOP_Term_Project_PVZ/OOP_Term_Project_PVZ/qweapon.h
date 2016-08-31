@@ -6,7 +6,7 @@
 #include <vector>
 #include "const.h"
 
-class QZombie;
+class QUnit;
 class QWeapon : public QObject
 {
     Q_OBJECT
@@ -26,7 +26,7 @@ protected:
     int currentpic;
 
 public:
-    virtual bool inRange(QZombie* zombie) = 0;
+    virtual bool inRange(QUnit* unit) = 0;
     bool outofDuration();
 };
 
