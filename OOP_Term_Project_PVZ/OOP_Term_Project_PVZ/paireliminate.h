@@ -12,6 +12,7 @@
 #include <cmath>
 #include <vector>
 #include <cstring>
+#include "const.h"
 
 namespace Ui {
 class PairEliminate;
@@ -35,7 +36,6 @@ private:
     static const int TEMPLATE_COUNT = 10;
     static const int CARD_COUNT = 24;
 
-    static const int TIME_ELAPSE = 50; // 刷新间隔
     static const int MAX_TIME = 60; // 游戏时间
     static const int MAX_TIME_DISPLAY = 1000 / TIME_ELAPSE * MAX_TIME; // 进度条长度
     static const int LINE_TIME = 0.5 * 1000 / TIME_ELAPSE;

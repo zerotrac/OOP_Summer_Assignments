@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     qzombie.cpp \
     qweapon.cpp \
     qsunshine.cpp \
-    qinitialinterface.cpp
+    qinitialinterface.cpp \
+    qpeashooter.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
@@ -33,7 +34,8 @@ HEADERS  += mainwindow.h \
     qzombie.h \
     qweapon.h \
     qsunshine.h \
-    qinitialinterface.h
+    qinitialinterface.h \
+    qpeashooter.h
 
 FORMS    += mainwindow.ui \
     paireliminate.ui \

@@ -1,6 +1,7 @@
 #ifndef QPLANT_H
 #define QPLANT_H
 
+#include <vector>
 #include "qunit.h"
 #include "qsunshine.h"
 
@@ -14,7 +15,7 @@ public:
 
 public:
     virtual bool canAttack() = 0;
-    virtual QWeapon* attack() = 0;
+    virtual std::vector<QWeapon*> attack() = 0;
     virtual bool isPlant();
     virtual bool isZombie();
     virtual bool canGenerateSunshine() = 0; // 是否是阳光类植物

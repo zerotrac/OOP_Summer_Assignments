@@ -4,6 +4,8 @@
 #include <QObject>
 #include <vector>
 #include "qweapon.h"
+#include "qmovie.h"
+#include "const.h"
 
 // 用std::set存储当前所有存活的单位的编号(id)
 // 用std::vector存储所有存在过的单位指针
@@ -43,12 +45,13 @@ protected:
     QWeapon* weapon; //弹道
 
 protected:
-    //vector<...> pics; // 单位的动画
+    std::vector<QMovie*> pics; // 单位的动画
+    int countPic;
     int currentPic;
 
 public:
     virtual bool canAttack() = 0; // 该单位是否可以攻击，要考虑当前cd
-    virtual QWeapon* attack() = 0; // 若可以攻击，返回一个弹道
+    virtual std::vector<QWeapon*> attack() = 0; // 若可以攻击，返回一个弹道
     void move();
     virtual bool isPlant() = 0;
     virtual bool isZombie() = 0;

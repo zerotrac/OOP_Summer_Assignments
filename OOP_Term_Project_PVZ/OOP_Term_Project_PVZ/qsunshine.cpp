@@ -5,3 +5,7 @@ QSunshine::QSunshine(QWidget *parent) : QWidget(parent)
 
 }
 
+QSunshine::~QSunshine()
+{
+
+}
