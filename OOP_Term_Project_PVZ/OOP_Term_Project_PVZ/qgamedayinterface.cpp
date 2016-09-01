@@ -8,31 +8,60 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    plants[0] = new QPeashooter(0);
-    plants[0]->setAxis(100, 100);
-    plants[0]->setParent(this);
-    plants[1] = new QSnowPea(1);
-    plants[1]->setAxis(100, 225);
-    plants[1]->setParent(this);
-    plants[2] = new QSnowPea(2);
-    plants[2]->setAxis(100, 350);
-    plants[2]->setParent(this);
-    plants[3] = new QDoublePea(3);
-    plants[3]->setAxis(100, 475);
-    plants[3]->setParent(this);
-    plants[4] = new QGatlingPea(4);
-    plants[4]->setAxis(100, 600);
-    plants[4]->setParent(this);
+    plants.clear();
+
+    QPlant* plt = new QPeashooter(0);
+    plt->setAxis(200, 100);
+    plt->setParent(this);
+    plants.insert(plt);
+
+    plt = new QSnowPea(1);
+    plt->setAxis(200, 225);
+    plt->setParent(this);
+    plants.insert(plt);
+
+    plt = new QDoublePea(2);
+    plt->setAxis(200, 350);
+    plt->setParent(this);
+    plants.insert(plt);
+
+    plt = new QGatlingPea(3);
+    plt->setAxis(200, 475);
+    plt->setParent(this);
+    plants.insert(plt);
+
+    plt = new QGatlingPea(4);
+    plt->setAxis(200, 600);
+    plt->setParent(this);
+    plants.insert(plt);
+
     for (int i = 5; i < 10; ++i)
     {
-        plants[i] = new QTorchwood(i);
-        plants[i]->setAxis(400, 100 + 125 * (i - 5));
-        plants[i]->setParent(this);
+        if (i == 8) continue;
+        plt = new QTorchwood(i);
+        plt->setAxis(350, 100 + 125 * (i - 5));
+        plt->setParent(this);
+        plants.insert(plt);
     }
-    plants[10] = new QTorchwood(10);
-    plants[10]->setAxis(600, 350);
-    plants[10]->setParent(this);
 
+    plt = new QWallnut(11);
+    plt->setAxis(50, 100);
+    plt->setParent(this);
+    plants.insert(plt);
+
+    enemies.clear();
+    for (int i = 0; i < 5; ++i)
+    {
+        plt = new QWallnut(i * 2);
+        plt->setAxis(650, 100 + 125 * i);
+        plt->setParent(this);
+        enemies.insert(plt);
+
+        plt = new QWallnut(i * 2 + 1);
+        plt->setAxis(800, 100 + 125 * i);
+        plt->setParent(this);
+        enemies.insert(plt);
+    }
     timerID = this->startTimer(TIME_ELAPSE);
     weapons.clear();
 }
@@ -46,14 +75,29 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
 {
     if (event->timerId() == timerID)
     {
-        std::cout << "size = " << weapons.size() << std::endl;
+        //std::cout << "size = " << weapons.size() << std::endl;
         for (QWeapon* weapon: weapons)
         {
-            for (int j = 0; j < 11; ++j)
+            qDebug() << "weapon atk = " << weapon->atk;
+            for (QPlant* plant: plants)
             {
-                if (weapon->inRange(plants[j]) && plants[j]->canLitUp())
+                if (weapon->inRange(plant) && plant->canLitUp())
                 {
-                    weapon->setLit(plants[j]->id);
+                    weapon->setLit(plant->id);
+                }
+            }
+            for (QPlant* enemy: enemies)
+            {
+                qDebug() << "enemy hp = " << enemy->getCurrentHP();
+                if (weapon->inRange(enemy))
+                {
+                    enemy->beAttacked(weapon->atk);
+                    if (enemy->isDead())
+                    {
+                        delete enemy;
+                        enemies.erase(enemy);
+                    }
+                    weapon->decBullet();
                 }
             }
             if (weapon->outofDuration())
@@ -68,20 +112,24 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
             weapon->show();
         }
         //std::cout << pea->canAttack() << " " << head << " " << tail << std::endl;
-        for (int i = 0; i < 11; ++i)
+        for (QPlant* plant: plants)
         {
-            if (plants[i]->canAttack())
+            if (plant->canAttack())
             {
-                std::vector<QWeapon*> wps = plants[i]->attack();
+                std::vector<QWeapon*> wps = plant->attack();
                 //std::cout << "size = " << wps.size() << std::endl;
                 for (QWeapon* wp: wps)
                 {
-                    wp->setAxis(plants[i]->pos().x() + plants[i]->width() / 2, plants[i]->pos().y() + plants[i]->height() / 2);
+                    wp->setAxis(plant->pos().x() + plant->width() / 2, plant->pos().y() + plant->height() / 2);
                     wp->setParent(this);
                     weapons.insert(wp);
                 }
             }
-            plants[i]->updateInfo();
+            plant->updateInfo();
+        }
+        for (QPlant* enemy: enemies)
+        {
+            enemy->updateInfo();
         }
     }
 }

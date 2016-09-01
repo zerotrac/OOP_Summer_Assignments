@@ -2,6 +2,7 @@
 
 QPeaWeapon::QPeaWeapon(int _currentPic)
 {
+    atk = 20;
     duration = 99999999;
     bullet = 1;
     spdX = 8;
@@ -30,3 +31,10 @@ bool QPeaWeapon::inRange(QUnit *unit)
      && centerY >= unit->pos().y() && centerY <= unit->pos().y() + unit->height()) return true;
     return false;
 }
+
+void QPeaWeapon::updateInfo()
+{
+    this->setGeometry(this->pos().x() + spdX, this->pos().y() + spdY, 0, 0);
+    if (currentPic == 2) atk = 40; else atk = 20;
+}
+

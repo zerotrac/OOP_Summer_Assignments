@@ -3,6 +3,7 @@
 
 #include <QLabel>
 #include <QPixmap>
+#include <QDebug>
 #include <vector>
 #include "qweapon.h"
 #include "qmovie.h"
@@ -27,8 +28,6 @@ public:
 protected:
     // 下面所有的参数带base的表示基础参数值
     // 不带base的在每一帧自动变化，为计算buff和debuff之后的参数值
-    int atk; // 攻击力
-    int baseAtk;
     int hp; // 血量
     int baseHp;
     int cd; // 攻击冷却时间
@@ -56,9 +55,11 @@ public:
     void move();
     virtual bool isPlant() = 0;
     virtual bool isZombie() = 0;
-    bool isDead(); // hp为0或者bullet为0时死亡
+    bool isDead() const; // hp为0或者bullet为0时死亡
     virtual void updateInfo() = 0; // 每一帧更新单位信息
     void setAxis(double dx, double dy); // 这里的(dx, dy)是左下角的坐标
+    void beAttacked(int damage);
+    int getCurrentHP() const;
 };
 
 #endif // QUNIT_H

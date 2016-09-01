@@ -3,7 +3,6 @@
 QTorchwood::QTorchwood(int _id)
 {
     id = _id;
-    atk = baseAtk = 0;
     hp = baseHp = 300;
     cd = baseCd = 0;
     rng = baserng = 0;

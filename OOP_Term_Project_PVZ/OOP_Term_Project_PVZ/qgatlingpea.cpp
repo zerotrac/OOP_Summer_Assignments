@@ -3,7 +3,6 @@
 QGatlingPea::QGatlingPea(int _id)
 {
     id = _id;
-    atk = baseAtk = 20;
     hp = baseHp = 300;
     cd = baseCd = 1.4 * 1000 / TIME_ELAPSE;
     rng = baserng = 99999999;

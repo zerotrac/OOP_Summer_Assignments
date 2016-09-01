@@ -16,6 +16,9 @@ public:
     QWeapon();
     virtual ~QWeapon();
 
+public:
+    int atk;
+
 protected:
     int duration; // 持续时间
     int bullet;
@@ -30,9 +33,10 @@ protected:
 public:
     virtual bool inRange(QUnit* unit) = 0;
     bool outofDuration();
-    void updateInfo();
+    virtual void updateInfo() = 0;
     void setAxis(double dx, double dy);
     void setLit(int _litID);
+    void decBullet();
 };
 
 #endif // QWEAPON_H

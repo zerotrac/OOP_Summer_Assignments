@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     qdoublepea.cpp \
     qsnowpea.cpp \
     qgatlingpea.cpp \
-    qtorchwood.cpp
+    qtorchwood.cpp \
+    qwallnut.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
@@ -47,7 +48,8 @@ HEADERS  += mainwindow.h \
     qdoublepea.h \
     qsnowpea.h \
     qgatlingpea.h \
-    qtorchwood.h
+    qtorchwood.h \
+    qwallnut.h
 
 FORMS    += mainwindow.ui \
     paireliminate.ui \

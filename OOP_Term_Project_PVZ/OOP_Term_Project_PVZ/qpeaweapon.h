@@ -11,6 +11,7 @@ public:
 
 public:
     virtual bool inRange(QUnit *unit);
+    virtual void updateInfo();
 };
 
 #endif // QPEAWEAPON_H
