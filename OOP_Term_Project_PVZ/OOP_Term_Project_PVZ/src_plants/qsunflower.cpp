@@ -51,6 +51,7 @@ QSunshine* QSunflower::generateSunshine(int _id)
 {
     clicked = false;
     return new QSunshine(_id);
+    cd = baseCd;
 }
 
 bool QSunflower::isMushroom()
@@ -65,6 +66,11 @@ bool QSunflower::canLitUp()
 
 void QSunflower::updateInfo()
 {
-
+    --cd;
 }
 
+void QSunflower::setClicked()
+{
+    clicked = true;
+    cd = baseCd;
+}

@@ -20,6 +20,7 @@ public:
     virtual bool isMushroom();
     virtual bool canLitUp();
     virtual void updateInfo();
+    virtual void setClicked() {}
 };
 
 #endif // QTORCHWOOD_H

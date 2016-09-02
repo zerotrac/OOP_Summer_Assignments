@@ -23,6 +23,7 @@ public:
     virtual bool isMushroom() = 0; // 是否是蘑菇（蘑菇类只有在晚上可以使用）
     virtual bool canLitUp() = 0; // 判断是不是火炬树桩
     virtual void updateInfo() = 0;
+    virtual void setClicked() = 0;
 };
 
 #endif // QPLANT_H

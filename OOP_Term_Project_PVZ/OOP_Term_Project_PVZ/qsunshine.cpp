@@ -10,14 +10,19 @@ QSunshine::QSunshine(int _ID)
     for (int i = 0; i < countPic; ++i)
     {
         QPixmap dummy("Resources/sunshine/sun.gif");
+        dummy = dummy.scaled(dummy.width() * 0.75, dummy.height() * 0.75);
         pics.push_back(dummy);
+
     }
     currentPic = 0;
     this->setMask(pics[0].mask());
     this->setFixedSize(pics[0].size());
-    this->setStyleSheet("QPushButton {background-image: url(Resources/sunshine/sun.gif); border: none;}"
-                        "QPushButton:hover {background-image: url(Resources/sunshine/sun.gif); border: none;}"
-                        "QPushButton:pressed {background-image: url(Resources/sunshine/sun.gif); border: none;}");
+    this->setIcon(pics[0]);
+    this->setIconSize(pics[0].size());
+    this->setStyleSheet("QPushButton {border: none;}"
+                        "QPushButton:hover {border: none;}"
+                        "QPushButton:pressed {border: none;}");
+    this->setCursor(Qt::PointingHandCursor);
 }
 
 QSunshine::~QSunshine()
@@ -27,17 +32,11 @@ QSunshine::~QSunshine()
 
 void QSunshine::updateInfo()
 {
-    this->setGeometry(this->pos().x() + spdX, this->pos().y() + spdY, 0, 0);
-    int posX = this->pos().x();
-    int posY = this->pos().y();
-    if ((spdX < 0 && posX < destX) || (spdX > 0 && posX > destX))
-    {
-        this->setGeometry(destX, this->pos().y(), 0, 0);
-    }
-    if ((spdY < 0 && posY < destY) || (spdY > 0 && posY > destY))
-    {
-        this->setGeometry(this->pos().x(), destY, 0, 0);
-    }
+    posX += spdX;
+    posY += spdY;
+    if ((spdX < 0 && posX < destX) || (spdX > 0 && posX > destX)) posX = destX;
+    if ((spdY < 0 && posY < destY) || (spdY > 0 && posY > destY)) posY = destY;
+    this->setGeometry(posX, posY, 0, 0);
 }
 
 void QSunshine::setGenerateID(int _generateID)
@@ -47,7 +46,9 @@ void QSunshine::setGenerateID(int _generateID)
 
 void QSunshine::setAxis(double dx, double dy)
 {
-    this->setGeometry(dx, dy - this->height(), 0, 0);
+    posX = dx;
+    posY = dy - this->height();
+    this->setGeometry(posX, posY, 0, 0);
 }
 
 void QSunshine::setSpeed(double dx, double dy)
@@ -67,7 +68,12 @@ void QSunshine::setClicked()
     clicked = true;
 }
 
-bool QSunshine::isClicked()
+bool QSunshine::isClicked() const
 {
     return clicked;
+}
+
+int QSunshine::getGenerateID() const
+{
+    return generateID;
 }

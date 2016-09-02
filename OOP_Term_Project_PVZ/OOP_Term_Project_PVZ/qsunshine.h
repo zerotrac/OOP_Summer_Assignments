@@ -20,6 +20,8 @@ public:
 private:
     int value; // 阳光值
     int generateID;
+    double posX;
+    double posY;
     double spdX;
     double spdY;
     double destX;
@@ -38,7 +40,8 @@ public:
     void setSpeed(double dx, double dy);
     void setDestination(double dx, double dy);
     void setClicked();
-    bool isClicked();
+    bool isClicked() const;
+    int getGenerateID() const;
 };
 
 #endif // QSUNSHINE_H

@@ -48,13 +48,16 @@ private:
     int plantLabel;
     int enemyLabel;
     int sunshineLabel;
-
+    int curSunshine;
     int timerID;
 
 private:
     void paintEvent(QPaintEvent* event);
     void timerEvent(QTimerEvent *event);
     QString getSplitColor(double per);
+
+private slots:
+    void slotClickSunshine(int);
 
 private:
     Ui::QGameDayInterface *ui;
