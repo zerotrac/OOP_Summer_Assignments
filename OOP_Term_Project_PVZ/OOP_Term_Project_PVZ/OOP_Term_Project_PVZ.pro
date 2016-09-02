@@ -23,15 +23,15 @@ SOURCES += main.cpp\
     qweapon.cpp \
     qsunshine.cpp \
     qinitialinterface.cpp \
-    qpeashooter.cpp \
     qgamedayinterface.cpp \
-    qpeaweapon.cpp \
-    qdoublepea.cpp \
-    qsnowpea.cpp \
-    qgatlingpea.cpp \
-    qtorchwood.cpp \
-    qwallnut.cpp \
-    qsunflower.cpp
+    src_plants/qdoublepea.cpp \
+    src_plants/qgatlingpea.cpp \
+    src_plants/qpeashooter.cpp \
+    src_plants/qsnowpea.cpp \
+    src_plants/qsunflower.cpp \
+    src_plants/qtorchwood.cpp \
+    src_plants/qwallnut.cpp \
+    src_weapons/qpeaweapon.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
@@ -43,15 +43,15 @@ HEADERS  += mainwindow.h \
     qweapon.h \
     qsunshine.h \
     qinitialinterface.h \
-    qpeashooter.h \
     qgamedayinterface.h \
-    qpeaweapon.h \
-    qdoublepea.h \
-    qsnowpea.h \
-    qgatlingpea.h \
-    qtorchwood.h \
-    qwallnut.h \
-    qsunflower.h
+    src_plants/qdoublepea.h \
+    src_plants/qgatlingpea.h \
+    src_plants/qpeashooter.h \
+    src_plants/qsnowpea.h \
+    src_plants/qsunflower.h \
+    src_plants/qtorchwood.h \
+    src_plants/qwallnut.h \
+    src_weapons/qpeaweapon.h
 
 FORMS    += mainwindow.ui \
     paireliminate.ui \

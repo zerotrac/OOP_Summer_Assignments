@@ -1,16 +1,16 @@
-#ifndef QSNOWPEA_H
-#define QSNOWPEA_H
+#ifndef QGATLINGPEA_H
+#define QGATLINGPEA_H
 
 #include "qplant.h"
-#include "qpeaweapon.h"
+#include "src_weapons/qpeaweapon.h"
 
-class QSnowPea: public QPlant
+class QGatlingPea: public QPlant
 {
     Q_OBJECT
 
 public:
-    QSnowPea(int _id);
-    virtual ~QSnowPea();
+    QGatlingPea(int _id);
+    virtual ~QGatlingPea();
 
 public:
     virtual bool canAttack(QUnit*);
@@ -22,4 +22,4 @@ public:
     virtual void updateInfo();
 };
 
-#endif // QSNOWPEA_H
+#endif // QGATLINGPEA_H

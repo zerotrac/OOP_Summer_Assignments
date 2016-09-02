@@ -13,12 +13,12 @@
 #include "qzombie.h"
 #include "qweapon.h"
 #include "qsunshine.h"
-#include "qpeashooter.h"
-#include "qsnowpea.h"
-#include "qdoublepea.h"
-#include "qgatlingpea.h"
-#include "qtorchwood.h"
-#include "qwallnut.h"
+#include "src_plants/qpeashooter.h"
+#include "src_plants/qsnowpea.h"
+#include "src_plants/qdoublepea.h"
+#include "src_plants/qgatlingpea.h"
+#include "src_plants/qtorchwood.h"
+#include "src_plants/qwallnut.h"
 
 namespace Ui {
 class QGameDayInterface;

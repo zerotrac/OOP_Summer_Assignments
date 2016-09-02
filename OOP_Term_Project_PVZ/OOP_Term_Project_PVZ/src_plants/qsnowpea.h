@@ -1,16 +1,16 @@
-#ifndef QDOUBLEPEA_H
-#define QDOUBLEPEA_H
+#ifndef QSNOWPEA_H
+#define QSNOWPEA_H
 
 #include "qplant.h"
-#include "qpeaweapon.h"
+#include "src_weapons/qpeaweapon.h"
 
-class QDoublePea: public QPlant
+class QSnowPea: public QPlant
 {
     Q_OBJECT
 
 public:
-    QDoublePea(int _id);
-    virtual ~QDoublePea();
+    QSnowPea(int _id);
+    virtual ~QSnowPea();
 
 public:
     virtual bool canAttack(QUnit*);
@@ -22,4 +22,4 @@ public:
     virtual void updateInfo();
 };
 
-#endif // QDOUBLEPEA_H
+#endif // QSNOWPEA_H
