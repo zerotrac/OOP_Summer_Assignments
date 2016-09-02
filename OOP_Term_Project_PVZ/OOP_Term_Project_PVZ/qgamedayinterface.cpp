@@ -19,10 +19,21 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
     {
         if (enemy != nullptr) delete enemy;
     }
+    for (QSunshine* sunshine: sunshines)
+    {
+        if (sunshine != nullptr)
+        {
+            QObject::disconnect(sunshine);
+            delete sunshine;
+        }
+    }
     plants.clear();
     enemies.clear();
+    sunshines.clear();
+    if (sunshineMapper != nullptr) QObject::disconnect(sunshineMapper);
     plantLabel = -1;
     enemyLabel = -1;
+    sunshineLabel = -1;
 
     ++plantLabel;
     QPlant* plt = new QPeashooter(plantLabel);
@@ -93,6 +104,17 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
         enemiesID.insert(enemyLabel);
         enemies.push_back(plt);
     }
+
+    ++sunshineLabel;
+    QSunshine* sunshine = new QSunshine(sunshineLabel);
+    sunshine->setGenerateID(0);
+    sunshine->setAxis(100, 600);
+    sunshine->setParent(this);
+    sunshine->setDestination(800, 100);
+    sunshine->setSpeed(3, -3);
+    sunshinesID.insert(sunshineLabel);
+    sunshines.push_back(sunshine);
+
     timerID = this->startTimer(TIME_ELAPSE);
 }
 
@@ -182,6 +204,10 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
         {
             weapon->updateInfo();
             weapon->show();
+        }
+        for (QSunshine* sunshine: sunshines)
+        {
+            sunshine->updateInfo();
         }
         for (int plantID: plantsID)
         {
