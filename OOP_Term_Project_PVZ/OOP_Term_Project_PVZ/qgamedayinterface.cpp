@@ -96,13 +96,6 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
         plt->setParent(this);
         enemiesID.insert(enemyLabel);
         enemies.push_back(plt);
-
-        ++enemyLabel;
-        plt = new QWallnut(enemyLabel);
-        plt->setAxis(800, 100 + 125 * i);
-        plt->setParent(this);
-        enemiesID.insert(enemyLabel);
-        enemies.push_back(plt);
     }
 
     ++sunshineLabel;
@@ -191,18 +184,26 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
                         delete enemy;
                         enemiesID.erase(enemyID);
                     }
+
                     weapon->decBullet();
+                    if (weapon->outofDuration())
+                    {
+                        delete weapon;
+                        weapons.erase(weapon);
+                        break;
+                    }
                 }
-            }
-            if (weapon->outofDuration())
-            {
-                delete weapon;
-                weapons.erase(weapon);
             }
         }
         for (QWeapon* weapon: weapons)
         {
             weapon->updateInfo();
+            if (weapon->outofDuration())
+            {
+                delete weapon;
+                weapons.erase(weapon);
+                continue;
+            }
             weapon->show();
         }
         for (QSunshine* sunshine: sunshines)
@@ -212,7 +213,13 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
         for (int plantID: plantsID)
         {
             QPlant* plant = plants[plantID];
-            if (plant->canAttack())
+            bool ok = false;
+            for (int enemyID: enemiesID)
+            {
+                QPlant* enemy = enemies[enemyID];
+                ok |= plant->canAttack(enemy);
+            }
+            if (ok)
             {
                 std::vector<QWeapon*> wps = plant->attack();
                 for (QWeapon* wp: wps)

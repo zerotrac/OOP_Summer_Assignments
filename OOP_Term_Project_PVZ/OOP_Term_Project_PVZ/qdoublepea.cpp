@@ -28,9 +28,10 @@ QDoublePea::~QDoublePea()
 
 }
 
-bool QDoublePea::canAttack()
+bool QDoublePea::canAttack(QUnit* unit)
 {
-    if (cd <= 0) return true;
+    if (cd > 0) return false;
+    if (abs(this->pos().y() + this->height() - unit->pos().y() - unit->height()) < 0.1) return true;
     return false;
 }
 

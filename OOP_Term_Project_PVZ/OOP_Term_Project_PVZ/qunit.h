@@ -3,6 +3,8 @@
 
 #include <QLabel>
 #include <QPixmap>
+#include <cmath>
+#include <algorithm>
 #include <vector>
 #include "qweapon.h"
 #include "qmovie.h"
@@ -49,7 +51,7 @@ protected:
     int currentPic;
 
 public:
-    virtual bool canAttack() = 0; // 该单位是否可以攻击，要考虑当前cd
+    virtual bool canAttack(QUnit*) = 0; // 该单位是否可以攻击，要考虑当前cd
     virtual std::vector<QWeapon*> attack() = 0; // 若可以攻击，返回一个弹道
     void move();
     virtual bool isPlant() = 0;

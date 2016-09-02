@@ -13,7 +13,7 @@ public:
     virtual ~QDoublePea();
 
 public:
-    virtual bool canAttack();
+    virtual bool canAttack(QUnit*);
     virtual std::vector<QWeapon*> attack();
     virtual bool canGenerateSunshine();
     virtual QSunshine* generateSunshine();

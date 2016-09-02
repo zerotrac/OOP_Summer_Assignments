@@ -18,7 +18,7 @@ private:
     int rageBuff; // 僵尸发怒了，移动速度变快
 
 public:
-    virtual bool canAttack() = 0;
+    virtual bool canAttack(QUnit*) = 0;
     virtual std::vector<QWeapon*> attack() = 0;
     virtual bool isPlant();
     virtual bool isZombie();

@@ -28,7 +28,7 @@ QWallnut::~QWallnut()
 
 }
 
-bool QWallnut::canAttack()
+bool QWallnut::canAttack(QUnit* unit)
 {
     return false;
 }

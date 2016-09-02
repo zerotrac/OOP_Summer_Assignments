@@ -28,7 +28,7 @@ QTorchwood::~QTorchwood()
 
 }
 
-bool QTorchwood::canAttack()
+bool QTorchwood::canAttack(QUnit *unit)
 {
     return false;
 }

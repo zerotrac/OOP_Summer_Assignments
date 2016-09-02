@@ -14,7 +14,7 @@ public:
     virtual ~QPlant();
 
 public:
-    virtual bool canAttack() = 0;
+    virtual bool canAttack(QUnit*) = 0;
     virtual std::vector<QWeapon*> attack() = 0;
     virtual bool isPlant();
     virtual bool isZombie();
