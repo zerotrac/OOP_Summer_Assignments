@@ -34,7 +34,6 @@ public:
     ~QGameDayInterface();
 
 private:
-    //QPlant* plants[11];
     std::unordered_set<int> plantsID;
     std::unordered_set<int> enemiesID;
     std::unordered_set<int> sunshinesID;

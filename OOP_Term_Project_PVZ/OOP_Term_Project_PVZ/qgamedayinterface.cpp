@@ -8,6 +8,13 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    this->setAutoFillBackground(true);
+    QPalette palette;
+    QPixmap backgroundBig("Resources/interface/day_background.jpg");
+    QPixmap background = backgroundBig.copy(120, 0, 900, 600);
+    palette.setBrush(QPalette::Background, QBrush(background));
+    this->setPalette(palette);
+
     plantsID.clear();
     enemiesID.clear();
     weapons.clear();
@@ -44,73 +51,44 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
     sunshineLabel = -1;
     curSunshine = 0;
 
-    ++plantLabel;
-    QPlant* plt = new QPeashooter(plantLabel);
-    plt->setAxis(200, 100);
-    plt->setParent(this);
-    plantsID.insert(plantLabel);
-    plants.push_back(plt);
-
-    ++plantLabel;
-    plt = new QSnowPea(plantLabel);
-    plt->setAxis(200, 225);
-    plt->setParent(this);
-    plantsID.insert(plantLabel);
-    plants.push_back(plt);
-
-    ++plantLabel;
-    plt = new QDoublePea(plantLabel);
-    plt->setAxis(200, 350);
-    plt->setParent(this);
-    plantsID.insert(plantLabel);
-    plants.push_back(plt);
-
-    ++plantLabel;
-    plt = new QGatlingPea(plantLabel);
-    plt->setAxis(200, 475);
-    plt->setParent(this);
-    plantsID.insert(plantLabel);
-    plants.push_back(plt);
-
-    ++plantLabel;
-    plt = new QGatlingPea(plantLabel);
-    plt->setAxis(200, 600);
-    plt->setParent(this);
-    plantsID.insert(plantLabel);
-    plants.push_back(plt);
-
-    for (int i = 5; i < 10; ++i)
-    {
-        if (i == 8) continue;
-        ++plantLabel;
-        plt = new QTorchwood(plantLabel);
-        plt->setAxis(350, 100 + 125 * (i - 5));
-        plt->setParent(this);
-        plantsID.insert(plantLabel);
-        plants.push_back(plt);
-    }
+    qDebug() << "good1";
 
     for (int i = 0; i < 5; ++i)
     {
-        ++plantLabel;
-        plt = new QSunflower(plantLabel);
-        plt->setAxis(50, 100 + 125 * i);
-        plt->setParent(this);
-        plantsID.insert(plantLabel);
-        plants.push_back(plt);
+        for (int j = 0; j < 7; ++j)
+        {
+            ++plantLabel;
+            //qDebug() << "label =" << plantLabel;
+            QPlant* plt;
+            if (j == 0) plt = new QSunflower(plantLabel);
+            else if (j == 1) plt = new QPeashooter(plantLabel);
+            else if (j == 2) plt = new QDoublePea(plantLabel);
+            else if (j == 3) plt = new QSnowPea(plantLabel);
+            else if (j == 4) plt = new QGatlingPea(plantLabel);
+            else if (j == 5) plt = new QTorchwood(plantLabel);
+            else plt = new QWallnut(plantLabel);
+
+            plt->setAxis(145 + j * 80, 170 + i * 95);
+            plt->setParent(this);
+            plantsID.insert(plantLabel);
+            plants.push_back(plt);
+        }
     }
-
-
     for (int i = 0; i < 5; ++i)
     {
-        ++enemyLabel;
-        plt = new QWallnut(enemyLabel);
-        plt->setAxis(650, 100 + 125 * i);
-        plt->setParent(this);
-        enemiesID.insert(enemyLabel);
-        enemies.push_back(plt);
+        for (int j = 7; j < 9; ++j)
+        {
+            ++enemyLabel;
+            QPlant* plt;
+            if (j == 7) plt = new QWallnut(plantLabel);
+            else plt = new QPeashooter(plantLabel);
+            plt->setAxis(145 + j * 80, 170 + i * 95);
+            plt->setParent(this);
+            enemiesID.insert(enemyLabel);
+            enemies.push_back(plt);
+        }
     }
-    qDebug() << "good9";
+
     timerID = this->startTimer(TIME_ELAPSE);
 }
 
@@ -159,7 +137,7 @@ void QGameDayInterface::paintEvent(QPaintEvent *event)
 
 void QGameDayInterface::timerEvent(QTimerEvent *event)
 {
-    qDebug() << curSunshine;
+    //qDebug() << "sun =" << curSunshine;
     if (event->timerId() == timerID)
     {
         // 步骤：
@@ -180,41 +158,57 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
             for (int enemyID: enemiesID) // 处理武器对僵尸
             {
                 QPlant* enemy = enemies[enemyID];
-                if (weapon->inRange(enemy))
+                if (!enemy->isDead() && !weapon->outofDuration() && weapon->inRange(enemy))
                 {
+                    qDebug() << "weapon location =" << weapon->pos().x() << weapon->pos().y();
                     enemy->beAttacked(weapon->atk);
-                    if (enemy->isDead()) // 僵尸死亡判定
-                    {
-                        delete enemy;
-                        enemiesID.erase(enemyID);
-                    }
-
                     weapon->decBullet();
-                    if (weapon->outofDuration()) // 一次性武器判定
-                    {
-                        delete weapon;
-                        weapons.erase(weapon);
-                        break;
-                    }
+
                 }
             }
         }
+        //qDebug() << "good1";
+        for (auto iter = enemiesID.begin(); iter != enemiesID.end();) // 处理死亡的僵尸
+        {
+            if (enemies[*iter]->isDead())
+            {
+                delete enemies[*iter];
+                enemiesID.erase(iter++);
+            }
+            else
+            {
+                ++iter;
+            }
+        }
+        //qDebug() << "good2";
         for (QWeapon* weapon: weapons) // 处理武器移动
         {
-            weapon->updateInfo();
-            if (weapon->outofDuration()) // 武器在窗口外判定
+            if (!weapon->outofDuration())
             {
-                delete weapon;
-                weapons.erase(weapon);
-                continue;
+                weapon->updateInfo();
+                weapon->show();
             }
-            weapon->show();
         }
+        //qDebug() << "good3";
+        for (auto iter = weapons.begin(); iter != weapons.end();) // 一次性武器判定
+        {
+            if ((*iter)->outofDuration())
+            {
+                delete (*iter);
+                weapons.erase(iter++);
+            }
+            else
+            {
+                ++iter;
+            }
+        }
+        //qDebug() << "good4";
         for (QSunshine* sunshine: sunshines) // 处理阳光
         {
             sunshine->updateInfo();
             sunshine->show();
         }
+        //qDebug() << "good5";
         for (int plantID: plantsID) // 处理植物
         {
             QPlant* plant = plants[plantID];
@@ -252,13 +246,20 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
             }
 
             plant->updateInfo();
-            if (plant->isDead()) // 一次性植物判定
+        }
+        for (auto iter = plantsID.begin(); iter != plantsID.end();) // 一次性植物判定
+        {
+            if (plants[*iter]->isDead())
             {
-                delete plant;
-                plantsID.erase(plantID);
+                delete plants[*iter];
+                plantsID.erase(iter++);
+            }
+            else
+            {
+                ++iter;
             }
         }
-
+        //qDebug() << "good6";
         for (int enemyID: enemiesID)
         {
             QPlant* enemy = enemies[enemyID];
