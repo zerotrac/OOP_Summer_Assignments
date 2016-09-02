@@ -1,16 +1,20 @@
-#ifndef QDOUBLEPEA_H
-#define QDOUBLEPEA_H
+#ifndef QSUNFLOWER_H
+#define QSUNFLOWER_H
 
 #include "qplant.h"
-#include "qpeaweapon.h"
+#include "qweapon.h"
+#include "qsunshine.h"
 
-class QDoublePea: public QPlant
+class QSunflower: public QPlant
 {
     Q_OBJECT
 
 public:
-    QDoublePea(int _id);
-    virtual ~QDoublePea();
+    QSunflower(int _id);
+    virtual ~QSunflower();
+
+private:
+    bool clicked;
 
 public:
     virtual bool canAttack(QUnit*);
@@ -20,6 +24,7 @@ public:
     virtual bool isMushroom();
     virtual bool canLitUp();
     virtual void updateInfo();
+    void setClicked();
 };
 
-#endif // QDOUBLEPEA_H
+#endif // QSUNFLOWER_H

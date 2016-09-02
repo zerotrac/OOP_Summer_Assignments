@@ -2,8 +2,9 @@
 
 QSunshine::QSunshine(int _ID)
 {
-    value = SUNSHINE_VALUE;
     ID = _ID;
+    value = SUNSHINE_VALUE;
+    clicked = false;
 
     countPic = 1;
     for (int i = 0; i < countPic; ++i)
@@ -14,9 +15,9 @@ QSunshine::QSunshine(int _ID)
     currentPic = 0;
     this->setMask(pics[0].mask());
     this->setFixedSize(pics[0].size());
-    this->setStyleSheet("QPushButton {background-image: url(Resources/sunshine/sun.gif);}"
-                        "QPushButton:hover {background-image: url(Resources/sunshine/sun.gif);}"
-                        "QPushButton:pressed {background-image: url(Resources/sunshine/sun.gif);}");
+    this->setStyleSheet("QPushButton {background-image: url(Resources/sunshine/sun.gif); border: none;}"
+                        "QPushButton:hover {background-image: url(Resources/sunshine/sun.gif); border: none;}"
+                        "QPushButton:pressed {background-image: url(Resources/sunshine/sun.gif); border: none;}");
 }
 
 QSunshine::~QSunshine()
@@ -59,4 +60,14 @@ void QSunshine::setDestination(double dx, double dy)
 {
     destX = dx;
     destY = dy;
+}
+
+void QSunshine::setClicked()
+{
+    clicked = true;
+}
+
+bool QSunshine::isClicked()
+{
+    return clicked;
 }

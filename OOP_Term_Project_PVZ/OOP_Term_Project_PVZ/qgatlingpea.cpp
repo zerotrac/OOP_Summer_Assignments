@@ -49,7 +49,7 @@ bool QGatlingPea::canGenerateSunshine()
     return false;
 }
 
-QSunshine* QGatlingPea::generateSunshine()
+QSunshine* QGatlingPea::generateSunshine(int _id)
 {
     return nullptr;
 }

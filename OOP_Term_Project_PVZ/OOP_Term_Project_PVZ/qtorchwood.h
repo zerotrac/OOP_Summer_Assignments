@@ -16,7 +16,7 @@ public:
     virtual bool canAttack(QUnit*);
     virtual std::vector<QWeapon*> attack();
     virtual bool canGenerateSunshine();
-    virtual QSunshine* generateSunshine();
+    virtual QSunshine* generateSunshine(int _id);
     virtual bool isMushroom();
     virtual bool canLitUp();
     virtual void updateInfo();

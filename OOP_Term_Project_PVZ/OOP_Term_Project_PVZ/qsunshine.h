@@ -24,6 +24,7 @@ private:
     double spdY;
     double destX;
     double destY;
+    bool clicked;
 
 protected:
     std::vector<QPixmap> pics;
@@ -36,6 +37,8 @@ public:
     void setAxis(double dx, double dy);
     void setSpeed(double dx, double dy);
     void setDestination(double dx, double dy);
+    void setClicked();
+    bool isClicked();
 };
 
 #endif // QSUNSHINE_H

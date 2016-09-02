@@ -1,4 +1,4 @@
-#include "QTorchwood.h"
+#include "qtorchwood.h"
 
 QTorchwood::QTorchwood(int _id)
 {
@@ -44,7 +44,7 @@ bool QTorchwood::canGenerateSunshine()
     return false;
 }
 
-QSunshine* QTorchwood::generateSunshine()
+QSunshine* QTorchwood::generateSunshine(int _id)
 {
     return nullptr;
 }

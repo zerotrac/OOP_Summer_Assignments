@@ -44,7 +44,7 @@ bool QWallnut::canGenerateSunshine()
     return false;
 }
 
-QSunshine* QWallnut::generateSunshine()
+QSunshine* QWallnut::generateSunshine(int _id)
 {
     return nullptr;
 }

@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     qsnowpea.cpp \
     qgatlingpea.cpp \
     qtorchwood.cpp \
-    qwallnut.cpp
+    qwallnut.cpp \
+    qsunflower.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
@@ -49,7 +50,8 @@ HEADERS  += mainwindow.h \
     qsnowpea.h \
     qgatlingpea.h \
     qtorchwood.h \
-    qwallnut.h
+    qwallnut.h \
+    qsunflower.h
 
 FORMS    += mainwindow.ui \
     paireliminate.ui \
