@@ -19,6 +19,7 @@
 #include "src_plants/qgatlingpea.h"
 #include "src_plants/qtorchwood.h"
 #include "src_plants/qwallnut.h"
+#include "src_plants/qsunflower.h"
 
 namespace Ui {
 class QGameDayInterface;

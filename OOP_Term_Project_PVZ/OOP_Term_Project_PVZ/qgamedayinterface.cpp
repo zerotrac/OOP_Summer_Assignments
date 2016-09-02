@@ -81,12 +81,16 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
         plants.push_back(plt);
     }
 
-    ++plantLabel;
-    plt = new QWallnut(plantLabel);
-    plt->setAxis(50, 100);
-    plt->setParent(this);
-    plantsID.insert(plantLabel);
-    plants.push_back(plt);
+    for (int i = 0; i < 5; ++i)
+    {
+        ++plantLabel;
+        plt = new QSunflower(plantLabel);
+        plt->setAxis(50, 100 + 125 * i);
+        plt->setParent(this);
+        plantsID.insert(plantLabel);
+        plants.push_back(plt);
+    }
+
 
     for (int i = 0; i < 5; ++i)
     {
