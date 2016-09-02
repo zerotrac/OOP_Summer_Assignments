@@ -17,7 +17,6 @@ void QUnit::move()
 
 bool QUnit::isDead() const
 {
-    qDebug() << "hp = " << hp << " " << bullet;
     return (hp <= 0 || bullet <= 0);
 }
 
@@ -34,4 +33,9 @@ void QUnit::beAttacked(int damage)
 int QUnit::getCurrentHP() const
 {
     return hp;
+}
+
+int QUnit::getMaxHP() const
+{
+    return baseHp;
 }

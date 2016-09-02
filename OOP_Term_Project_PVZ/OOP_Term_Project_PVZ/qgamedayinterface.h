@@ -2,9 +2,12 @@
 #define QGAMEDAYINTERFACE_H
 
 #include <QWidget>
+#include <QPainter>
+#include <QPaintEvent>
+#include <QTimerEvent>
+#include <QDebug>
 #include <vector>
 #include <unordered_set>
-#include <QTimerEvent>
 #include "qpeashooter.h"
 #include "qsnowpea.h"
 #include "qdoublepea.h"
@@ -28,13 +31,20 @@ public:
 
 private:
     //QPlant* plants[11];
-    std::unordered_set<QPlant*> plants;
-    std::unordered_set<QPlant*> enemies;
+    std::unordered_set<int> plantsID;
+    std::unordered_set<int> enemiesID;
     std::unordered_set<QWeapon*> weapons;
+    std::vector<QPlant*> plants;
+    std::vector<QPlant*> enemies;
+    int plantLabel;
+    int enemyLabel;
+
     int timerID;
 
 private:
+    void paintEvent(QPaintEvent* event);
     void timerEvent(QTimerEvent *event);
+    QString getSplitColor(double per);
 
 private:
     Ui::QGameDayInterface *ui;

@@ -3,7 +3,6 @@
 
 #include <QLabel>
 #include <QPixmap>
-#include <QDebug>
 #include <vector>
 #include "qweapon.h"
 #include "qmovie.h"
@@ -60,6 +59,7 @@ public:
     void setAxis(double dx, double dy); // 这里的(dx, dy)是左下角的坐标
     void beAttacked(int damage);
     int getCurrentHP() const;
+    int getMaxHP() const;
 };
 
 #endif // QUNIT_H
