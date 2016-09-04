@@ -427,12 +427,24 @@ void QGameDayInterface::slotCardSelectAnimation()
     ani->start(QAbstractAnimation::DeleteWhenStopped);
 
 
+    // 定位 以后要用
     QCard* card[7];
     for (int i = 0; i < 7; ++i)
     {
         card[i] = new QCard();
         card[i]->setParent(this);
         card[i]->setGeometry(81 + i * 50, 10, 0, 0);
+    }
+
+    QCard* card2[6][8];
+    for (int i = 0; i < 6; ++i)
+    {
+        for (int j = 0; j < 8; ++j)
+        {
+            card2[i][j] = new QCard();
+            card2[i][j]->setParent(this);
+            card2[i][j]->setGeometry(10 + j * 52, 120 + i * 80, 0, 0);
+        }
     }
 }
 
