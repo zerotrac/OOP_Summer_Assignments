@@ -44,7 +44,7 @@ void QCard::updateInfo(int sunshine)
 {
     --cd;
     if (cd < 0) cd = 0;
-    if (sunshine >= sunshineCost)
+    if (sunshine >= sunshineCost && cd <= 0)
     {
         this->setEnabled(true);
     }

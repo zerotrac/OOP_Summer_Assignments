@@ -16,12 +16,12 @@ public:
 
 public:
     QPixmap staticPic;
+    int sunshineCost;
 
 protected:
     int id;
     QLabel* labelPic;
-    QLabel* labelTxt;
-    int sunshineCost;
+    QLabel* labelTxt;   
     int cd;
     int baseCd;
 

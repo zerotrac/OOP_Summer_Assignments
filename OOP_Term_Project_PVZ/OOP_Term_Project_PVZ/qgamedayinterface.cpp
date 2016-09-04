@@ -9,11 +9,6 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
     ui->setupUi(this);
 
     this->setFocusPolicy(Qt::StrongFocus);
-    //this->setMouseTracking(true);
-    //this->setAttribute(Qt::WA_TransparentForMouseEvents, true);
-    //this->setWindowFlags(Qt::FramelessWindowHint);
-    //this->setAttribute(Qt::WA_TranslucentBackground);
-
     this->setAutoFillBackground(true);
     QPalette palette;
     QPixmap backgroundBig("Resources/interface/day_background.jpg");
@@ -92,8 +87,8 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
     mouseShadow->hide();
 
     gamePreparation();
-    //slotCardSelectAnimation();
-    playStartAnimation();
+    slotCardSelectAnimation();
+    //playStartAnimation();
 
     /*for (int i = 0; i < 5; ++i)
     {
@@ -116,7 +111,7 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
             plants.push_back(plt);
         }
     }*/
-    /*for (int i = 0; i < 5; ++i)
+    for (int i = 0; i < 5; ++i)
     {
         for (int j = 7; j < 9; ++j)
         {
@@ -129,7 +124,7 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
             enemiesID.insert(enemyLabel);
             enemies.push_back(plt);
         }
-    }*/
+    }
 }
 
 QGameDayInterface::~QGameDayInterface()
@@ -139,7 +134,39 @@ QGameDayInterface::~QGameDayInterface()
 
 void QGameDayInterface::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::RightButton)
+    if (event->button() == Qt::LeftButton)
+    {
+        if (mouseShadow->isHidden()) return;
+
+        QPoint p = this->mapFromGlobal(this->cursor().pos());
+        bool ok = false;
+        for (int i = 0; i < 5; ++i)
+        {
+            for (int j = 0; j < 9; ++j)
+            {
+                if (p.x() >= 140 + j * 80 && p.x() <= 220 + j * 80 && p.y() >= 75 + i * 95 && p.y() <= 170 + i * 95)
+                {
+                    ++plantLabel;
+                    QPlant* plt = cardsCanUse[mouseLabel]->getPlant(plantLabel);
+                    qDebug() << "good generate!" << plt->width() << plt->height();
+                    plt->setAxis(140 + j * 80, 170 + i * 95);
+                    plt->setParent(this);
+                    plt->show();
+                    plantsID.insert(plantLabel);
+                    plants.push_back(plt);
+                    curSunshine -= cardsCanUse[mouseLabel]->sunshineCost;
+                    ok = true;
+                    break;
+                }
+                if (ok) break;
+            }
+        }
+
+        mousePic->hide();
+        mouseShadow->hide();
+        mouseLabel = -1;
+    }
+    else if (event->button() == Qt::RightButton)
     {
         mousePic->hide();
         mouseShadow->hide();
@@ -153,12 +180,10 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
 
     if (key == Qt::Key_A)
     {
-        qDebug() << "good A";
         curSunshine += 100;
     }
     else if (key == Qt::Key_D)
     {
-        qDebug() << "good D";
         curSunshine -= 100;
         if (curSunshine < 0) curSunshine = 0;
     }
@@ -207,7 +232,6 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
     if (mouseLabel != -1)
     {
         QPoint p = this->mapFromGlobal(this->cursor().pos());
-        qDebug() << p.x() << p.y();
         mousePic->setGeometry(p.x() - mousePic->width() / 2, p.y() - mousePic->height() / 2, mousePic->width(), mousePic->height());
         bool ok = false;
         for (int i = 0; i < 5; ++i)
@@ -216,11 +240,22 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
             {
                 if (p.x() >= 140 + j * 80 && p.x() <= 220 + j * 80 && p.y() >= 75 + i * 95 && p.y() <= 170 + i * 95)
                 {
-                    //qDebug() << "in range";
-                    mouseShadow->show();
-                    mouseShadow->setGeometry(140 + j * 80, 170 + i * 95 - mouseShadow->height(), mouseShadow->width(), mouseShadow->height());
-                    ok = true;
-                    break;
+                    bool ok0 = true;
+                    for (QPlant* plant: plants)
+                    {
+                        if (plant->pos().x() == 140 + j * 80 && plant->pos().y() + plant->height() == 170 + i * 95)
+                        {
+                            ok0 = false;
+                            break;
+                        }
+                    }
+                    if (ok0)
+                    {
+                        mouseShadow->show();
+                        mouseShadow->setGeometry(140 + j * 80, 170 + i * 95 - mouseShadow->height(), mouseShadow->width(), mouseShadow->height());
+                        ok = true;
+                        break;
+                    }
                 }
                 if (ok) break;
             }
