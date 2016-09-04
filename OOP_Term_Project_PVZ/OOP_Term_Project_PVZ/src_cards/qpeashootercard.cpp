@@ -2,6 +2,7 @@
 
 QPeashooterCard::QPeashooterCard(int _id)
 {
+    staticPic.load("Resources/plants/peashooter/static.gif");
     id = _id;
     baseCd = 7.5 * 1000 / TIME_ELAPSE;
     QPixmap pic = QPixmap("Resources/plants/peashooter/static.gif").scaled(QSize(37, 37));

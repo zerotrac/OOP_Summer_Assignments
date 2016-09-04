@@ -2,6 +2,7 @@
 
 QWallnutCard::QWallnutCard(int _id)
 {
+    staticPic.load("Resources/plants/wallnut/static.gif");
     id = _id;
     baseCd = 30 * 1000 / TIME_ELAPSE;
     QPixmap pic = QPixmap("Resources/plants/wallnut/static.gif").scaled(QSize(37, 37));

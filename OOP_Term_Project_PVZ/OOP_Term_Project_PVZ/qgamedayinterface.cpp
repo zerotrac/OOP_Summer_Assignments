@@ -8,6 +8,12 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    this->setFocusPolicy(Qt::StrongFocus);
+    //this->setMouseTracking(true);
+    //this->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+    //this->setWindowFlags(Qt::FramelessWindowHint);
+    //this->setAttribute(Qt::WA_TranslucentBackground);
+
     this->setAutoFillBackground(true);
     QPalette palette;
     QPixmap backgroundBig("Resources/interface/day_background.jpg");
@@ -80,11 +86,16 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
         zombie[i]->setMovie(zombieMov);
     }
 
+    mousePic = new QLabel(this);
+    mousePic->hide();
+    mouseShadow = new QLabel(this);
+    mouseShadow->hide();
+
     gamePreparation();
     //slotCardSelectAnimation();
     playStartAnimation();
 
-    for (int i = 0; i < 5; ++i)
+    /*for (int i = 0; i < 5; ++i)
     {
         for (int j = 0; j < 7; ++j)
         {
@@ -99,33 +110,41 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
             else if (j == 5) plt = new QTorchwood(plantLabel);
             else plt = new QWallnut(plantLabel);
 
-            plt->setAxis(145 + j * 80, 170 + i * 95);
+            plt->setAxis(140 + j * 80, 170 + i * 95);
             plt->setParent(this);
             plantsID.insert(plantLabel);
             plants.push_back(plt);
         }
-    }
-    for (int i = 0; i < 5; ++i)
+    }*/
+    /*for (int i = 0; i < 5; ++i)
     {
         for (int j = 7; j < 9; ++j)
         {
             ++enemyLabel;
             QPlant* plt;
-            if (j == 7) plt = new QWallnut(plantLabel);
-            else plt = new QPeashooter(plantLabel);
-            plt->setAxis(145 + j * 80, 170 + i * 95);
+            if (j == 7) plt = new QPeashooter(plantLabel);
+            else plt = new QWallnut(plantLabel);
+            plt->setAxis(140 + j * 80, 170 + i * 95);
             plt->setParent(this);
             enemiesID.insert(enemyLabel);
             enemies.push_back(plt);
         }
-    }
-
-    //timerID = this->startTimer(TIME_ELAPSE);
+    }*/
 }
 
 QGameDayInterface::~QGameDayInterface()
 {
     delete ui;
+}
+
+void QGameDayInterface::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::RightButton)
+    {
+        mousePic->hide();
+        mouseShadow->hide();
+        mouseLabel = -1;
+    }
 }
 
 void QGameDayInterface::keyPressEvent(QKeyEvent *event)
@@ -185,7 +204,33 @@ void QGameDayInterface::paintEvent(QPaintEvent *event)
 
 void QGameDayInterface::timerEvent(QTimerEvent *event)
 {
-    //qDebug() << "sun =" << curSunshine;
+    if (mouseLabel != -1)
+    {
+        QPoint p = this->mapFromGlobal(this->cursor().pos());
+        qDebug() << p.x() << p.y();
+        mousePic->setGeometry(p.x() - mousePic->width() / 2, p.y() - mousePic->height() / 2, mousePic->width(), mousePic->height());
+        bool ok = false;
+        for (int i = 0; i < 5; ++i)
+        {
+            for (int j = 0; j < 9; ++j)
+            {
+                if (p.x() >= 140 + j * 80 && p.x() <= 220 + j * 80 && p.y() >= 75 + i * 95 && p.y() <= 170 + i * 95)
+                {
+                    //qDebug() << "in range";
+                    mouseShadow->show();
+                    mouseShadow->setGeometry(140 + j * 80, 170 + i * 95 - mouseShadow->height(), mouseShadow->width(), mouseShadow->height());
+                    ok = true;
+                    break;
+                }
+                if (ok) break;
+            }
+        }
+        if (!ok)
+        {
+            mouseShadow->hide();
+        }
+    }
+
     if (event->timerId() == timerID)
     {
         showSunshineNum->setText(QString::number(curSunshine));
@@ -214,7 +259,7 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
                 QPlant* enemy = enemies[enemyID];
                 if (!enemy->isDead() && !weapon->outofDuration() && weapon->inRange(enemy))
                 {
-                    qDebug() << "weapon location =" << weapon->pos().x() << weapon->pos().y();
+                    //qDebug() << "weapon location =" << weapon->pos().x() << weapon->pos().y();
                     enemy->beAttacked(weapon->atk);
                     weapon->decBullet();
                 }
@@ -400,6 +445,8 @@ void QGameDayInterface::gamePreparation()
     {
         zombie[i]->hide();
     }
+
+    mouseLabel = -1;
 }
 
 void QGameDayInterface::playStartAnimation()
@@ -677,5 +724,34 @@ void QGameDayInterface::slotClickStart()
 
 void QGameDayInterface::slotPlant(int label)
 {
+    qDebug() << "good plant";
+    mouseLabel = label;
+    mousePic->resize(cardsCanUse[mouseLabel]->staticPic.size());
+    //mousePic->setPixmap(cardsCanUse[mouseLabel]->staticPic);
 
+    int alpha = 150;
+    QImage beforeImg = cardsCanUse[mouseLabel]->staticPic.toImage();
+    QImage nowImg = cardsCanUse[mouseLabel]->staticPic.toImage();
+    QPainter painter(&nowImg);
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    painter.fillRect(nowImg.rect(), Qt::transparent);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    painter.drawImage(0, 0, beforeImg);
+    painter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+    painter.fillRect(nowImg.rect(), QColor(0, 0, 0, alpha));
+    painter.end();
+
+    QPixmap before = QPixmap::fromImage(beforeImg);
+    QPixmap now = QPixmap::fromImage(nowImg);
+    QPoint p = this->mapFromGlobal(this->cursor().pos());
+
+    mouseShadow->setPixmap(now);
+    mouseShadow->resize(now.size());
+    mouseShadow->raise();
+
+    mousePic->setPixmap(before);
+    mousePic->resize(before.size());
+    mousePic->setGeometry(p.x() - mousePic->width() / 2, p.y() - mousePic->height() / 2, mousePic->width(), mousePic->height());
+    mousePic->show();
+    mousePic->raise();
 }

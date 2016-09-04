@@ -2,7 +2,7 @@
 
 QUnit::QUnit()
 {
-
+    this->setMouseTracking(true);
 }
 
 QUnit::~QUnit()

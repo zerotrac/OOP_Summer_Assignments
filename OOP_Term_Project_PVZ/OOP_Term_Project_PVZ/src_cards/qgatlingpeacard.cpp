@@ -2,6 +2,7 @@
 
 QGatlingPeaCard::QGatlingPeaCard(int _id)
 {
+    staticPic.load("Resources/plants/gatlingpea/static.gif");
     id = _id;
     baseCd = 50 * 1000 / TIME_ELAPSE;
     QPixmap pic = QPixmap("Resources/plants/gatlingpea/static.gif").scaled(QSize(37, 37));

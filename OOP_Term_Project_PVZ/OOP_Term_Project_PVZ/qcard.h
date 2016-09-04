@@ -14,6 +14,9 @@ public:
     QCard();
     virtual ~QCard();
 
+public:
+    QPixmap staticPic;
+
 protected:
     int id;
     QLabel* labelPic;

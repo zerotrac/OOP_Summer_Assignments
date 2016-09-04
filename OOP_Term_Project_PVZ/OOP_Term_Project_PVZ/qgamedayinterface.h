@@ -2,10 +2,13 @@
 #define QGAMEDAYINTERFACE_H
 
 #include <QWidget>
+#include <QCursor>
 #include <QPainter>
+#include <QEvent>
 #include <QPaintEvent>
 #include <QTimerEvent>
 #include <QKeyEvent>
+#include <QMouseEvent>
 #include <QMessageBox>
 #include <QSignalMapper>
 #include <QPropertyAnimation>
@@ -85,9 +88,14 @@ private:
     QLabel* showSunshine;
     QPixmap picSunshine;
 
+    QLabel* mousePic;
+    QLabel* mouseShadow;
+    int mouseLabel;
+
     int timerID;
 
 private:
+    void mousePressEvent(QMouseEvent* event);
     void keyPressEvent(QKeyEvent* event);
     void paintEvent(QPaintEvent* event);
     void timerEvent(QTimerEvent *event);

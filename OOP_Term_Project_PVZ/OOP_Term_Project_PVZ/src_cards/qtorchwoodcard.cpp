@@ -2,6 +2,7 @@
 
 QTorchwoodCard::QTorchwoodCard(int _id)
 {
+    staticPic.load("Resources/plants/torchwood/static.gif");
     id = _id;
     baseCd = 7.5 * 1000 / TIME_ELAPSE;
     QPixmap pic = QPixmap("Resources/plants/torchwood/static.gif").scaled(QSize(37, 37));

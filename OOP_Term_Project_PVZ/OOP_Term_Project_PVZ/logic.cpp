@@ -7,7 +7,6 @@ Logic::Logic(QObject *parent) : QObject(parent)
 
     initialInterface = new QInitialInterface();
     gameDayInterface = new QGameDayInterface();
-    gameDayInterface->setFocusPolicy(Qt::StrongFocus);
     pairEliminate = new PairEliminate();
 
     makeConnections();
