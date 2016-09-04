@@ -10,6 +10,8 @@ const double SUNSHINE_DEST_X = 750.0;
 const double SUNSHINE_DEST_Y = 50.0;
 const int SUNSHINE_RUN = 0.3 * 1000;
 const int START_ZOMBIE_COUNT = 10;
+const int CARD_WIDTH_COUNT = 8;
+const int CARD_HEIGHT_COUNT = 6;
 
 #endif // CONST
 

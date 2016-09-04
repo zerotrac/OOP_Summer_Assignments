@@ -9,9 +9,25 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
     ui->setupUi(this);
 
     sunshineMapper = nullptr;
+
+    for (int i = 0; i < CARD_HEIGHT_COUNT; ++i)
+    {
+        for (int j = 0; j < CARD_WIDTH_COUNT; ++j)
+        {
+            cards[i][j] = nullptr;
+        }
+    }
+    cards[0][0] = new QSunflowerCard(0); cards[0][0]->setParent(this);
+    cards[0][1] = new QPeashooterCard(1); cards[0][1]->setParent(this);
+    cards[0][2] = new QSnowPeaCard(2); cards[0][2]->setParent(this);
+    cards[0][3] = new QDoublePeaCard(3);cards[0][3]->setParent(this);
+    cards[0][4] = new QGatlingPeaCard(4); cards[0][4]->setParent(this);
+    cards[0][5] = new QWallnutCard(5); cards[0][5]->setParent(this);
+    cards[0][6] = new QTorchwoodCard(6); cards[0][6]->setParent(this);
+
     gamePreparation();
-    slotCardSelectAnimation();
-    //playStartAnimation();
+    //slotCardSelectAnimation();
+    playStartAnimation();
 
     /*this->setAutoFillBackground(true);
     QPalette palette;
@@ -269,15 +285,22 @@ void QGameDayInterface::gamePreparation()
     }
     for (QSunshine* sunshine: sunshines)
     {
-        if (sunshine != nullptr)
-        {
-            QObject::disconnect(sunshine);
-            delete sunshine;
-        }
+        if (sunshine != nullptr) delete sunshine;
     }
     plants.clear();
     enemies.clear();
     sunshines.clear();
+
+    for (int i = 0; i < CARD_HEIGHT_COUNT; ++i)
+    {
+        for (int j = 0; j < CARD_WIDTH_COUNT; ++j)
+        {
+            if (cards[i][j] != nullptr)
+            {
+                cards[i][j]->initialize();
+            }
+        }
+    }
 
     plantLabel = -1;
     enemyLabel = -1;
@@ -323,7 +346,7 @@ void QGameDayInterface::playStartAnimation()
         {
             for (int j = i + 1; j < thres; ++j)
             {
-                if (std::abs(p[i] - p[j]) < 10 || std::abs(q[i] - q[j]) < 10)
+                if (std::abs(p[i] - p[j]) < 15 || std::abs(q[i] - q[j]) < 15)
                 {
                     flag = false;
                     break;
@@ -406,32 +429,50 @@ void QGameDayInterface::slotCardSelectAnimation()
     down->show();
 
     propAni = new QPropertyAnimation(up, "pos", this);
-    //propAni->setDuration(2200);
-    propAni->setDuration(0);
+    propAni->setDuration(1100);
+    //propAni->setDuration(0);
     propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
     propAni->setKeyValueAt(0.0, QPoint(0, -up->height()));
-    propAni->setKeyValueAt(1.0 - 100.0 / 2200, QPoint(0, -up->height()));
+    propAni->setKeyValueAt(1.0 - 100.0 / 1100, QPoint(0, -up->height()));
     propAni->setKeyValueAt(1.0, QPoint(0, 0));
     selectAni->addAnimation(propAni);
 
     propAni = new QPropertyAnimation(down, "pos", this);
-    //propAni->setDuration(2200);
-    propAni->setDuration(0);
+    propAni->setDuration(1100);
+    //propAni->setDuration(0);
     propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
     propAni->setKeyValueAt(0.0, QPoint(0, WINDOW_HEIGHT));
-    propAni->setKeyValueAt(1.0 - 100.0 / 2200, QPoint(0, WINDOW_HEIGHT));
+    propAni->setKeyValueAt(1.0 - 100.0 / 1100, QPoint(0, WINDOW_HEIGHT));
     propAni->setKeyValueAt(1.0, QPoint(0, WINDOW_HEIGHT - down->height()));
     selectAni->addAnimation(propAni);
 
+    for (int i = 0; i < CARD_HEIGHT_COUNT; ++i)
+    {
+        for (int j = 0; j < CARD_WIDTH_COUNT; ++j)
+        {
+            if (cards[i][j] != nullptr)
+            {
+                propAni = new QPropertyAnimation(cards[i][j], "pos", this);
+                propAni->setDuration(1100);
+                //propAni->setDuration(0);
+                propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
+                propAni->setKeyValueAt(0.0, QPoint(cards[i][j]->pos().x(), cards[i][j]->pos().y() + down->height()));
+                propAni->setKeyValueAt(1.0 - 100.0 / 1100, QPoint(cards[i][j]->pos().x(), cards[i][j]->pos().y() + down->height()));
+                propAni->setKeyValueAt(1.0, cards[i][j]->pos());
+                selectAni->addAnimation(propAni);
+                cards[i][j]->raise();
+            }
+        }
+    }
     QAbstractAnimation* ani = selectAni;
     ani->start(QAbstractAnimation::DeleteWhenStopped);
 
 
     // 定位 以后要用
-    QCard* card[7];
+    /*QCard* card[7];
     for (int i = 0; i < 7; ++i)
     {
-        card[i] = new QCard();
+        card[i] = new QPeashooterCard(0);
         card[i]->setParent(this);
         card[i]->setGeometry(81 + i * 50, 10, 0, 0);
     }
@@ -441,11 +482,11 @@ void QGameDayInterface::slotCardSelectAnimation()
     {
         for (int j = 0; j < 8; ++j)
         {
-            card2[i][j] = new QCard();
+            card2[i][j] = new QPeashooterCard(0);
             card2[i][j]->setParent(this);
             card2[i][j]->setGeometry(10 + j * 52, 120 + i * 80, 0, 0);
         }
-    }
+    }*/
 }
 
 void QGameDayInterface::slotClickSunshine(int label)

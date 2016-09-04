@@ -32,7 +32,14 @@ SOURCES += main.cpp\
     src_plants/qtorchwood.cpp \
     src_plants/qwallnut.cpp \
     src_weapons/qpeaweapon.cpp \
-    qcard.cpp
+    qcard.cpp \
+    src_cards/qpeashootercard.cpp \
+    src_cards/qsnowpeacard.cpp \
+    src_cards/qdoublepeacard.cpp \
+    src_cards/qgatlingpeacard.cpp \
+    src_cards/qsunflowercard.cpp \
+    src_cards/qwallnutcard.cpp \
+    src_cards/qtorchwoodcard.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
@@ -53,7 +60,14 @@ HEADERS  += mainwindow.h \
     src_plants/qtorchwood.h \
     src_plants/qwallnut.h \
     src_weapons/qpeaweapon.h \
-    qcard.h
+    qcard.h \
+    src_cards/qpeashootercard.h \
+    src_cards/qsnowpeacard.h \
+    src_cards/qdoublepeacard.h \
+    src_cards/qgatlingpeacard.h \
+    src_cards/qsunflowercard.h \
+    src_cards/qwallnutcard.h \
+    src_cards/qtorchwoodcard.h
 
 FORMS    += mainwindow.ui \
     paireliminate.ui \

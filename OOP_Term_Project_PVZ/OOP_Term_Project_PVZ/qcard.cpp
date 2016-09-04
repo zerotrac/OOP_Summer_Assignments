@@ -9,13 +9,9 @@ QCard::QCard()
     this->setCursor(Qt::PointingHandCursor);
 
     labelPic = new QLabel(this);
-    QPixmap pic = QPixmap("Resources/plants/peashooter/static.gif").scaled(QSize(37, 37));
-    labelPic->setPixmap(pic);
     labelPic->setGeometry(7, 11, 37, 37);
 
-    sunshineCost = 100;
     labelTxt = new QLabel(this);
-    labelTxt->setText(QString::number(sunshineCost));
     labelTxt->setGeometry(8, 53, 25, 10);
 }
 
@@ -23,3 +19,36 @@ QCard::~QCard()
 {
 
 }
+
+void QCard::initialize()
+{
+    cd = 0;
+    setInitialPosition();
+}
+
+void QCard::setInitialPosition()
+{
+    int i = id / 8;
+    int j = id % 8;
+    this->setGeometry(10 + j * 52, 120 + i * 80, 0, 0);
+}
+
+void QCard::updateInfo(int sunshine)
+{
+    --cd;
+    if (cd < 0) cd = 0;
+    if (sunshine >= sunshineCost)
+    {
+        this->setEnabled(true);
+    }
+    else
+    {
+        this->setEnabled(false);
+    }
+}
+
+bool QCard::canGetPlant()
+{
+    return (cd <= 0);
+}
+
