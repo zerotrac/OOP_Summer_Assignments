@@ -13,6 +13,14 @@ QCard::QCard()
 
     labelTxt = new QLabel(this);
     labelTxt->setGeometry(8, 53, 25, 10);
+
+    labelCd = new QLabel();
+    labelCd->setParent(this);
+    labelCd->setAutoFillBackground(true);
+    labelCd->setGeometry(0, 0, 100 * 0.48, 0);
+    QPalette plt;
+    plt.setColor(QPalette::Button, QColor(100, 100, 100, 200));
+    labelCd->setPalette(plt);
 }
 
 QCard::~QCard()
@@ -44,7 +52,7 @@ void QCard::updateInfo(int sunshine)
 {
     --cd;
     if (cd < 0) cd = 0;
-    if (sunshine >= sunshineCost && cd <= 0)
+    if (sunshine >= sunshineCost)
     {
         this->setEnabled(true);
     }
@@ -52,6 +60,7 @@ void QCard::updateInfo(int sunshine)
     {
         this->setEnabled(false);
     }
+    labelCd->setGeometry(0, 0, 100 * 0.48, 140 * 0.48 * cd / baseCd);
 }
 
 bool QCard::canGetPlant()

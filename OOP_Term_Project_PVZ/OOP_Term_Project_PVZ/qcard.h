@@ -21,7 +21,8 @@ public:
 protected:
     int id;
     QLabel* labelPic;
-    QLabel* labelTxt;   
+    QLabel* labelTxt;
+    QLabel* labelCd;
     int cd;
     int baseCd;
 

@@ -759,6 +759,8 @@ void QGameDayInterface::slotClickStart()
 
 void QGameDayInterface::slotPlant(int label)
 {
+    if (!cardsCanUse[label]->canGetPlant()) return;
+
     qDebug() << "good plant";
     mouseLabel = label;
     mousePic->resize(cardsCanUse[mouseLabel]->staticPic.size());
