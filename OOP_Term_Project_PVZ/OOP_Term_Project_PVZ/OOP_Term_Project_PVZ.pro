@@ -39,7 +39,9 @@ SOURCES += main.cpp\
     src_cards/qgatlingpeacard.cpp \
     src_cards/qsunflowercard.cpp \
     src_cards/qwallnutcard.cpp \
-    src_cards/qtorchwoodcard.cpp
+    src_cards/qtorchwoodcard.cpp \
+    src_plants/qtallnut.cpp \
+    src_cards/qtallnutcard.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
@@ -67,7 +69,9 @@ HEADERS  += mainwindow.h \
     src_cards/qgatlingpeacard.h \
     src_cards/qsunflowercard.h \
     src_cards/qwallnutcard.h \
-    src_cards/qtorchwoodcard.h
+    src_cards/qtorchwoodcard.h \
+    src_plants/qtallnut.h \
+    src_cards/qtallnutcard.h
 
 FORMS    += mainwindow.ui \
     paireliminate.ui \

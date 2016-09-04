@@ -27,6 +27,7 @@
 #include "src_plants/qsunflower.h"
 #include "src_plants/qtorchwood.h"
 #include "src_plants/qwallnut.h"
+#include "src_plants/qtallnut.h"
 
 #include "src_cards/qdoublepeacard.h"
 #include "src_cards/qgatlingpeacard.h"
@@ -35,6 +36,7 @@
 #include "src_cards/qsunflowercard.h"
 #include "src_cards/qtorchwoodcard.h"
 #include "src_cards/qwallnutcard.h"
+#include "src_cards/qtallnutcard.h"
 
 namespace Ui {
 class QGameDayInterface;
@@ -59,8 +61,12 @@ private:
     std::vector<QSunshine*> sunshines;
 
     QCard* cards[CARD_HEIGHT_COUNT][CARD_WIDTH_COUNT];
+    QCard* cardsCanUse[CARD_CAN_USE];
+    int cardsTop;
 
     QSignalMapper* sunshineMapper;
+    QSignalMapper* cardSelectionMapper;
+
     int plantLabel;
     int enemyLabel;
     int sunshineLabel;
@@ -77,7 +83,7 @@ private:
 private slots:
     void slotClickSunshine(int);
     void slotCardSelectAnimation();
-    //void slotMoveCard(int);
+    void slotMoveCard(int);
 
 private:
     Ui::QGameDayInterface *ui;

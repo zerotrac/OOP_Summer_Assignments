@@ -9,6 +9,7 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
     ui->setupUi(this);
 
     sunshineMapper = nullptr;
+    cardSelectionMapper = nullptr;
 
     for (int i = 0; i < CARD_HEIGHT_COUNT; ++i)
     {
@@ -24,10 +25,11 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
     cards[0][4] = new QGatlingPeaCard(4); cards[0][4]->setParent(this);
     cards[0][5] = new QWallnutCard(5); cards[0][5]->setParent(this);
     cards[0][6] = new QTorchwoodCard(6); cards[0][6]->setParent(this);
+    cards[0][7] = new QTallnutCard(7); cards[0][7]->setParent(this);
 
     gamePreparation();
-    //slotCardSelectAnimation();
-    playStartAnimation();
+    slotCardSelectAnimation();
+    //playStartAnimation();
 
     /*this->setAutoFillBackground(true);
     QPalette palette;
@@ -291,17 +293,6 @@ void QGameDayInterface::gamePreparation()
     enemies.clear();
     sunshines.clear();
 
-    for (int i = 0; i < CARD_HEIGHT_COUNT; ++i)
-    {
-        for (int j = 0; j < CARD_WIDTH_COUNT; ++j)
-        {
-            if (cards[i][j] != nullptr)
-            {
-                cards[i][j]->initialize();
-            }
-        }
-    }
-
     plantLabel = -1;
     enemyLabel = -1;
     sunshineLabel = -1;
@@ -310,6 +301,27 @@ void QGameDayInterface::gamePreparation()
     if (sunshineMapper != nullptr) delete sunshineMapper;
     sunshineMapper = new QSignalMapper(this);
     QObject::connect(sunshineMapper, SIGNAL(mapped(int)), this, SLOT(slotClickSunshine(int)));
+
+    if (cardSelectionMapper != nullptr) delete cardSelectionMapper;
+    cardSelectionMapper = new QSignalMapper(this);
+    QObject::connect(cardSelectionMapper, SIGNAL(mapped(int)), this, SLOT(slotMoveCard(int)));
+    for (int i = 0; i < CARD_HEIGHT_COUNT; ++i)
+    {
+        for (int j = 0; j < CARD_WIDTH_COUNT; ++j)
+        {
+            if (cards[i][j] != nullptr)
+            {
+                cards[i][j]->initialize();
+                QObject::connect(cards[i][j], SIGNAL(clicked(bool)), cardSelectionMapper, SLOT(map()));
+                cardSelectionMapper->setMapping(cards[i][j], i * CARD_WIDTH_COUNT + j);
+            }
+        }
+    }
+    cardsTop = -1;
+    for (int i = 0; i < CARD_CAN_USE; ++i)
+    {
+        cardsCanUse[i] = nullptr;
+    }
 }
 
 void QGameDayInterface::playStartAnimation()
@@ -503,3 +515,32 @@ void QGameDayInterface::slotClickSunshine(int label)
         plants[dummy]->setClicked();
     }
 }
+
+void QGameDayInterface::slotMoveCard(int pos)
+{
+    int i = pos / CARD_WIDTH_COUNT;
+    int j = pos % CARD_WIDTH_COUNT;
+    if (cards[i][j]->pos() != QPoint(10 + j * 52, 120 + i * 80))
+    {
+        cards[i][j]->setInitialPosition();
+        for (int k = 0; k <= cardsTop; ++k)
+        {
+            if (cardsCanUse[k] == cards[i][j])
+            {
+                for (int k0 = k; k0 < cardsTop; ++k0)
+                {
+                    cardsCanUse[k0] = cardsCanUse[k0 + 1];
+                    cardsCanUse[k0]->setGeometry(81 + k0 * 50, 10, 0, 0);
+                }
+                cardsCanUse[cardsTop--] = nullptr;
+                break;
+            }
+        }
+    }
+    else if (cardsTop < CARD_CAN_USE - 1)
+    {
+        cardsCanUse[++cardsTop] = cards[i][j];
+        cards[i][j]->setGeometry(81 + cardsTop * 50, 10, 0, 0);
+    }
+}
+

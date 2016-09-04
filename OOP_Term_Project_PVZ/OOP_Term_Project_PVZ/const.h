@@ -12,6 +12,6 @@ const int SUNSHINE_RUN = 0.3 * 1000;
 const int START_ZOMBIE_COUNT = 10;
 const int CARD_WIDTH_COUNT = 8;
 const int CARD_HEIGHT_COUNT = 6;
-
+const int CARD_CAN_USE = 7;
 #endif // CONST
 
