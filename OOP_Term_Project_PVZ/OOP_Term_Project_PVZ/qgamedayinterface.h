@@ -5,6 +5,8 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QTimerEvent>
+#include <QKeyEvent>
+#include <QMessageBox>
 #include <QSignalMapper>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
@@ -66,14 +68,27 @@ private:
 
     QSignalMapper* sunshineMapper;
     QSignalMapper* cardSelectionMapper;
+    QSignalMapper* cardPlantMapper;
+    QPushButton* startButton;
+    QLabel* background;
+    QLabel* up;
+    QLabel* down;
+    QLabel* zombie[START_ZOMBIE_COUNT];
+    int p[START_ZOMBIE_COUNT];
+    int q[START_ZOMBIE_COUNT];
 
     int plantLabel;
     int enemyLabel;
     int sunshineLabel;
     int curSunshine;
+    QLabel* showSunshineNum;
+    QLabel* showSunshine;
+    QPixmap picSunshine;
+
     int timerID;
 
 private:
+    void keyPressEvent(QKeyEvent* event);
     void paintEvent(QPaintEvent* event);
     void timerEvent(QTimerEvent *event);
     QString getSplitColor(double per);
@@ -83,7 +98,12 @@ private:
 private slots:
     void slotClickSunshine(int);
     void slotCardSelectAnimation();
+    void slotBacktoSceneAnimation();
+    void slotSceneLeftAnimation();
+    void slotStart();
     void slotMoveCard(int);
+    void slotClickStart();
+    void slotPlant(int);
 
 private:
     Ui::QGameDayInterface *ui;

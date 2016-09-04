@@ -26,6 +26,13 @@ void QCard::initialize()
     setInitialPosition();
 }
 
+bool QCard::isInitialPosition() const
+{
+    int i = id / 8;
+    int j = id % 8;
+    return (this->pos() == QPoint(10 + j * 52, 120 + i * 80));
+}
+
 void QCard::setInitialPosition()
 {
     int i = id / 8;

@@ -10,6 +10,17 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
 
     sunshineMapper = nullptr;
     cardSelectionMapper = nullptr;
+    cardPlantMapper = nullptr;
+    startButton = new QPushButton(this);
+
+    startButton->setFixedSize(QPixmap("Resources/interface/card_start.png").size());
+    startButton->setStyleSheet("QPushButton {border-image: url(Resources/interface/card_start.png);}");
+    startButton->setText("  游戏开始！");
+    startButton->setCursor(Qt::PointingHandCursor);
+    QPalette palForStartButton;
+    palForStartButton.setColor(QPalette::ButtonText, Qt::white);
+    startButton->setPalette(palForStartButton);
+    QObject::connect(startButton, SIGNAL(clicked(bool)), this, SLOT(slotClickStart()));
 
     for (int i = 0; i < CARD_HEIGHT_COUNT; ++i)
     {
@@ -27,21 +38,44 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
     cards[0][6] = new QTorchwoodCard(6); cards[0][6]->setParent(this);
     cards[0][7] = new QTallnutCard(7); cards[0][7]->setParent(this);
 
+    background = new QLabel(this);
+    QPixmap backPic("Resources/interface/day_background.jpg");
+    background->setFixedSize(backPic.size());
+    background->setPixmap(backPic);
+
+    up = new QLabel(this);
+    QPixmap upPic("Resources/interface/card_up.png");
+    up->setFixedSize(upPic.size());
+    up->setPixmap(upPic);
+
+    down = new QLabel(this);
+    QPixmap downPic0("Resources/interface/card_down.png");
+    QPixmap downPic = downPic0.scaled(downPic0.size() * 0.93);
+    down->setFixedSize(downPic.size());
+    down->setPixmap(downPic);
+
+    for (int i = 0; i < START_ZOMBIE_COUNT; ++i)
+    {
+        zombie[i] = new QLabel(this);
+        QMovie* zombieMov = new QMovie("Resources/zombies/zombie/laugh.gif");
+        zombieMov->start();
+        zombie[i]->setFixedSize(zombieMov->currentPixmap().size());
+        zombie[i]->setMovie(zombieMov);
+    }
+
+    showSunshineNum = new QLabel(this);
+    showSunshineNum->setFixedSize(50, 20);
+
+    picSunshine.load("Resources/sunshine/sun.gif");
+    picSunshine = picSunshine.scaled(picSunshine.width() * 0.75, picSunshine.height() * 0.75);
+    showSunshine = new QLabel(this);
+    showSunshine->setFixedSize(picSunshine.size());
+    showSunshine->setGeometry(10, 6, 0, 0);
+    showSunshine->setPixmap(picSunshine);
+
     gamePreparation();
-    slotCardSelectAnimation();
-    //playStartAnimation();
-
-    /*this->setAutoFillBackground(true);
-    QPalette palette;
-    QPixmap backgroundBig("Resources/interface/day_background.jpg");
-    QPixmap background = backgroundBig.copy(120, 0, 900, 600);
-    palette.setBrush(QPalette::Background, QBrush(background));
-    this->setPalette(palette);*/
-
-
-
-
-
+    //slotCardSelectAnimation();
+    playStartAnimation();
 
 /*
     qDebug() << "good1";
@@ -90,6 +124,23 @@ QGameDayInterface::~QGameDayInterface()
     delete ui;
 }
 
+void QGameDayInterface::keyPressEvent(QKeyEvent *event)
+{
+    int key = event->key();
+
+    if (key == Qt::Key_A)
+    {
+        qDebug() << "good A";
+        curSunshine += 100;
+    }
+    else if (key == Qt::Key_D)
+    {
+        qDebug() << "good D";
+        curSunshine -= 100;
+        if (curSunshine < 0) curSunshine = 0;
+    }
+}
+
 void QGameDayInterface::paintEvent(QPaintEvent *event)
 {
     QPainter* painter = new QPainter(this);
@@ -133,6 +184,12 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
     //qDebug() << "sun =" << curSunshine;
     if (event->timerId() == timerID)
     {
+        showSunshineNum->setText(QString::number(curSunshine));
+        showSunshineNum->setGeometry(40 - showSunshineNum->text().length() * 4, 62, 0, 0);
+        showSunshineNum->show();
+        showSunshineNum->raise();
+        showSunshine->show();
+        showSunshine->raise();
         // 步骤：
         // 1. 武器与其它单位进行判定，僵尸销毁
         // 2. 武器移动，武器销毁
@@ -258,6 +315,11 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
             QPlant* enemy = enemies[enemyID];
             enemy->updateInfo();
         }
+
+        for (QCard* card: cardsCanUse)
+        {
+            card->updateInfo(curSunshine);
+        }
     }
     this->update();
 }
@@ -296,7 +358,7 @@ void QGameDayInterface::gamePreparation()
     plantLabel = -1;
     enemyLabel = -1;
     sunshineLabel = -1;
-    curSunshine = 0;
+    curSunshine = 50;
 
     if (sunshineMapper != nullptr) delete sunshineMapper;
     sunshineMapper = new QSignalMapper(this);
@@ -322,30 +384,28 @@ void QGameDayInterface::gamePreparation()
     {
         cardsCanUse[i] = nullptr;
     }
+
+    showSunshineNum->hide();
+    showSunshine->hide();
 }
 
 void QGameDayInterface::playStartAnimation()
 {
     QParallelAnimationGroup *startAni = new QParallelAnimationGroup(this);
     QPropertyAnimation *propAni;
-    QLabel* background = new QLabel(this);
-    QPixmap backPic("Resources/interface/day_background.jpg");
-    background->setFixedSize(backPic.size());
-    background->setPixmap(backPic);
     propAni = new QPropertyAnimation(background, "pos", this);
     propAni->setDuration(4000);
     propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
-    propAni->setKeyValueAt(0., QPoint(0, 0));
+    propAni->setKeyValueAt(0.0, QPoint(0, 0));
     propAni->setKeyValueAt(0.5, QPoint(0, 0));
-    propAni->setKeyValueAt(1., QPoint(-500, 0));
+    propAni->setKeyValueAt(1.0, QPoint(-500, 0));
     startAni->addAnimation(propAni);
+    background->raise();
 
     QTime t = QTime::currentTime();
     qsrand(t.msec() + t.second() * 1000);
 
     int thres = START_ZOMBIE_COUNT;
-    int p[thres];
-    int q[thres];
     while (1)
     {
         for (int i = 0; i < thres; ++i)
@@ -382,40 +442,15 @@ void QGameDayInterface::playStartAnimation()
 
     for (int i = 0; i < thres; ++i)
     {
-        QLabel* zombie = new QLabel(this);
-        QMovie* zombieMov = new QMovie("Resources/zombies/zombie/laugh.gif");
-        zombieMov->start();
-        zombie->setFixedSize(zombieMov->currentPixmap().size());
-        zombie->setMovie(zombieMov);
-        propAni = new QPropertyAnimation(zombie, "pos", this);
+        propAni = new QPropertyAnimation(zombie[i], "pos", this);
         propAni->setDuration(4000);
         propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
-        propAni->setKeyValueAt(0.0, QPoint(p[i] + 500, 0));
+        propAni->setKeyValueAt(0.0, QPoint(p[i] + 500, q[i]));
         propAni->setKeyValueAt(0.5, QPoint(p[i] + 500, q[i]));
         propAni->setKeyValueAt(1.0, QPoint(p[i], q[i]));
         startAni->addAnimation(propAni);
+        zombie[i]->raise();
     }
-
-
-    /*propAni = new QPropertyAnimation(lb, "pos", this);
-    propAni->setDuration(2000);
-    propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
-    propAni->setKeyValueAt(0., QPoint(0, 0));
-    propAni->setKeyValueAt(1., QPoint(-500, 0));
-    seqAni->addAnimation(propAni);*/
-    /*propAni = new QPropertyAnimation(ui->widgetCardBack, "pos", this);
-    propAni->setDuration(250);
-    propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
-    propAni->setKeyValueAt(0., QPoint(0, -85));
-    propAni->setKeyValueAt(1., QPoint(0, 0));
-    seqAni->addAnimation(propAni);
-    seqAni->addPause(2000);
-    propAni = new QPropertyAnimation(lb, "pos", this);
-    propAni->setDuration(1500);
-    propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
-    propAni->setKeyValueAt(0., QPoint(-500, 0));
-    propAni->setKeyValueAt(1., QPoint(-120, 0));
-    seqAni->addAnimation(propAni);*/
     QAbstractAnimation* ani = startAni;
     ani->start(QAbstractAnimation::DeleteWhenStopped);
     QObject::connect(ani, SIGNAL(finished()), this, SLOT(slotCardSelectAnimation()));
@@ -423,40 +458,35 @@ void QGameDayInterface::playStartAnimation()
 
 void QGameDayInterface::slotCardSelectAnimation()
 {
-    qDebug() << "good1";
     QParallelAnimationGroup *selectAni = new QParallelAnimationGroup(this);
     QPropertyAnimation *propAni;
-    qDebug() << "good2";
-    QLabel* up = new QLabel(this);
-    QPixmap upPic("Resources/interface/card_up.png");
-    up->setFixedSize(upPic.size());
-    up->setPixmap(upPic);
-    up->show();
-
-    QLabel* down = new QLabel(this);
-    QPixmap downPic0("Resources/interface/card_down.png");
-    QPixmap downPic = downPic0.scaled(downPic0.size() * 0.93);
-    down->setFixedSize(downPic.size());
-    down->setPixmap(downPic);
-    down->show();
 
     propAni = new QPropertyAnimation(up, "pos", this);
     propAni->setDuration(1100);
-    //propAni->setDuration(0);
     propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
     propAni->setKeyValueAt(0.0, QPoint(0, -up->height()));
     propAni->setKeyValueAt(1.0 - 100.0 / 1100, QPoint(0, -up->height()));
     propAni->setKeyValueAt(1.0, QPoint(0, 0));
     selectAni->addAnimation(propAni);
+    up->raise();
 
     propAni = new QPropertyAnimation(down, "pos", this);
     propAni->setDuration(1100);
-    //propAni->setDuration(0);
     propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
     propAni->setKeyValueAt(0.0, QPoint(0, WINDOW_HEIGHT));
     propAni->setKeyValueAt(1.0 - 100.0 / 1100, QPoint(0, WINDOW_HEIGHT));
     propAni->setKeyValueAt(1.0, QPoint(0, WINDOW_HEIGHT - down->height()));
     selectAni->addAnimation(propAni);
+    down->raise();
+
+    propAni = new QPropertyAnimation(startButton, "pos", this);
+    propAni->setDuration(1100);
+    propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
+    propAni->setKeyValueAt(0.0, QPoint(160, 550 + down->height()));
+    propAni->setKeyValueAt(1.0 - 100.0 / 1100, QPoint(160, 550 + down->height()));
+    propAni->setKeyValueAt(1.0, QPoint(160, 550));
+    selectAni->addAnimation(propAni);
+    startButton->raise();
 
     for (int i = 0; i < CARD_HEIGHT_COUNT; ++i)
     {
@@ -466,7 +496,6 @@ void QGameDayInterface::slotCardSelectAnimation()
             {
                 propAni = new QPropertyAnimation(cards[i][j], "pos", this);
                 propAni->setDuration(1100);
-                //propAni->setDuration(0);
                 propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
                 propAni->setKeyValueAt(0.0, QPoint(cards[i][j]->pos().x(), cards[i][j]->pos().y() + down->height()));
                 propAni->setKeyValueAt(1.0 - 100.0 / 1100, QPoint(cards[i][j]->pos().x(), cards[i][j]->pos().y() + down->height()));
@@ -478,27 +507,98 @@ void QGameDayInterface::slotCardSelectAnimation()
     }
     QAbstractAnimation* ani = selectAni;
     ani->start(QAbstractAnimation::DeleteWhenStopped);
+}
 
-
-    // 定位 以后要用
-    /*QCard* card[7];
-    for (int i = 0; i < 7; ++i)
+void QGameDayInterface::slotBacktoSceneAnimation()
+{
+    for (int i = 0; i < CARD_HEIGHT_COUNT; ++i)
     {
-        card[i] = new QPeashooterCard(0);
-        card[i]->setParent(this);
-        card[i]->setGeometry(81 + i * 50, 10, 0, 0);
+        for (int j = 0; j < CARD_WIDTH_COUNT; ++j)
+        {
+            if (cards[i][j] != nullptr)
+            {
+                qDebug() << "good";
+                cards[i][j]->disconnect();
+            }
+        }
     }
 
-    QCard* card2[6][8];
-    for (int i = 0; i < 6; ++i)
+    QParallelAnimationGroup *selectAni = new QParallelAnimationGroup(this);
+    QPropertyAnimation *propAni;
+
+    int duration = 500;
+    propAni = new QPropertyAnimation(down, "pos", this);
+    propAni->setDuration(duration);
+    propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
+    propAni->setKeyValueAt(0.0, QPoint(0, WINDOW_HEIGHT - down->height()));
+    propAni->setKeyValueAt(1.0, QPoint(0, WINDOW_HEIGHT));
+    selectAni->addAnimation(propAni);
+
+    propAni = new QPropertyAnimation(startButton, "pos", this);
+    propAni->setDuration(duration);
+    propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
+    propAni->setKeyValueAt(0.0, QPoint(160, 550));
+    propAni->setKeyValueAt(1.0, QPoint(160, 550 + down->height()));
+    selectAni->addAnimation(propAni);
+
+    for (int i = 0; i < CARD_HEIGHT_COUNT; ++i)
     {
-        for (int j = 0; j < 8; ++j)
+        for (int j = 0; j < CARD_WIDTH_COUNT; ++j)
         {
-            card2[i][j] = new QPeashooterCard(0);
-            card2[i][j]->setParent(this);
-            card2[i][j]->setGeometry(10 + j * 52, 120 + i * 80, 0, 0);
+            if (cards[i][j] != nullptr && cards[i][j]->isInitialPosition())
+            {
+                propAni = new QPropertyAnimation(cards[i][j], "pos", this);
+                propAni->setDuration(duration);
+                propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
+                propAni->setKeyValueAt(0.0, cards[i][j]->pos());
+                propAni->setKeyValueAt(1.0, QPoint(cards[i][j]->pos().x(), cards[i][j]->pos().y() + down->height()));
+                selectAni->addAnimation(propAni);
+            }
         }
-    }*/
+    }
+    QAbstractAnimation* ani = selectAni;
+    ani->start(QAbstractAnimation::DeleteWhenStopped);
+    QObject::connect(ani, SIGNAL(finished()), this, SLOT(slotSceneLeftAnimation()));
+}
+
+void QGameDayInterface::slotSceneLeftAnimation()
+{
+    QParallelAnimationGroup *startAni = new QParallelAnimationGroup(this);
+    QPropertyAnimation *propAni;
+
+    propAni = new QPropertyAnimation(background, "pos", this);
+    propAni->setDuration(1500);
+    propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
+    propAni->setKeyValueAt(0.0, QPoint(-500, 0));
+    propAni->setKeyValueAt(1.0, QPoint(-120, 0));
+    startAni->addAnimation(propAni);
+
+    for (int i = 0; i < START_ZOMBIE_COUNT; ++i)
+    {
+        propAni = new QPropertyAnimation(zombie[i], "pos", this);
+        propAni->setDuration(1500);
+        propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
+        propAni->setKeyValueAt(0.0, QPoint(p[i], q[i]));
+        propAni->setKeyValueAt(1.0, QPoint(p[i] + 380, q[i]));
+        startAni->addAnimation(propAni);
+    }
+    QAbstractAnimation* ani = startAni;
+    ani->start(QAbstractAnimation::DeleteWhenStopped);
+    QObject::connect(ani, SIGNAL(finished()), this, SLOT(slotStart()));
+}
+
+void QGameDayInterface::slotStart()
+{
+    if (cardPlantMapper != nullptr) delete cardPlantMapper;
+    cardPlantMapper = new QSignalMapper(this);
+    QObject::connect(cardPlantMapper, SIGNAL(mapped(int)), this, SLOT(slotPlant(int)));
+    for (int i = 0; i < CARD_CAN_USE; ++i)
+    {
+        QObject::connect(cardsCanUse[i], SIGNAL(clicked(bool)), cardPlantMapper, SLOT(map()));
+        cardPlantMapper->setMapping(cardsCanUse[i], i);
+    }
+
+    timerID = this->startTimer(TIME_ELAPSE);
 }
 
 void QGameDayInterface::slotClickSunshine(int label)
@@ -544,3 +644,26 @@ void QGameDayInterface::slotMoveCard(int pos)
     }
 }
 
+void QGameDayInterface::slotClickStart()
+{
+    if (cardsTop != CARD_CAN_USE - 1)
+    {
+        QMessageBox* msgbox = new QMessageBox(this);
+        msgbox->setText("卡片不足，请继续选择！");
+        msgbox->setIcon(QMessageBox::Warning);
+        msgbox->setStandardButtons(QMessageBox::Ok);
+        if (msgbox->exec() == QMessageBox::Ok)
+        {
+            delete msgbox;
+        }
+    }
+    else
+    {
+        slotBacktoSceneAnimation();
+    }
+}
+
+void QGameDayInterface::slotPlant(int label)
+{
+
+}

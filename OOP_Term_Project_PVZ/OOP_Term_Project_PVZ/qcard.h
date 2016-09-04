@@ -24,6 +24,7 @@ protected:
 
 public:
     void initialize();
+    bool isInitialPosition() const;
     void setInitialPosition();
     void updateInfo(int sunshine);
     bool canGetPlant();
