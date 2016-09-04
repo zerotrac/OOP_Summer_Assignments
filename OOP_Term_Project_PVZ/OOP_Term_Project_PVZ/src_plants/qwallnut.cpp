@@ -56,7 +56,7 @@ bool QWallnut::isMushroom()
 
 bool QWallnut::canLitUp()
 {
-    return true;
+    return false;
 }
 
 void QWallnut::updateInfo()

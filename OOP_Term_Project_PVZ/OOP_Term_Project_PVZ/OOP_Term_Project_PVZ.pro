@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     src_plants/qsunflower.cpp \
     src_plants/qtorchwood.cpp \
     src_plants/qwallnut.cpp \
-    src_weapons/qpeaweapon.cpp
+    src_weapons/qpeaweapon.cpp \
+    qcard.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
@@ -51,7 +52,8 @@ HEADERS  += mainwindow.h \
     src_plants/qsunflower.h \
     src_plants/qtorchwood.h \
     src_plants/qwallnut.h \
-    src_weapons/qpeaweapon.h
+    src_weapons/qpeaweapon.h \
+    qcard.h
 
 FORMS    += mainwindow.ui \
     paireliminate.ui \

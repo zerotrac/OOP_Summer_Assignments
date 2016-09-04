@@ -8,49 +8,24 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    this->setAutoFillBackground(true);
+    sunshineMapper = nullptr;
+    gamePreparation();
+    slotCardSelectAnimation();
+    //playStartAnimation();
+
+    /*this->setAutoFillBackground(true);
     QPalette palette;
     QPixmap backgroundBig("Resources/interface/day_background.jpg");
     QPixmap background = backgroundBig.copy(120, 0, 900, 600);
     palette.setBrush(QPalette::Background, QBrush(background));
-    this->setPalette(palette);
+    this->setPalette(palette);*/
 
-    plantsID.clear();
-    enemiesID.clear();
-    weapons.clear();
-    for (QPlant* plant: plants)
-    {
-        if (plant != nullptr) delete plant;
-    }
-    for (QPlant* enemy: enemies)
-    {
-        if (enemy != nullptr) delete enemy;
-    }
-    for (QSunshine* sunshine: sunshines)
-    {
-        if (sunshine != nullptr)
-        {
-            QObject::disconnect(sunshine);
-            delete sunshine;
-        }
-    }
-    plants.clear();
-    enemies.clear();
-    sunshines.clear();
 
-    sunshineMapper = nullptr;
-    if (sunshineMapper != nullptr)
-    {
-        QObject::disconnect(sunshineMapper);
-        delete sunshineMapper;
-    }
-    sunshineMapper = new QSignalMapper(this);
-    QObject::connect(sunshineMapper, SIGNAL(mapped(int)), this, SLOT(slotClickSunshine(int)));
-    plantLabel = -1;
-    enemyLabel = -1;
-    sunshineLabel = -1;
-    curSunshine = 0;
 
+
+
+
+/*
     qDebug() << "good1";
 
     for (int i = 0; i < 5; ++i)
@@ -89,7 +64,7 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
         }
     }
 
-    timerID = this->startTimer(TIME_ELAPSE);
+    timerID = this->startTimer(TIME_ELAPSE);*/
 }
 
 QGameDayInterface::~QGameDayInterface()
@@ -277,6 +252,188 @@ QString QGameDayInterface::getSplitColor(double _per)
     if (p.size() == 1) p = "0" + p;
     if (q.size() == 1) q = "0" + q;
     return "#" + p + q + "00";
+}
+
+void QGameDayInterface::gamePreparation()
+{
+    plantsID.clear();
+    enemiesID.clear();
+    weapons.clear();
+    for (QPlant* plant: plants)
+    {
+        if (plant != nullptr) delete plant;
+    }
+    for (QPlant* enemy: enemies)
+    {
+        if (enemy != nullptr) delete enemy;
+    }
+    for (QSunshine* sunshine: sunshines)
+    {
+        if (sunshine != nullptr)
+        {
+            QObject::disconnect(sunshine);
+            delete sunshine;
+        }
+    }
+    plants.clear();
+    enemies.clear();
+    sunshines.clear();
+
+    plantLabel = -1;
+    enemyLabel = -1;
+    sunshineLabel = -1;
+    curSunshine = 0;
+
+    if (sunshineMapper != nullptr) delete sunshineMapper;
+    sunshineMapper = new QSignalMapper(this);
+    QObject::connect(sunshineMapper, SIGNAL(mapped(int)), this, SLOT(slotClickSunshine(int)));
+}
+
+void QGameDayInterface::playStartAnimation()
+{
+    QParallelAnimationGroup *startAni = new QParallelAnimationGroup(this);
+    QPropertyAnimation *propAni;
+    QLabel* background = new QLabel(this);
+    QPixmap backPic("Resources/interface/day_background.jpg");
+    background->setFixedSize(backPic.size());
+    background->setPixmap(backPic);
+    propAni = new QPropertyAnimation(background, "pos", this);
+    propAni->setDuration(4000);
+    propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
+    propAni->setKeyValueAt(0., QPoint(0, 0));
+    propAni->setKeyValueAt(0.5, QPoint(0, 0));
+    propAni->setKeyValueAt(1., QPoint(-500, 0));
+    startAni->addAnimation(propAni);
+
+    QTime t = QTime::currentTime();
+    qsrand(t.msec() + t.second() * 1000);
+
+    int thres = START_ZOMBIE_COUNT;
+    int p[thres];
+    int q[thres];
+    while (1)
+    {
+        for (int i = 0; i < thres; ++i)
+        {
+            p[i] = qrand() % 250 + 500;
+            q[i] = qrand() % 450;
+        }
+        bool flag = true;
+        for (int i = 0; i < thres - 1; ++i)
+        {
+            for (int j = i + 1; j < thres; ++j)
+            {
+                if (std::abs(p[i] - p[j]) < 10 || std::abs(q[i] - q[j]) < 10)
+                {
+                    flag = false;
+                    break;
+                }
+            }
+            if (!flag) break;
+        }
+        if (flag) break;
+    }
+    for (int i = 0; i < thres - 1; ++i)
+    {
+        for (int j = i + 1; j < thres; ++j)
+        {
+            if (q[i] > q[j])
+            {
+                std::swap(p[i], p[j]);
+                std::swap(q[i], q[j]);
+            }
+        }
+    }
+
+    for (int i = 0; i < thres; ++i)
+    {
+        QLabel* zombie = new QLabel(this);
+        QMovie* zombieMov = new QMovie("Resources/zombies/zombie/laugh.gif");
+        zombieMov->start();
+        zombie->setFixedSize(zombieMov->currentPixmap().size());
+        zombie->setMovie(zombieMov);
+        propAni = new QPropertyAnimation(zombie, "pos", this);
+        propAni->setDuration(4000);
+        propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
+        propAni->setKeyValueAt(0.0, QPoint(p[i] + 500, 0));
+        propAni->setKeyValueAt(0.5, QPoint(p[i] + 500, q[i]));
+        propAni->setKeyValueAt(1.0, QPoint(p[i], q[i]));
+        startAni->addAnimation(propAni);
+    }
+
+
+    /*propAni = new QPropertyAnimation(lb, "pos", this);
+    propAni->setDuration(2000);
+    propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
+    propAni->setKeyValueAt(0., QPoint(0, 0));
+    propAni->setKeyValueAt(1., QPoint(-500, 0));
+    seqAni->addAnimation(propAni);*/
+    /*propAni = new QPropertyAnimation(ui->widgetCardBack, "pos", this);
+    propAni->setDuration(250);
+    propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
+    propAni->setKeyValueAt(0., QPoint(0, -85));
+    propAni->setKeyValueAt(1., QPoint(0, 0));
+    seqAni->addAnimation(propAni);
+    seqAni->addPause(2000);
+    propAni = new QPropertyAnimation(lb, "pos", this);
+    propAni->setDuration(1500);
+    propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
+    propAni->setKeyValueAt(0., QPoint(-500, 0));
+    propAni->setKeyValueAt(1., QPoint(-120, 0));
+    seqAni->addAnimation(propAni);*/
+    QAbstractAnimation* ani = startAni;
+    ani->start(QAbstractAnimation::DeleteWhenStopped);
+    QObject::connect(ani, SIGNAL(finished()), this, SLOT(slotCardSelectAnimation()));
+}
+
+void QGameDayInterface::slotCardSelectAnimation()
+{
+    qDebug() << "good1";
+    QParallelAnimationGroup *selectAni = new QParallelAnimationGroup(this);
+    QPropertyAnimation *propAni;
+    qDebug() << "good2";
+    QLabel* up = new QLabel(this);
+    QPixmap upPic("Resources/interface/card_up.png");
+    up->setFixedSize(upPic.size());
+    up->setPixmap(upPic);
+    up->show();
+
+    QLabel* down = new QLabel(this);
+    QPixmap downPic0("Resources/interface/card_down.png");
+    QPixmap downPic = downPic0.scaled(downPic0.size() * 0.93);
+    down->setFixedSize(downPic.size());
+    down->setPixmap(downPic);
+    down->show();
+
+    propAni = new QPropertyAnimation(up, "pos", this);
+    //propAni->setDuration(2200);
+    propAni->setDuration(0);
+    propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
+    propAni->setKeyValueAt(0.0, QPoint(0, -up->height()));
+    propAni->setKeyValueAt(1.0 - 100.0 / 2200, QPoint(0, -up->height()));
+    propAni->setKeyValueAt(1.0, QPoint(0, 0));
+    selectAni->addAnimation(propAni);
+
+    propAni = new QPropertyAnimation(down, "pos", this);
+    //propAni->setDuration(2200);
+    propAni->setDuration(0);
+    propAni->setEasingCurve(QEasingCurve(QEasingCurve::InOutCubic));
+    propAni->setKeyValueAt(0.0, QPoint(0, WINDOW_HEIGHT));
+    propAni->setKeyValueAt(1.0 - 100.0 / 2200, QPoint(0, WINDOW_HEIGHT));
+    propAni->setKeyValueAt(1.0, QPoint(0, WINDOW_HEIGHT - down->height()));
+    selectAni->addAnimation(propAni);
+
+    QAbstractAnimation* ani = selectAni;
+    ani->start(QAbstractAnimation::DeleteWhenStopped);
+
+
+    QCard* card[7];
+    for (int i = 0; i < 7; ++i)
+    {
+        card[i] = new QCard();
+        card[i]->setParent(this);
+        card[i]->setGeometry(81 + i * 50, 10, 0, 0);
+    }
 }
 
 void QGameDayInterface::slotClickSunshine(int label)

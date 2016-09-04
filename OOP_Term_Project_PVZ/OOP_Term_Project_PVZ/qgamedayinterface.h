@@ -6,6 +6,11 @@
 #include <QPaintEvent>
 #include <QTimerEvent>
 #include <QSignalMapper>
+#include <QPropertyAnimation>
+#include <QParallelAnimationGroup>
+#include <QElapsedTimer>
+#include <QTime>
+#include <QFont>
 #include <QDebug>
 #include <vector>
 #include <unordered_set>
@@ -13,6 +18,7 @@
 #include "qzombie.h"
 #include "qweapon.h"
 #include "qsunshine.h"
+#include "qcard.h"
 #include "src_plants/qpeashooter.h"
 #include "src_plants/qsnowpea.h"
 #include "src_plants/qdoublepea.h"
@@ -54,9 +60,12 @@ private:
     void paintEvent(QPaintEvent* event);
     void timerEvent(QTimerEvent *event);
     QString getSplitColor(double per);
+    void gamePreparation();
+    void playStartAnimation();
 
 private slots:
     void slotClickSunshine(int);
+    void slotCardSelectAnimation();
 
 private:
     Ui::QGameDayInterface *ui;
