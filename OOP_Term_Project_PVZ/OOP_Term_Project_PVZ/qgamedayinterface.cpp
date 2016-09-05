@@ -32,6 +32,28 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
     down->setFixedSize(downPic.size());
     down->setPixmap(downPic);
 
+    QPixmap sb0("Resources/interface/shovel_back.png");
+    QPixmap sh0("Resources/interface/shovel.png");
+    sb0 = sb0.scaled(QSize(sb0.width() * 1.30, sb0.height() * 1.47));
+
+    shovelBack = new QLabel(this);
+    shovelBack->setFixedSize(sb0.size());
+    shovelBack->setGeometry(445, 0, 0, 0);
+    shovelBack->setPixmap(sb0);
+
+    shovel = new QPushButton(this);
+    shovel->setMask(sh0.mask());
+    shovel->setFixedSize(sh0.size());
+    shovel->setGeometry(453, 9, 0, 0);
+    shovel->setCursor(Qt::PointingHandCursor);
+    shovel->setStyleSheet("QPushButton {border-image: url(Resources/interface/shovel.png); border-style: none;}");
+    QObject::connect(shovel, SIGNAL(clicked(bool)), this, SLOT(slotShovel()));
+
+    shovelPic = new QLabel(this);
+    shovelPic->setFixedSize(sh0.size());
+    shovelPic->setGeometry(453, 9, 0, 0);
+    shovelPic->setPixmap(sh0);
+
     picSunshine.load("Resources/sunshine/sun.gif");
     picSunshine = picSunshine.scaled(picSunshine.width() * 0.75, picSunshine.height() * 0.75);
     showSunshine = new QLabel(this);
@@ -110,7 +132,7 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
             plants.push_back(plt);
         }
     }*/
-    for (int i = 0; i < 5; ++i)
+    /*for (int i = 0; i < 5; ++i)
     {
         for (int j = 7; j < 9; ++j)
         {
@@ -123,7 +145,7 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
             enemiesID.insert(enemyLabel);
             enemies.push_back(plt);
         }
-    }
+    }*/
 }
 
 QGameDayInterface::~QGameDayInterface()
@@ -135,41 +157,66 @@ void QGameDayInterface::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
     {
-        if (mouseShadow->isHidden()) return;
-
-        QPoint p = this->mapFromGlobal(this->cursor().pos());
-        bool ok = false;
-        for (int i = 0; i < 5; ++i)
+        if (!mouseShadow->isHidden())
         {
-            for (int j = 0; j < 9; ++j)
+            QPoint p = this->mapFromGlobal(this->cursor().pos());
+            bool ok = false;
+            for (int i = 0; i < 5; ++i)
             {
-                if (p.x() >= 140 + j * 80 && p.x() <= 220 + j * 80 && p.y() >= 75 + i * 95 && p.y() <= 170 + i * 95)
+                for (int j = 0; j < 9; ++j)
                 {
-                    ++plantLabel;
-                    QPlant* plt = cardsCanUse[mouseLabel]->getPlant(plantLabel);
-                    qDebug() << "good generate!" << plt->width() << plt->height();
-                    plt->setAxis(140 + j * 80, 170 + i * 95);
-                    plt->setParent(this);
-                    plt->show();
-                    plantsID.insert(plantLabel);
-                    plants.push_back(plt);
-                    curSunshine -= cardsCanUse[mouseLabel]->sunshineCost;
-                    ok = true;
+                    if (p.x() >= 140 + j * 80 && p.x() <= 220 + j * 80 && p.y() >= 75 + i * 95 && p.y() <= 170 + i * 95)
+                    {
+                        ++plantLabel;
+                        QPlant* plt = cardsCanUse[mouseLabel]->getPlant(plantLabel);
+                        qDebug() << "good generate!" << plt->width() << plt->height();
+                        plt->setAxis(140 + j * 80, 170 + i * 95);
+                        plt->setParent(this);
+                        plt->show();
+                        plantsID.insert(plantLabel);
+                        plants.push_back(plt);
+                        curSunshine -= cardsCanUse[mouseLabel]->sunshineCost;
+                        ok = true;
+                        break;
+                    }
+                    if (ok) break;
+                }
+            }
+            mousePic->hide();
+            mouseShadow->hide();
+            mouseLabel = -1;
+        }
+        else if (shovelInHand)
+        {
+            qDebug() << "shovel in hand";
+            QPoint p = this->mapFromGlobal(this->cursor().pos());
+            for (int plantID: plantsID)
+            {
+                QPlant* plant = plants[plantID];
+                if (p.x() >= plant->x() && p.x() <= plant->x() + plant->width() && p.y() >= plant->y() && p.y() <= plant->y() + plant->height())
+                {
+                    delete plants[plantID];
+                    plantsID.erase(plantID);
                     break;
                 }
-                if (ok) break;
             }
         }
-
-        mousePic->hide();
-        mouseShadow->hide();
-        mouseLabel = -1;
+        shovel->setGeometry(453, 9, 0, 0);
+        if (timerID != -1) shovel->show();
+        shovelPic->setGeometry(453, 9, 0, 0);
+        shovelPic->hide();
+        shovelInHand = false;
     }
     else if (event->button() == Qt::RightButton)
     {
         mousePic->hide();
         mouseShadow->hide();
         mouseLabel = -1;
+        shovel->setGeometry(453, 9, 0, 0);
+        if (timerID != -1) shovel->show();
+        shovelPic->setGeometry(453, 9, 0, 0);
+        shovelPic->hide();
+        shovelInHand = false;
     }
 }
 
@@ -193,6 +240,10 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
         curSunshine -= 100;
         if (curSunshine < 0) curSunshine = 0;
     }
+    else if (key == Qt::Key_H)
+    {
+        giveHP = 1 - giveHP;
+    }
     else if (key == Qt::Key_Escape)
     {
         if (timerID != -1) this->killTimer(timerID);
@@ -209,13 +260,15 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
         else
         {
             delete msgbox;
+            if (timerID != -1) timerID = this->startTimer(TIME_ELAPSE);
         }
-        if (timerID != -1) timerID = this->startTimer(TIME_ELAPSE);
     }
 }
 
 void QGameDayInterface::paintEvent(QPaintEvent *event)
 {
+    if (!giveHP) return;
+
     QPainter* painter = new QPainter(this);
     for (int plantID: plantsID)
     {
@@ -254,6 +307,24 @@ void QGameDayInterface::paintEvent(QPaintEvent *event)
 
 void QGameDayInterface::timerEvent(QTimerEvent *event)
 {
+    --giveSunshine;
+    if (giveSunshine <= 0)
+    {
+        ++sunshineLabel;
+        QSunshine* sunshine = new QSunshine(sunshineLabel);
+        sunshine->setGenerateID(-1);
+        int px = qrand() % 401 + 300;
+        sunshine->setAxis(px, sunshine->height());
+        sunshine->setParent(this);
+        sunshine->setDestination(px, WINDOW_HEIGHT - sunshine->height() * 2);
+        sunshine->setSpeed(0, 3);
+        sunshinesID.insert(sunshineLabel);
+        sunshines.push_back(sunshine);
+        QObject::connect(sunshine, SIGNAL(clicked(bool)), sunshineMapper, SLOT(map()));
+        sunshineMapper->setMapping(sunshine, sunshineLabel);
+        giveSunshine = qrand() % (3000 / TIME_ELAPSE + 1) + 9000 / TIME_ELAPSE;
+    }
+
     if (mouseLabel != -1)
     {
         QPoint p = this->mapFromGlobal(this->cursor().pos());
@@ -292,14 +363,17 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
         }
     }
 
+    if (shovelInHand)
+    {
+        QPoint p = this->mapFromGlobal(this->cursor().pos());
+        shovelPic->setGeometry(p.x() - 15, p.y() - shovel->height() / 2, 0, 0);
+    }
+
     if (event->timerId() == timerID)
     {
         showSunshineNum->setText(QString::number(curSunshine));
         showSunshineNum->setGeometry(40 - showSunshineNum->text().length() * 4, 62, 0, 0);
-        showSunshineNum->show();
-        //showSunshineNum->raise();
-        showSunshine->show();
-        //showSunshine->raise();
+
         // 步骤：
         // 1. 武器与其它单位进行判定，僵尸销毁
         // 2. 武器移动，武器销毁
@@ -445,21 +519,14 @@ QString QGameDayInterface::getSplitColor(double _per)
 
 void QGameDayInterface::gamePreparation()
 {
+    for (int plantID: plantsID) delete plants[plantID];
+    for (int enemyID: enemiesID) delete enemies[enemyID];
+    for (int sunshineID: sunshinesID) delete sunshines[sunshineID];
     plantsID.clear();
     enemiesID.clear();
+    sunshinesID.clear();
+
     weapons.clear();
-    for (QPlant* plant: plants)
-    {
-        if (plant != nullptr) delete plant;
-    }
-    for (QPlant* enemy: enemies)
-    {
-        if (enemy != nullptr) delete enemy;
-    }
-    for (QSunshine* sunshine: sunshines)
-    {
-        if (sunshine != nullptr) delete sunshine;
-    }
     plants.clear();
     enemies.clear();
     sunshines.clear();
@@ -467,6 +534,7 @@ void QGameDayInterface::gamePreparation()
     plantLabel = -1;
     enemyLabel = -1;
     sunshineLabel = -1;
+    shovelInHand = false;
     curSunshine = 50;
 
     if (sunshineMapper != nullptr) delete sunshineMapper;
@@ -476,6 +544,7 @@ void QGameDayInterface::gamePreparation()
     if (cardSelectionMapper != nullptr) delete cardSelectionMapper;
     cardSelectionMapper = new QSignalMapper(this);
     QObject::connect(cardSelectionMapper, SIGNAL(mapped(int)), this, SLOT(slotMoveCard(int)));
+
     for (int i = 0; i < CARD_HEIGHT_COUNT; ++i)
     {
         for (int j = 0; j < CARD_WIDTH_COUNT; ++j)
@@ -501,6 +570,9 @@ void QGameDayInterface::gamePreparation()
     startButton->hide();
     showSunshineNum->hide();
     showSunshine->hide();
+    shovel->hide();
+    shovelBack->hide();
+    shovelPic->hide();
 
     for (int i = 0; i < START_ZOMBIE_COUNT; ++i)
     {
@@ -509,8 +581,9 @@ void QGameDayInterface::gamePreparation()
 
     mouseLabel = -1;
     timerID = -1;
-
-    playStartAnimation();
+    giveSunshine = qrand() % (1000 / TIME_ELAPSE + 1) + 5000 / TIME_ELAPSE;
+    //playStartAnimation();
+    slotCardSelectAnimation();
 }
 
 void QGameDayInterface::playStartAnimation()
@@ -721,6 +794,10 @@ void QGameDayInterface::slotStart()
         cardPlantMapper->setMapping(cardsCanUse[i], i);
     }
     background->hide();
+    showSunshineNum->show();
+    showSunshine->show();
+    shovel->show();
+    shovelBack->show();
     timerID = this->startTimer(TIME_ELAPSE);
 }
 
@@ -820,4 +897,12 @@ void QGameDayInterface::slotPlant(int label)
     mousePic->setGeometry(p.x() - mousePic->width() / 2, p.y() - mousePic->height() / 2, mousePic->width(), mousePic->height());
     mousePic->show();
     mousePic->raise();
+}
+
+void QGameDayInterface::slotShovel()
+{
+    shovel->hide();
+    shovelPic->show();
+    shovelPic->raise();
+    shovelInHand = true;
 }

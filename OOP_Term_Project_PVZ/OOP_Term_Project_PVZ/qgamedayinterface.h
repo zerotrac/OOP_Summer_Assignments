@@ -92,7 +92,15 @@ private:
     QLabel* mouseShadow;
     int mouseLabel;
 
+    QLabel* shovelBack;
+    QPushButton* shovel;
+    QLabel* shovelPic;
+    bool shovelInHand;
+
     int timerID;
+    int giveSunshine;
+    bool giveHP = false;
+
 
 private:
     void mousePressEvent(QMouseEvent* event);
@@ -119,6 +127,7 @@ private slots:
     void slotMoveCard(int);
     void slotClickStart();
     void slotPlant(int);
+    void slotShovel();
 
 private:
     Ui::QGameDayInterface *ui;

@@ -11,7 +11,7 @@ Logic::Logic(QObject *parent) : QObject(parent)
 
     makeConnections();
 
-    emit signalWidget(QString("main"));
+    emit signalWidget(QString("day"));
 }
 
 void Logic::makeConnections()
