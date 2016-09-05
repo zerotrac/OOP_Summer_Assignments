@@ -33,6 +33,7 @@ public:
     void updateInfo(int sunshine);
     bool canGetPlant();
     virtual QPlant* getPlant(int _id) = 0;
+    void setCdZero();
 };
 
 #endif // QCARD_H

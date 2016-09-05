@@ -87,7 +87,6 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
     mouseShadow->hide();
 
     gamePreparation();
-    slotCardSelectAnimation();
     //playStartAnimation();
 
     /*for (int i = 0; i < 5; ++i)
@@ -181,11 +180,37 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
     if (key == Qt::Key_A)
     {
         curSunshine += 100;
+    } 
+    else if (key == Qt::Key_C)
+    {
+        for (int i = 0; i < CARD_CAN_USE; ++i)
+        {
+            cardsCanUse[i]->setCdZero();
+        }
     }
     else if (key == Qt::Key_D)
     {
         curSunshine -= 100;
         if (curSunshine < 0) curSunshine = 0;
+    }
+    else if (key == Qt::Key_Escape)
+    {
+        if (timerID != -1) this->killTimer(timerID);
+        QMessageBox* msgbox = new QMessageBox(this);
+        msgbox->setIcon(QMessageBox::Question);
+        msgbox->setText("确定要退出冒险模式吗？");
+        msgbox->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+        if (msgbox->exec() == QMessageBox::Ok)
+        {
+            qDebug() << "msgbox ok";
+            delete msgbox;
+            emit signalWidget(QString("main"));
+        }
+        else
+        {
+            delete msgbox;
+        }
+        if (timerID != -1) timerID = this->startTimer(TIME_ELAPSE);
     }
 }
 
@@ -241,8 +266,9 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
                 if (p.x() >= 140 + j * 80 && p.x() <= 220 + j * 80 && p.y() >= 75 + i * 95 && p.y() <= 170 + i * 95)
                 {
                     bool ok0 = true;
-                    for (QPlant* plant: plants)
+                    for (int plantID: plantsID)
                     {
+                        QPlant* plant = plants[plantID];
                         if (plant->pos().x() == 140 + j * 80 && plant->pos().y() + plant->height() == 170 + i * 95)
                         {
                             ok0 = false;
@@ -482,6 +508,9 @@ void QGameDayInterface::gamePreparation()
     }
 
     mouseLabel = -1;
+    timerID = -1;
+
+    playStartAnimation();
 }
 
 void QGameDayInterface::playStartAnimation()

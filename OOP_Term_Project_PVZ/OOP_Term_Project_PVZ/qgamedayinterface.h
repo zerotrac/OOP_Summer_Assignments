@@ -100,8 +100,15 @@ private:
     void paintEvent(QPaintEvent* event);
     void timerEvent(QTimerEvent *event);
     QString getSplitColor(double per);
+
+public:
     void gamePreparation();
+
+private:
     void playStartAnimation();
+
+signals:
+    void signalWidget(QString);
 
 private slots:
     void slotClickSunshine(int);

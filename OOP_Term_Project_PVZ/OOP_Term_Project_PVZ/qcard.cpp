@@ -31,6 +31,9 @@ QCard::~QCard()
 void QCard::initialize()
 {
     cd = 0;
+    this->setEnabled(true);
+    labelCd->setGeometry(0, 0, 100 * 0.48, 0);
+    this->disconnect();
     setInitialPosition();
 }
 
@@ -68,3 +71,7 @@ bool QCard::canGetPlant()
     return (cd <= 0);
 }
 
+void QCard::setCdZero()
+{
+    cd = 0;
+}

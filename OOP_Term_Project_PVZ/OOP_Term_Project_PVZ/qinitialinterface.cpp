@@ -68,6 +68,7 @@ void QInitialInterface::makeConnections()
 
     QObject::connect(buttonAdventure, SIGNAL(pressed()), this, SLOT(slotPressA()));
     QObject::connect(buttonAdventure, SIGNAL(released()), this, SLOT(slotReleaseA()));
+    QObject::connect(buttonAdventure, SIGNAL(clicked(bool)), this, SLOT(slotAdventure()));
     QObject::connect(buttonWisdom, SIGNAL(pressed()), this, SLOT(slotPressW()));
     QObject::connect(buttonWisdom, SIGNAL(released()), this, SLOT(slotReleaseW()));
     QObject::connect(buttonMini, SIGNAL(pressed()), this, SLOT(slotPressM()));
@@ -127,6 +128,11 @@ void QInitialInterface::slotQuit()
     {
         msgboxQuit->hide();
     }
+}
+
+void QInitialInterface::slotAdventure()
+{
+    emit signalWidget(QString("day"));
 }
 
 void QInitialInterface::slotMini()
