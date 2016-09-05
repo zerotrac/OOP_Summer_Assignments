@@ -46,7 +46,11 @@ bool QCommonZombie::canAttack(QUnit *unit)
 std::vector<QWeapon*> QCommonZombie::attack()
 {
     std::vector<QWeapon*> weapons;
-    weapons.push_back(new QHandWeapon(100 / (1000 / TIME_ELAPSE)));
+    QWeapon* wp = new QHandWeapon(100 / (1000 / TIME_ELAPSE));
+    wp->setFixedSize(40, 10);
+    QPoint point = this->getCenter();
+    wp->setAxis(point.x() - 40, point.y() + 10);
+    weapons.push_back(wp);
     cd = baseCd * 1;
     attacked = true;
     return weapons;
@@ -72,5 +76,5 @@ void QCommonZombie::updateInfo()
 
 QPoint QCommonZombie::getCenter() const
 {
-    return QPoint(this->pos().x() + this->width() / 2, this->pos().y() + this->height() / 2);
+    return QPoint(this->pos().x() + this->width() / 2, this->pos().y() + this->height() / 3 * 2);
 }

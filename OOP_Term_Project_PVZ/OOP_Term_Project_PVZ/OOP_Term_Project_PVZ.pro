@@ -45,7 +45,10 @@ SOURCES += main.cpp\
     src_zombies/qcommonzombie.cpp \
     src_weapons/qhandweapon.cpp \
     src_zombies/qbucketheadzombie.cpp \
-    src_zombies/qconeheadzombie.cpp
+    src_zombies/qconeheadzombie.cpp \
+    src_weapons/qcherryweapon.cpp \
+    src_plants/qcherrybomb.cpp \
+    src_cards/qcherrybombcard.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
@@ -79,7 +82,10 @@ HEADERS  += mainwindow.h \
     src_zombies/qcommonzombie.h \
     src_weapons/qhandweapon.h \
     src_zombies/qbucketheadzombie.h \
-    src_zombies/qconeheadzombie.h
+    src_zombies/qconeheadzombie.h \
+    src_weapons/qcherryweapon.h \
+    src_plants/qcherrybomb.h \
+    src_cards/qcherrybombcard.h
 
 FORMS    += mainwindow.ui \
     paireliminate.ui \

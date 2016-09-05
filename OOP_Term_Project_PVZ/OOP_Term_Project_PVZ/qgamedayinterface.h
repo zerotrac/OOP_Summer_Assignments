@@ -24,16 +24,6 @@
 #include "qweapon.h"
 #include "qsunshine.h"
 #include "qcard.h"
-
-#include "src_plants/qdoublepea.h"
-#include "src_plants/qgatlingpea.h"
-#include "src_plants/qpeashooter.h"
-#include "src_plants/qsnowpea.h"
-#include "src_plants/qsunflower.h"
-#include "src_plants/qtorchwood.h"
-#include "src_plants/qwallnut.h"
-#include "src_plants/qtallnut.h"
-
 #include "src_zombies/qcommonzombie.h"
 #include "src_zombies/qconeheadzombie.h"
 #include "src_zombies/qbucketheadzombie.h"
@@ -46,6 +36,7 @@
 #include "src_cards/qtorchwoodcard.h"
 #include "src_cards/qwallnutcard.h"
 #include "src_cards/qtallnutcard.h"
+#include "src_cards/qcherrybombcard.h"
 
 namespace Ui {
 class QGameDayInterface;

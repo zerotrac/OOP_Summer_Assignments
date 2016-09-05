@@ -26,5 +26,5 @@ bool QHandWeapon::inRange(QUnit *unit)
 
 void QHandWeapon::updateInfo()
 {
-
+    --duration;
 }

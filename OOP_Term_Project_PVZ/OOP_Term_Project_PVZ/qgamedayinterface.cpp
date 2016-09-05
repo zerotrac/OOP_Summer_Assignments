@@ -93,6 +93,7 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
     cards[0][5] = new QWallnutCard(5); cards[0][5]->setParent(this);
     cards[0][6] = new QTorchwoodCard(6); cards[0][6]->setParent(this);
     cards[0][7] = new QTallnutCard(7); cards[0][7]->setParent(this);
+    cards[1][0] = new QCherryBombCard(8); cards[1][0]->setParent(this);
 
     for (int i = 0; i < START_ZOMBIE_COUNT; ++i)
     {
@@ -536,7 +537,6 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
                 std::vector<QWeapon*> wps = plant->attack();
                 for (QWeapon* wp: wps)
                 {
-                    wp->setAxis(plant->pos().x() + plant->width() / 3, plant->pos().y() + plant->height() / 2);
                     wp->setParent(this);
                     plantWeapons.insert(wp);
                 }
@@ -573,9 +573,6 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
                 std::vector<QWeapon*> wps = enemy->attack();
                 for (QWeapon* wp: wps)
                 {
-                    QPoint point = enemy->getCenter();
-                    wp->setFixedSize(40, 10);
-                    wp->setAxis(point.x() - 40, point.y() + 10);
                     wp->setParent(this);
                     enemyWeapons.insert(wp);
                 }

@@ -40,7 +40,9 @@ std::vector<QWeapon*> QGatlingPea::attack()
 {
     ++shell;
     std::vector<QWeapon*> weapons;
-    weapons.push_back(new QPeaWeapon(1));
+    QWeapon* wp = new QPeaWeapon(1);
+    wp->setAxis(this->pos().x() + this->width() / 3, this->pos().y() + this->height() / 2);
+    weapons.push_back(wp);
     if (shell % 4 == 0) cd = baseCd; else cd = 0.2 * 1000 / TIME_ELAPSE;
     return weapons;
 }

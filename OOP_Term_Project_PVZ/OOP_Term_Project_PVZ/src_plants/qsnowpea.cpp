@@ -40,7 +40,9 @@ std::vector<QWeapon*> QSnowPea::attack()
 {
     ++shell;
     std::vector<QWeapon*> weapons;
-    weapons.push_back(new QPeaWeapon(0));
+    QWeapon* wp = new QPeaWeapon(0);
+    wp->setAxis(this->pos().x() + this->width() / 3, this->pos().y() + this->height() / 2);
+    weapons.push_back(wp);
     cd = baseCd;
     return weapons;
 }

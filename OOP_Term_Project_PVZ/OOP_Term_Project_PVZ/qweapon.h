@@ -3,6 +3,7 @@
 
 #include <QLabel>
 #include <QPixmap>
+#include <QDebug>
 #include <vector>
 #include "const.h"
 #include "qunit.h"
