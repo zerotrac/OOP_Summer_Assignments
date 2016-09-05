@@ -24,6 +24,7 @@ public:
     virtual bool canLitUp() = 0; // 判断是不是火炬树桩
     virtual void updateInfo() = 0;
     virtual void setClicked() = 0;
+    virtual QPoint getCenter() const;
 };
 
 #endif // QPLANT_H

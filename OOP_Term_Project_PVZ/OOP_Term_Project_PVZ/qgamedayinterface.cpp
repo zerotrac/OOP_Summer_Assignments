@@ -224,6 +224,17 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
 {
     int key = event->key();
 
+    if (key == Qt::Key_1)
+    {
+        qDebug() << "here comes a zombie";
+        ++enemyLabel;
+        QZombie* enemy = new QCommonZombie(enemyLabel);
+        enemy->setAxis(WINDOW_WIDTH, 170);
+        enemy->setParent(this);
+        enemy->show();
+        enemiesID.insert(enemyLabel);
+        enemies.push_back(enemy);
+    }
     if (key == Qt::Key_A)
     {
         curSunshine += 100;
@@ -288,18 +299,18 @@ void QGameDayInterface::paintEvent(QPaintEvent *event)
     }
     for (int enemyID: enemiesID)
     {
-        QPlant* enemy = enemies[enemyID];
+        QZombie* enemy = enemies[enemyID];
         double per = 1.0 * enemy->getCurrentHP() / enemy->getMaxHP();
 
         QString color = getSplitColor(per);
         painter->setPen(Qt::NoPen);
         painter->setBrush(QColor(color));
-        QRectF rect2(enemy->pos().x(), enemy->pos().y() - 10, 1.0 * enemy->width() * per, 10);
+        QRectF rect2(enemy->pos().x() + enemy->hpS * enemy->width(), enemy->pos().y() - 10, enemy->hpL * enemy->width() * per, 10);
         painter->drawRect(rect2);
 
         painter->setPen(QPen(Qt::black, 1));
         painter->setBrush(Qt::NoBrush);
-        QRectF rect1(enemy->pos().x(), enemy->pos().y() - 10, enemy->width(), 10);
+        QRectF rect1(enemy->pos().x() + enemy->hpS * enemy->width(), enemy->pos().y() - 10, enemy->hpL * enemy->width(), 10);
         painter->drawRect(rect1);
     }
     delete painter;
@@ -391,7 +402,7 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
             }
             for (int enemyID: enemiesID) // 处理武器对僵尸
             {
-                QPlant* enemy = enemies[enemyID];
+                QZombie* enemy = enemies[enemyID];
                 if (!enemy->isDead() && !weapon->outofDuration() && weapon->inRange(enemy))
                 {
                     //qDebug() << "weapon location =" << weapon->pos().x() << weapon->pos().y();
@@ -448,7 +459,7 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
             bool ok = false;
             for (int enemyID: enemiesID) // 植物攻击判定
             {
-                QPlant* enemy = enemies[enemyID];
+                QZombie* enemy = enemies[enemyID];
                 ok |= plant->canAttack(enemy);
             }
             if (ok)
@@ -495,7 +506,7 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
         //qDebug() << "good6";
         for (int enemyID: enemiesID)
         {
-            QPlant* enemy = enemies[enemyID];
+            QZombie* enemy = enemies[enemyID];
             enemy->updateInfo();
         }
 

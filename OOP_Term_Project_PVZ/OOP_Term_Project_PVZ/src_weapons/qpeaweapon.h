@@ -5,6 +5,8 @@
 
 class QPeaWeapon: public QWeapon
 {
+    Q_OBJECT
+
 public:
     QPeaWeapon(int _currentPic);
     virtual ~QPeaWeapon();

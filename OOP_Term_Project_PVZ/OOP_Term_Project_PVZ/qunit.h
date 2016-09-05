@@ -58,10 +58,11 @@ public:
     virtual bool isZombie() = 0;
     bool isDead() const; // hp为0或者bullet为0时死亡
     virtual void updateInfo() = 0; // 每一帧更新单位信息
-    void setAxis(double dx, double dy); // 这里的(dx, dy)是左下角的坐标
+    virtual void setAxis(double dx, double dy); // 这里的(dx, dy)是左下角的坐标
     void beAttacked(int damage);
     int getCurrentHP() const;
     int getMaxHP() const;
+    virtual QPoint getCenter() const = 0;
 };
 
 #endif // QUNIT_H

@@ -34,6 +34,8 @@
 #include "src_plants/qwallnut.h"
 #include "src_plants/qtallnut.h"
 
+#include "src_zombies/qcommonzombie.h"
+
 #include "src_cards/qdoublepeacard.h"
 #include "src_cards/qgatlingpeacard.h"
 #include "src_cards/qpeashootercard.h"
@@ -62,7 +64,7 @@ private:
 
     std::unordered_set<QWeapon*> weapons;
     std::vector<QPlant*> plants;
-    std::vector<QPlant*> enemies;
+    std::vector<QZombie*> enemies;
     std::vector<QSunshine*> sunshines;
 
     QCard* cards[CARD_HEIGHT_COUNT][CARD_WIDTH_COUNT];

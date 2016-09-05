@@ -22,3 +22,8 @@ bool QPlant::isZombie()
 {
     return false;
 }
+
+QPoint QPlant::getCenter() const
+{
+    return QPoint(this->pos().x() + this->width() / 2, this->pos().y() + this->height() / 2);
+}
