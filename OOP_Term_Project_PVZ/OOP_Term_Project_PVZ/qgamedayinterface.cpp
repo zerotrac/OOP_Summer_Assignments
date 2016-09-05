@@ -229,13 +229,35 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
         qDebug() << "here comes a zombie";
         ++enemyLabel;
         QZombie* enemy = new QCommonZombie(enemyLabel);
-        enemy->setAxis(WINDOW_WIDTH, 170);
+        enemy->setAxis(WINDOW_WIDTH, 170 + 2 * 95);
         enemy->setParent(this);
         enemy->show();
         enemiesID.insert(enemyLabel);
         enemies.push_back(enemy);
     }
-    if (key == Qt::Key_A)
+    else if (key == Qt::Key_2)
+    {
+        qDebug() << "here comes a zombie";
+        ++enemyLabel;
+        QZombie* enemy = new QConeHeadZombie(enemyLabel);
+        enemy->setAxis(WINDOW_WIDTH, 170 + 2 * 95);
+        enemy->setParent(this);
+        enemy->show();
+        enemiesID.insert(enemyLabel);
+        enemies.push_back(enemy);
+    }
+    else if (key == Qt::Key_3)
+    {
+        qDebug() << "here comes a zombie";
+        ++enemyLabel;
+        QZombie* enemy = new QBucketHeadZombie(enemyLabel);
+        enemy->setAxis(WINDOW_WIDTH, 170 + 2 * 95);
+        enemy->setParent(this);
+        enemy->show();
+        enemiesID.insert(enemyLabel);
+        enemies.push_back(enemy);
+    }
+    else if (key == Qt::Key_A)
     {
         curSunshine += 100;
     } 
@@ -390,7 +412,7 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
         // 2. 武器移动，武器销毁
         // 3. 植物攻击判定
         // 4. 僵尸攻击判定，植物销毁
-        for (QWeapon* weapon: weapons) // 处理武器
+        for (QWeapon* weapon: plantWeapons) // 处理武器
         {
             for (int plantID: plantsID) // 处理火炬树桩对武器的作用
             {
@@ -405,13 +427,28 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
                 QZombie* enemy = enemies[enemyID];
                 if (!enemy->isDead() && !weapon->outofDuration() && weapon->inRange(enemy))
                 {
-                    //qDebug() << "weapon location =" << weapon->pos().x() << weapon->pos().y();
+                    qDebug() << "zombie be attacked";
                     enemy->beAttacked(weapon->atk);
                     weapon->decBullet();
                 }
             }
         }
-        //qDebug() << "good1";
+        for (QWeapon* weapon: enemyWeapons)
+        {
+            for (int plantID: plantsID)
+            {
+                QPlant* plant = plants[plantID];
+                qDebug() << "weapon =" << weapon->x() << weapon->y() << weapon->x() + weapon->width() << weapon->y() + weapon->height();
+                qDebug() << "plant = " << plant->x() << plant->y() << plant->x() + plant->width() << plant->y() + plant->height();
+                if (!plant->isDead() && !weapon->outofDuration() && weapon->inRange(plant))
+                {
+                    qDebug() << "plant be attacked";
+                    plant->beAttacked(weapon->atk);
+                    weapon->decBullet();
+                }
+            }
+        }
+
         for (auto iter = enemiesID.begin(); iter != enemiesID.end();) // 处理死亡的僵尸
         {
             if (enemies[*iter]->isDead())
@@ -424,8 +461,20 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
                 ++iter;
             }
         }
-        //qDebug() << "good2";
-        for (QWeapon* weapon: weapons) // 处理武器移动
+        for (auto iter = plantsID.begin(); iter != plantsID.end();)
+        {
+            if (plants[*iter]->isDead())
+            {
+                delete plants[*iter];
+                plantsID.erase(iter++);
+            }
+            else
+            {
+                ++iter;
+            }
+        }
+
+        for (QWeapon* weapon: plantWeapons) // 处理武器移动
         {
             if (!weapon->outofDuration())
             {
@@ -433,26 +482,46 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
                 weapon->show();
             }
         }
-        //qDebug() << "good3";
-        for (auto iter = weapons.begin(); iter != weapons.end();) // 一次性武器判定
+        for (QWeapon* weapon: enemyWeapons)
+        {
+            if (!weapon->outofDuration())
+            {
+                weapon->updateInfo();
+                weapon->show();
+            }
+        }
+
+        for (auto iter = plantWeapons.begin(); iter != plantWeapons.end();) // 一次性武器判定
         {
             if ((*iter)->outofDuration())
             {
                 delete (*iter);
-                weapons.erase(iter++);
+                plantWeapons.erase(iter++);
             }
             else
             {
                 ++iter;
             }
         }
-        //qDebug() << "good4";
+        for (auto iter = enemyWeapons.begin(); iter != enemyWeapons.end();)
+        {
+            if ((*iter)->outofDuration())
+            {
+                delete (*iter);
+                enemyWeapons.erase(iter++);
+            }
+            else
+            {
+                ++iter;
+            }
+        }
+
         for (QSunshine* sunshine: sunshines) // 处理阳光
         {
             sunshine->updateInfo();
             sunshine->show();
         }
-        //qDebug() << "good5";
+
         for (int plantID: plantsID) // 处理植物
         {
             QPlant* plant = plants[plantID];
@@ -467,9 +536,9 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
                 std::vector<QWeapon*> wps = plant->attack();
                 for (QWeapon* wp: wps)
                 {
-                    wp->setAxis(plant->pos().x() + plant->width() / 2, plant->pos().y() + plant->height() / 2);
+                    wp->setAxis(plant->pos().x() + plant->width() / 3, plant->pos().y() + plant->height() / 2);
                     wp->setParent(this);
-                    weapons.insert(wp);
+                    plantWeapons.insert(wp);
                 }
             }
 
@@ -488,31 +557,35 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
                 QObject::connect(sunshine, SIGNAL(clicked(bool)), sunshineMapper, SLOT(map()));
                 sunshineMapper->setMapping(sunshine, sunshineLabel);
             }
-
             plant->updateInfo();
         }
-        for (auto iter = plantsID.begin(); iter != plantsID.end();) // 一次性植物判定
-        {
-            if (plants[*iter]->isDead())
-            {
-                delete plants[*iter];
-                plantsID.erase(iter++);
-            }
-            else
-            {
-                ++iter;
-            }
-        }
-        //qDebug() << "good6";
         for (int enemyID: enemiesID)
         {
             QZombie* enemy = enemies[enemyID];
+            bool ok = false;
+            for (int plantID: plantsID)
+            {
+                QPlant* plant = plants[plantID];
+                ok |= enemy->canAttack(plant);
+            }
+            if (ok)
+            {
+                std::vector<QWeapon*> wps = enemy->attack();
+                for (QWeapon* wp: wps)
+                {
+                    QPoint point = enemy->getCenter();
+                    wp->setFixedSize(40, 10);
+                    wp->setAxis(point.x() - 40, point.y() + 10);
+                    wp->setParent(this);
+                    enemyWeapons.insert(wp);
+                }
+            }
             enemy->updateInfo();
         }
-
         for (QCard* card: cardsCanUse)
         {
             card->updateInfo(curSunshine);
+            card->raise();
         }
     }
     this->update();
@@ -537,7 +610,8 @@ void QGameDayInterface::gamePreparation()
     enemiesID.clear();
     sunshinesID.clear();
 
-    weapons.clear();
+    plantWeapons.clear();
+    enemyWeapons.clear();
     plants.clear();
     enemies.clear();
     sunshines.clear();
@@ -626,7 +700,7 @@ void QGameDayInterface::playStartAnimation()
         {
             for (int j = i + 1; j < thres; ++j)
             {
-                if (std::abs(p[i] - p[j]) < 15 || std::abs(q[i] - q[j]) < 15)
+                if (abs(p[i] - p[j]) < 15 || abs(q[i] - q[j]) < 15)
                 {
                     flag = false;
                     break;

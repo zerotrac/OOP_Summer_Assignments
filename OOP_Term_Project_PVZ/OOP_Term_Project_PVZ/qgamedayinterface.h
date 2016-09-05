@@ -35,6 +35,8 @@
 #include "src_plants/qtallnut.h"
 
 #include "src_zombies/qcommonzombie.h"
+#include "src_zombies/qconeheadzombie.h"
+#include "src_zombies/qbucketheadzombie.h"
 
 #include "src_cards/qdoublepeacard.h"
 #include "src_cards/qgatlingpeacard.h"
@@ -62,7 +64,8 @@ private:
     std::unordered_set<int> enemiesID;
     std::unordered_set<int> sunshinesID;
 
-    std::unordered_set<QWeapon*> weapons;
+    std::unordered_set<QWeapon*> plantWeapons;
+    std::unordered_set<QWeapon*> enemyWeapons;
     std::vector<QPlant*> plants;
     std::vector<QZombie*> enemies;
     std::vector<QSunshine*> sunshines;

@@ -19,6 +19,7 @@ public:
 protected:
     double posX;
     double posY;
+    bool attacked;
 
 private:
     int freezeDebuff; // 僵尸被冰冻，移动速度减少50%

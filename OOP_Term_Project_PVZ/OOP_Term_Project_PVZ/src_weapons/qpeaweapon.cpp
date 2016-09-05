@@ -28,7 +28,7 @@ bool QPeaWeapon::inRange(QUnit *unit)
     double centerX = this->pos().x() + this->width() / 2.0;
     double centerY = this->pos().y() + this->height() / 2.0;
     QPoint point = unit->getCenter();
-    if (point.x() - centerX >= -10 && point.x() - centerX <= 10 && std::abs(point.y() - centerY) < 30) return true;
+    if (std::abs(point.x() - centerX) <= 15 && std::abs(point.y() - centerY) <= 60) return true;
     return false;
 }
 

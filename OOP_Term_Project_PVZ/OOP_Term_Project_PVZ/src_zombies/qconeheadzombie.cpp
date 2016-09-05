@@ -1,9 +1,9 @@
-#include "qcommonzombie.h"
+#include "QConeheadzombie.h"
 
-QCommonZombie::QCommonZombie(int _id)
+QConeHeadZombie::QConeHeadZombie(int _id)
 {
     id = _id;
-    hp = baseHp = 200;
+    hp = baseHp = 560;
     cd = baseCd = 1;
     rng = baserng = 40;
     bullet = 99999999;
@@ -11,15 +11,21 @@ QCommonZombie::QCommonZombie(int _id)
     spdX = baseSpdX = -80.0 / (4.7 * 1000 / TIME_ELAPSE);
     weapon = nullptr;
 
-    countPic = 4;
-    for (int i = 0; i < countPic; ++i)
+    countPic = 6;
+    for (int i = 0; i < 2; ++i)
+    {
+        QMovie* dummy = new QMovie("Resources/zombies/coneheadzombie/" + QString::number(i) + ".gif");
+        dummy->start();
+        pics.push_back(dummy);
+    }
+    for (int i = 0; i < 4; ++i)
     {
         QMovie* dummy = new QMovie("Resources/zombies/commonzombie/" + QString::number(i) + ".gif");
         dummy->start();
         pics.push_back(dummy);
     }
     currentPic = 0;
-    this->setFixedSize(QPixmap("Resources/zombies/commonzombie/0.gif").size());
+    this->setFixedSize(QPixmap("Resources/zombies/coneheadzombie/0.gif").size());
     this->setMovie(pics[currentPic]);
 
     hpS = 0.40;
@@ -27,12 +33,12 @@ QCommonZombie::QCommonZombie(int _id)
     attacked = false;
 }
 
-QCommonZombie::~QCommonZombie()
+QConeHeadZombie::~QConeHeadZombie()
 {
 
 }
 
-bool QCommonZombie::canAttack(QUnit *unit)
+bool QConeHeadZombie::canAttack(QUnit *unit)
 {
     if (cd > 0) return false;
     if (unit->pos().x() > this->pos().x() + this->width()) return false;
@@ -43,7 +49,7 @@ bool QCommonZombie::canAttack(QUnit *unit)
     return true;
 }
 
-std::vector<QWeapon*> QCommonZombie::attack()
+std::vector<QWeapon*> QConeHeadZombie::attack()
 {
     std::vector<QWeapon*> weapons;
     weapons.push_back(new QHandWeapon(100 / (1000 / TIME_ELAPSE)));
@@ -52,16 +58,16 @@ std::vector<QWeapon*> QCommonZombie::attack()
     return weapons;
 }
 
-void QCommonZombie::updateInfo()
+void QConeHeadZombie::updateInfo()
 {
     --cd;
     if (attacked)
     {
-        if (hp <= 20) currentPic = 3; else currentPic = 1;
+        if (hp <= 20) currentPic = 5; else if (hp <= 180) currentPic = 3; else currentPic = 1;
     }
     else
     {
-        if (hp <= 20) currentPic = 2; else currentPic = 0;
+        if (hp <= 20) currentPic = 4; else if (hp <= 180) currentPic = 2; else currentPic = 0;
         posX += spdX;
         this->setGeometry(posX, posY, 0, 0);
     }
@@ -70,7 +76,7 @@ void QCommonZombie::updateInfo()
     attacked = false;
 }
 
-QPoint QCommonZombie::getCenter() const
+QPoint QConeHeadZombie::getCenter() const
 {
     return QPoint(this->pos().x() + this->width() / 2, this->pos().y() + this->height() / 2);
 }

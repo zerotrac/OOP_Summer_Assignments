@@ -1,16 +1,16 @@
-#ifndef QCOMMONZOMBIE_H
-#define QCOMMONZOMBIE_H
+#ifndef QCOREHEADZOMBIE_H
+#define QCOREHEADZOMBIE_H
 
 #include "qzombie.h"
 #include "src_weapons/qhandweapon.h"
 
-class QCommonZombie: public QZombie
+class QConeHeadZombie: public QZombie
 {
     Q_OBJECT
 
 public:
-    QCommonZombie(int _id);
-    virtual ~QCommonZombie();
+    QConeHeadZombie(int _id);
+    virtual ~QConeHeadZombie();
 
 public:
     virtual bool canAttack(QUnit*);
@@ -19,4 +19,4 @@ public:
     virtual QPoint getCenter() const;
 };
 
-#endif // QCOMMONZOMBIE_H
+#endif // QCONEHEADZOMBIE_H

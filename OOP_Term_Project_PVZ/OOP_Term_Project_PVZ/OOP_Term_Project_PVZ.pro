@@ -42,7 +42,10 @@ SOURCES += main.cpp\
     src_cards/qtorchwoodcard.cpp \
     src_plants/qtallnut.cpp \
     src_cards/qtallnutcard.cpp \
-    src_zombies/qcommonzombie.cpp
+    src_zombies/qcommonzombie.cpp \
+    src_weapons/qhandweapon.cpp \
+    src_zombies/qbucketheadzombie.cpp \
+    src_zombies/qconeheadzombie.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
@@ -73,7 +76,10 @@ HEADERS  += mainwindow.h \
     src_cards/qtorchwoodcard.h \
     src_plants/qtallnut.h \
     src_cards/qtallnutcard.h \
-    src_zombies/qcommonzombie.h
+    src_zombies/qcommonzombie.h \
+    src_weapons/qhandweapon.h \
+    src_zombies/qbucketheadzombie.h \
+    src_zombies/qconeheadzombie.h
 
 FORMS    += mainwindow.ui \
     paireliminate.ui \
