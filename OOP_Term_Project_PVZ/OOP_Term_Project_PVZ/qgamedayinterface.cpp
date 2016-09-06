@@ -94,6 +94,7 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
     cards[0][6] = new QTorchwoodCard(6); cards[0][6]->setParent(this);
     cards[0][7] = new QTallnutCard(7); cards[0][7]->setParent(this);
     cards[1][0] = new QCherryBombCard(8); cards[1][0]->setParent(this);
+    cards[1][1] = new QJalapenoCard(9); cards[1][1]->setParent(this);
 
     for (int i = 0; i < START_ZOMBIE_COUNT; ++i)
     {
@@ -228,35 +229,45 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
     if (key == Qt::Key_1)
     {
         qDebug() << "here comes a zombie";
-        ++enemyLabel;
-        QZombie* enemy = new QCommonZombie(enemyLabel);
-        enemy->setAxis(WINDOW_WIDTH, 170 + 2 * 95);
-        enemy->setParent(this);
-        enemy->show();
-        enemiesID.insert(enemyLabel);
-        enemies.push_back(enemy);
+        for (int i = 0; i < 5; ++i)
+        {
+            ++enemyLabel;
+            QZombie* enemy = new QCommonZombie(enemyLabel);
+            enemy->setAxis(WINDOW_WIDTH, 170 + i * 95);
+            enemy->setParent(this);
+            enemy->show();
+            enemiesID.insert(enemyLabel);
+            enemies.push_back(enemy);
+        }
+
     }
     else if (key == Qt::Key_2)
     {
         qDebug() << "here comes a zombie";
-        ++enemyLabel;
-        QZombie* enemy = new QConeHeadZombie(enemyLabel);
-        enemy->setAxis(WINDOW_WIDTH, 170 + 2 * 95);
-        enemy->setParent(this);
-        enemy->show();
-        enemiesID.insert(enemyLabel);
-        enemies.push_back(enemy);
+        for (int i = 0; i < 5; ++i)
+        {
+            ++enemyLabel;
+            QZombie* enemy = new QConeHeadZombie(enemyLabel);
+            enemy->setAxis(WINDOW_WIDTH, 170 + i * 95);
+            enemy->setParent(this);
+            enemy->show();
+            enemiesID.insert(enemyLabel);
+            enemies.push_back(enemy);
+        }
     }
     else if (key == Qt::Key_3)
     {
         qDebug() << "here comes a zombie";
-        ++enemyLabel;
-        QZombie* enemy = new QBucketHeadZombie(enemyLabel);
-        enemy->setAxis(WINDOW_WIDTH, 170 + 2 * 95);
-        enemy->setParent(this);
-        enemy->show();
-        enemiesID.insert(enemyLabel);
-        enemies.push_back(enemy);
+        for (int i = 0; i < 5; ++i)
+        {
+            ++enemyLabel;
+            QZombie* enemy = new QBucketHeadZombie(enemyLabel);
+            enemy->setAxis(WINDOW_WIDTH, 170 + i * 95);
+            enemy->setParent(this);
+            enemy->show();
+            enemiesID.insert(enemyLabel);
+            enemies.push_back(enemy);
+        }
     }
     else if (key == Qt::Key_A)
     {
@@ -277,6 +288,21 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
     else if (key == Qt::Key_H)
     {
         giveHP = 1 - giveHP;
+    }
+    else if (key == Qt::Key_J)
+    {
+        qDebug() << "here comes a jalapeno";
+        for (int i = 0; i < 5; ++i)
+        {
+            ++plantLabel;
+            qDebug() << "label = " << plantLabel;
+            QPlant* plant = new QJalapeno(plantLabel);
+            plant->setAxis(140, 170 + i * 95);
+            plant->setParent(this);
+            plant->show();
+            plantsID.insert(plantLabel);
+            plants.push_back(plant);
+        }
     }
     else if (key == Qt::Key_Escape)
     {

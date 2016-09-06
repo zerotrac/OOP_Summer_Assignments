@@ -8,7 +8,7 @@ QCherryBombCard::QCherryBombCard(int _id)
     QPixmap pic = QPixmap("Resources/plants/cherrybomb/static.gif").scaled(QSize(37, 37));
     labelPic->setPixmap(pic);
 
-    sunshineCost = 50;
+    sunshineCost = 150;
     labelTxt->setText(QString::number(sunshineCost));
 }
 

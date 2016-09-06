@@ -1,30 +1,25 @@
-#include "qpeaweapon.h"
+#include "qmushroomweapon.h"
 
-QPeaWeapon::QPeaWeapon(int _currentPic)
+QMushroomWeapon::QMushroomWeapon()
 {
     atk = 20;
     duration = 99999999;
     bullet = 1;
     spdX = 8;
     spdY = 0;
-    countPic = 3;
+    countPic = 1;
     for (int i = 0; i < countPic; ++i)
     {
-        QPixmap dummy("Resources/weapons/pea/" + QString::number(i) + ".gif");
+        QPixmap dummy("Resources/weapons/mushroom/" + QString::number(i) + ".gif");
         pics.push_back(dummy);
     }
-    currentPic = _currentPic;
+    currentPic = 0;
     this->setFixedSize(pics[0].size());
     this->setPixmap(pics[currentPic]);
 }
 
-QPeaWeapon::~QPeaWeapon()
+QMushroomWeapon::~QMushroomWeapon()
 {
-
-}
-
-bool QPeaWeapon::inRange(QUnit* unit)
-{   
     double centerX = this->pos().x() + this->width() / 2.0;
     double centerY = this->pos().y() + this->height() / 2.0;
     QPoint point = unit->getCenter();
@@ -32,9 +27,16 @@ bool QPeaWeapon::inRange(QUnit* unit)
     return false;
 }
 
-void QPeaWeapon::updateInfo()
+bool QMushroomWeapon::inRange(QUnit* unit)
 {
-    this->setGeometry(this->pos().x() + spdX, this->pos().y() + spdY, 0, 0);
-    if (currentPic == 2) atk = 40; else atk = 20;
+    double centerX = this->pos().x() + this->width() / 2.0;
+    double centerY = this->pos().y() + this->height() / 2.0;
+    QPoint point = unit->getCenter();
+    if (std::abs(point.x() - centerX) <= 15 && std::abs(point.y() - centerY) <= 30) return true;
+    return false;
 }
 
+void QMushroomWeapon::updateInfo()
+{
+    this->setGeometry(this->pos().x() + spdX, this->pos().y() + spdY, 0, 0);
+}

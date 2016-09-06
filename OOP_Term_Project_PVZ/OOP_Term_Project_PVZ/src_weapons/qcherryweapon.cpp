@@ -15,12 +15,11 @@ QCherryWeapon::~QCherryWeapon()
 
 }
 
-bool QCherryWeapon::inRange(QUnit *unit)
+bool QCherryWeapon::inRange(QUnit* unit)
 {
     double centerX = this->pos().x() + this->width() / 2.0;
     double centerY = this->pos().y() + this->height() / 2.0;
     QPoint point = unit->getCenter();
-    qDebug() << "range = (" << point.x() << point.y() << "), (" << centerX << " " << centerY << ")";
     if (std::max(std::abs(point.x() - centerX), std::abs(point.y() - centerY)) <= 120) return true;
     return false;
 }

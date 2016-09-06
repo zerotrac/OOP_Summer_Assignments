@@ -15,12 +15,12 @@ QHandWeapon::~QHandWeapon()
 
 }
 
-bool QHandWeapon::inRange(QUnit *unit)
+bool QHandWeapon::inRange(QUnit* unit)
 {
     double centerX = this->pos().x() + this->width() / 2.0;
     double centerY = this->pos().y() + this->height() / 2.0;
     QPoint point = unit->getCenter();
-    if (std::abs(point.x() - centerX) <= 40 && std::abs(point.y() - centerY) <= 60) return true;
+    if (std::abs(point.x() - centerX) <= 40 && std::abs(point.y() - centerY) <= 30) return true;
     return false;
 }
 
