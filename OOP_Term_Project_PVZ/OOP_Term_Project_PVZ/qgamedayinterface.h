@@ -27,6 +27,7 @@
 #include "src_zombies/qcommonzombie.h"
 #include "src_zombies/qconeheadzombie.h"
 #include "src_zombies/qbucketheadzombie.h"
+#include "src_zombies/qfootballzombie.h"
 
 #include "src_cards/qdoublepeacard.h"
 #include "src_cards/qgatlingpeacard.h"

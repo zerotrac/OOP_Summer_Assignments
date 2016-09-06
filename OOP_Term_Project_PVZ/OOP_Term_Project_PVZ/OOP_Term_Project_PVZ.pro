@@ -64,7 +64,8 @@ SOURCES += main.cpp\
     src_cards/qpotatominecard.cpp \
     src_weapons/qglobalweapon.cpp \
     src_plants/qiceshroom.cpp \
-    src_cards/qiceshroomcard.cpp
+    src_cards/qiceshroomcard.cpp \
+    src_zombies/qfootballzombie.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
@@ -117,7 +118,8 @@ HEADERS  += mainwindow.h \
     src_cards/qpotatominecard.h \
     src_weapons/qglobalweapon.h \
     src_plants/qiceshroom.h \
-    src_cards/qiceshroomcard.h
+    src_cards/qiceshroomcard.h \
+    src_zombies/qfootballzombie.h
 
 FORMS    += mainwindow.ui \
     paireliminate.ui \

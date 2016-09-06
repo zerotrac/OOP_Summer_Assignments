@@ -279,6 +279,20 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
             enemies.push_back(enemy);
         }
     }
+    else if (key == Qt::Key_4)
+    {
+        qDebug() << "here comes a zombie";
+        for (int i = 0; i < 5; ++i)
+        {
+            ++enemyLabel;
+            QZombie* enemy = new QFootballZombie(enemyLabel);
+            enemy->setAxis(WINDOW_WIDTH, 170 + i * 95);
+            enemy->setParent(this);
+            enemy->show();
+            enemiesID.insert(enemyLabel);
+            enemies.push_back(enemy);
+        }
+    }
     else if (key == Qt::Key_A)
     {
         curSunshine += 100;
