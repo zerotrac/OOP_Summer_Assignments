@@ -51,6 +51,7 @@ QInitialInterface::QInitialInterface(QWidget *parent) :
     buttonQuit->setGeometry(805, 505, 0, 0);
     buttonQuit->setStyleSheet(toStyleSheet("quit"));
 
+    msgboxOptions = new QMessageBox(QMessageBox::Information, "", "默认开启开发者模式，所以不用在这里选择。\n使用键盘进行开发者的调试。\n1：产生5个普通僵尸；\n2：产生5个路障僵尸；\n3：产生5个铁桶僵尸；\nA：增加100阳光；\nC：将所有植物冷却时间重置；\nD：减少100阳光；\nH：显示/隐藏生命值条；\nJ：使用火爆辣椒清场。", QMessageBox::Ok, this);
     msgboxHelp = new QMessageBox(QMessageBox::Information, "", "没有帮助。\n编写者：zerotrac\n开源代码：https://github.com/zerotrac/OOP_Summer_Assignments/tree/master/OOP_Term_Project_PVZ/OOP_Term_Project_PVZ", QMessageBox::Ok, this);
     msgboxQuit = new QMessageBox(QMessageBox::Warning, "", "确认要退出植物大战僵尸吗？", QMessageBox::Ok | QMessageBox::Cancel, this);
 
@@ -75,6 +76,7 @@ void QInitialInterface::makeConnections()
     QObject::connect(buttonMini, SIGNAL(released()), this, SLOT(slotReleaseM()));
     QObject::connect(buttonMini, SIGNAL(clicked(bool)), this, SLOT(slotMini()));
 
+    QObject::connect(buttonOptions, SIGNAL(clicked(bool)), msgboxOptions, SLOT(show()));
     QObject::connect(buttonHelp, SIGNAL(clicked(bool)), msgboxHelp, SLOT(show()));
     QObject::connect(buttonQuit, SIGNAL(clicked(bool)), this, SLOT(slotQuit()));
 }

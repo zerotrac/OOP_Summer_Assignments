@@ -55,7 +55,9 @@ SOURCES += main.cpp\
     src_weapons/qmushroomweapon.cpp \
     src_plants/qpuffshroom.cpp \
     src_cards/qpuffshroomcard.cpp \
-    qbuff.cpp
+    qbuff.cpp \
+    src_plants/qchomper.cpp \
+    src_cards/qchompercard.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
@@ -99,7 +101,9 @@ HEADERS  += mainwindow.h \
     src_weapons/qmushroomweapon.h \
     src_plants/qpuffshroom.h \
     src_cards/qpuffshroomcard.h \
-    qbuff.h
+    qbuff.h \
+    src_plants/qchomper.h \
+    src_cards/qchompercard.h
 
 FORMS    += mainwindow.ui \
     paireliminate.ui \

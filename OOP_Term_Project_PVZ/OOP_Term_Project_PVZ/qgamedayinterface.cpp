@@ -91,7 +91,7 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
     cards[0][3] = new QWallnutCard(3); cards[0][3]->setParent(this);
 
     cards[0][5] = new QSnowPeaCard(5); cards[0][5]->setParent(this);
-
+    cards[0][6] = new QChomperCard(6); cards[0][6]->setParent(this);
     cards[0][7] = new QDoublePeaCard(7);cards[0][7]->setParent(this);
 
     cards[1][0] = new QPuffShroomCard(8); cards[1][0]->setParent(this);
@@ -554,6 +554,7 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
         for (QSunshine* sunshine: sunshines) // 处理阳光
         {
             sunshine->updateInfo();
+            sunshine->raise();
             sunshine->show();
         }
 

@@ -128,9 +128,6 @@ void PairEliminate::timerEvent(QTimerEvent *event)
             gamePreparation();
         }
     }
-    // ui->timeDisplay->setValue(timeProgressing);
-
-    //std::cout << "tevent = " << pathHead << " " << pathTail << std::endl;
     while (pathHead <= pathTail && intervalCount - eliminateTime[pathHead] >= LINE_TIME)
     {
         ++pathHead;
@@ -416,7 +413,6 @@ void PairEliminate::eliminateHint()
 
 void PairEliminate::eliminatePair(QPushButton*& x, QPushButton*& y, Pos xPos, Pos yPos)
 {
-    std::cout << "good" << std::endl;
     x->hide();
     y->hide();
     gameInts[xPos.x][xPos.y] = -1;
@@ -426,7 +422,6 @@ void PairEliminate::eliminatePair(QPushButton*& x, QPushButton*& y, Pos xPos, Po
     cardCount -= 2;
     timeProgressing += ELIMINATE_PRIZE;
     if (timeProgressing > MAX_TIME_DISPLAY) timeProgressing = MAX_TIME_DISPLAY;
-    std::cout << "good2" << std::endl;
     if (cardCount == 0)
     {
         this->killTimer(myTimerId);
@@ -439,7 +434,6 @@ void PairEliminate::eliminatePair(QPushButton*& x, QPushButton*& y, Pos xPos, Po
     }
     else
     {
-        std::cout << "good3" << std::endl;
         existSolution = findHint();
         if (existSolution)
         {
@@ -450,8 +444,6 @@ void PairEliminate::eliminatePair(QPushButton*& x, QPushButton*& y, Pos xPos, Po
         {
             ui->labelRed->show();
         }
-        std::cout << "good4" << std::endl;
-        std::cout << "ht = " << pathHead << " " << pathTail << std::endl;
     }
 }
 
@@ -617,7 +609,6 @@ bool PairEliminate::checkPath(Pos s, Pos t)
     queue.clear();
     level.clear();
     prev.clear();
-    std::cout << "success = " << success << std::endl;
     return success;
 }
 
@@ -770,7 +761,6 @@ void PairEliminate::cardPick(int p0)
             if (check)
             {
                 eliminatePair(selectCard, gameButtons[xx][yy], selectPos, Pos(xx, yy));
-                std::cout << "good4.5" << std::endl;
             }
             else
             {
@@ -800,7 +790,6 @@ void PairEliminate::cardPick(int p0)
                                      );
         }
     }
-    std::cout << "good5" << std::endl;
 }
 
 void PairEliminate::useHint()
@@ -826,5 +815,6 @@ void PairEliminate::useShuffle()
 
 void PairEliminate::slotQuit()
 {
+    this->killTimer(myTimerId);
     emit signalWidget(QString("main"));
 }

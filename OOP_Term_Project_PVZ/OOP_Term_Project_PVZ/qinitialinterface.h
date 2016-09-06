@@ -31,6 +31,7 @@ private:
     QPushButton* buttonHelp;
     QPushButton* buttonQuit;
 
+    QMessageBox* msgboxOptions;
     QMessageBox* msgboxHelp;
     QMessageBox* msgboxQuit;
 
