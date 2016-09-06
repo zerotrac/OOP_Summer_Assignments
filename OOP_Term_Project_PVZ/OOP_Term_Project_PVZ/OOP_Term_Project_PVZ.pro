@@ -59,7 +59,9 @@ SOURCES += main.cpp\
     src_plants/qchomper.cpp \
     src_cards/qchompercard.cpp \
     src_plants/qscaredyshroom.cpp \
-    src_cards/qscaredyshroomcard.cpp
+    src_cards/qscaredyshroomcard.cpp \
+    src_plants/qpotatomine.cpp \
+    src_cards/qpotatominecard.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
@@ -107,7 +109,9 @@ HEADERS  += mainwindow.h \
     src_plants/qchomper.h \
     src_cards/qchompercard.h \
     src_plants/qscaredyshroom.h \
-    src_cards/qscaredyshroomcard.h
+    src_cards/qscaredyshroomcard.h \
+    src_plants/qpotatomine.h \
+    src_cards/qpotatominecard.h
 
 FORMS    += mainwindow.ui \
     paireliminate.ui \

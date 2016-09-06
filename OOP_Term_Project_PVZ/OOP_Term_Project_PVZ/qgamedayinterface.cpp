@@ -89,7 +89,7 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
     cards[0][1] = new QSunflowerCard(1); cards[0][1]->setParent(this);
     cards[0][2] = new QCherryBombCard(2); cards[0][2]->setParent(this);
     cards[0][3] = new QWallnutCard(3); cards[0][3]->setParent(this);
-
+    cards[0][4] = new QPotatoMineCard(4); cards[0][4]->setParent(this);
     cards[0][5] = new QSnowPeaCard(5); cards[0][5]->setParent(this);
     cards[0][6] = new QChomperCard(6); cards[0][6]->setParent(this);
     cards[0][7] = new QDoublePeaCard(7);cards[0][7]->setParent(this);

@@ -40,6 +40,7 @@ public:
     void setLit(int _litID);
     void decBullet();
     virtual QBuff getBuff() const;
+    void setBullet(int _bullet);
 };
 
 #endif // QWEAPON_H

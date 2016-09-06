@@ -41,6 +41,7 @@
 #include "src_cards/qpuffshroomcard.h"
 #include "src_cards/qchompercard.h"
 #include "src_cards/qscaredyshroomcard.h"
+#include "src_cards/qpotatominecard.h"
 
 namespace Ui {
 class QGameDayInterface;

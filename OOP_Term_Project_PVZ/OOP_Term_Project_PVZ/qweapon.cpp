@@ -42,3 +42,8 @@ QBuff QWeapon::getBuff() const
 {
     return QBuff(0, 0);
 }
+
+void QWeapon::setBullet(int _bullet)
+{
+    bullet = _bullet;
+}
