@@ -32,3 +32,30 @@ void QZombie::setAxis(double dx, double dy)
     this->setGeometry(dx, dy - this->height(), 0, 0);
 }
 
+void QZombie::eatBuff(QBuff buff)
+{
+    freezeDebuff = std::max(freezeDebuff, buff.freezeDebuff);
+    stunDebuff = std::max(stunDebuff, buff.stunDebuff);
+}
+
+void QZombie::updateBuff()
+{
+    if (stunDebuff > 0)
+    {
+        pics[currentPic]->setSpeed(0);
+        spdX = baseSpdX * 0;
+    }
+    else if (freezeDebuff > 0)
+    {
+        pics[currentPic]->setSpeed(50);
+        spdX = baseSpdX * 0.5;
+    }
+    else
+    {
+        pics[currentPic]->setSpeed(100);
+        spdX = baseSpdX * 1.0;
+    }
+    --freezeDebuff;
+    --stunDebuff;
+    --rageBuff;
+}

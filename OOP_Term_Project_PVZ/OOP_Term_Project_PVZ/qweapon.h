@@ -7,6 +7,7 @@
 #include <vector>
 #include "const.h"
 #include "qunit.h"
+#include "qbuff.h"
 
 class QUnit;
 class QWeapon : public QLabel
@@ -38,6 +39,7 @@ public:
     void setAxis(double dx, double dy);
     void setLit(int _litID);
     void decBullet();
+    virtual QBuff getBuff() const;
 };
 
 #endif // QWEAPON_H

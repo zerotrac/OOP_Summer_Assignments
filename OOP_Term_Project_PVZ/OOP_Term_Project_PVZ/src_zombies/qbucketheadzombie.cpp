@@ -76,6 +76,7 @@ void QBucketHeadZombie::updateInfo()
         this->setGeometry(posX, posY, 0, 0);
     }
     this->setMovie(pics[currentPic]);
+    this->updateBuff();
     this->update();
     attacked = false;
 }

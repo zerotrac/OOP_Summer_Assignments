@@ -85,17 +85,23 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
             cards[i][j] = nullptr;
         }
     }
-    cards[0][0] = new QSunflowerCard(0); cards[0][0]->setParent(this);
-    cards[0][1] = new QPeashooterCard(1); cards[0][1]->setParent(this);
-    cards[0][2] = new QSnowPeaCard(2); cards[0][2]->setParent(this);
-    cards[0][3] = new QDoublePeaCard(3);cards[0][3]->setParent(this);
-    cards[0][4] = new QGatlingPeaCard(4); cards[0][4]->setParent(this);
-    cards[0][5] = new QWallnutCard(5); cards[0][5]->setParent(this);
-    cards[0][6] = new QTorchwoodCard(6); cards[0][6]->setParent(this);
-    cards[0][7] = new QTallnutCard(7); cards[0][7]->setParent(this);
-    cards[1][0] = new QCherryBombCard(8); cards[1][0]->setParent(this);
-    cards[1][1] = new QJalapenoCard(9); cards[1][1]->setParent(this);
-    cards[1][2] = new QPuffShroomCard(10); cards[1][2]->setParent(this);
+    cards[0][0] = new QPeashooterCard(0); cards[0][0]->setParent(this);
+    cards[0][1] = new QSunflowerCard(1); cards[0][1]->setParent(this);
+    cards[0][2] = new QCherryBombCard(2); cards[0][2]->setParent(this);
+    cards[0][3] = new QWallnutCard(3); cards[0][3]->setParent(this);
+
+    cards[0][5] = new QSnowPeaCard(5); cards[0][5]->setParent(this);
+
+    cards[0][7] = new QDoublePeaCard(7);cards[0][7]->setParent(this);
+
+    cards[1][0] = new QPuffShroomCard(8); cards[1][0]->setParent(this);
+
+    cards[2][4] = new QJalapenoCard(20); cards[2][4]->setParent(this);
+
+    cards[2][6] = new QTorchwoodCard(22); cards[2][6]->setParent(this);
+    cards[2][7] = new QTallnutCard(23); cards[2][7]->setParent(this);
+
+    cards[5][0] = new QGatlingPeaCard(40); cards[5][0]->setParent(this);
 
     for (int i = 0; i < START_ZOMBIE_COUNT; ++i)
     {
@@ -457,6 +463,7 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
                 {
                     qDebug() << "zombie be attacked";
                     enemy->beAttacked(weapon->atk);
+                    enemy->eatBuff(weapon->getBuff());
                     weapon->decBullet();
                 }
             }
@@ -929,7 +936,7 @@ void QGameDayInterface::slotMoveCard(int pos)
 {
     int i = pos / CARD_WIDTH_COUNT;
     int j = pos % CARD_WIDTH_COUNT;
-    if (cards[i][j]->pos() != QPoint(10 + j * 52, 120 + i * 80))
+    if (cards[i][j]->pos() != QPoint(10 + j * 52, 120 + i * 70))
     {
         cards[i][j]->setInitialPosition();
         for (int k = 0; k <= cardsTop; ++k)

@@ -37,3 +37,8 @@ void QWeapon::decBullet()
 {
     --bullet;
 }
+
+QBuff QWeapon::getBuff() const
+{
+    return QBuff(0, 0);
+}

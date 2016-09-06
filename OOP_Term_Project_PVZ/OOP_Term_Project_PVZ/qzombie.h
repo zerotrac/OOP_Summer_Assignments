@@ -3,6 +3,7 @@
 
 #include "qunit.h"
 #include "qweapon.h"
+#include "qbuff.h"
 
 class QZombie: public QUnit
 {
@@ -34,6 +35,8 @@ public:
     virtual void updateInfo() = 0;
     virtual void setAxis(double dx, double dy);
     virtual QPoint getCenter() const = 0;
+    void eatBuff(QBuff buff);
+    void updateBuff();
 };
 
 #endif // QZOMBIE_H

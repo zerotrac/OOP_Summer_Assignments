@@ -38,3 +38,14 @@ void QPeaWeapon::updateInfo()
     if (currentPic == 2) atk = 40; else atk = 20;
 }
 
+QBuff QPeaWeapon::getBuff() const
+{
+    if (currentPic == 0)
+    {
+        return QBuff(10 * 1000 / TIME_ELAPSE, 0);
+    }
+    else
+    {
+        return QBuff(0, 0);
+    }
+}
