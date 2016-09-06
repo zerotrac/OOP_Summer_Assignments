@@ -1,6 +1,6 @@
-#include "qpuffshroom.h"
+#include "qscaredyshroom.h"
 
-QPuffShroom::QPuffShroom(int _id)
+QScaredyShroom::QScaredyShroom(int _id)
 {
     id = _id;
     hp = baseHp = 300;
@@ -11,64 +11,69 @@ QPuffShroom::QPuffShroom(int _id)
     spdX = spdY = baseSpdX = baseSpdY = 0;
     weapon = new QMushroomWeapon();
 
-    countPic = 1;
+    countPic = 2;
     for (int i = 0; i < countPic; ++i)
     {
-        QMovie* dummy = new QMovie("Resources/plants/puffshroom/" + QString::number(i) + ".gif");
+        QMovie* dummy = new QMovie("Resources/plants/scaredyshroom/" + QString::number(i) + ".gif");
         dummy->start();
         pics.push_back(dummy);
     }
     currentPic = 0;
-    this->setFixedSize(QPixmap("Resources/plants/puffshroom/0.gif").size());
+    this->setFixedSize(QPixmap("Resources/plants/scaredyshroom/0.gif").size());
     this->setMovie(pics[currentPic]);
 }
 
-QPuffShroom::~QPuffShroom()
+QScaredyShroom::~QScaredyShroom()
 {
 
 }
 
-bool QPuffShroom::canAttack(QUnit* unit)
+bool QScaredyShroom::canAttack(QUnit* unit)
 {
     if (cd > 0) return false;
     if (unit->pos().x() + unit->width() / 2 > WINDOW_WIDTH || unit->pos().x() + unit->width() / 2 < this->pos().x()) return false;
     if (abs(this->pos().y() + this->height() - unit->pos().y() - unit->height()) > 1) return false;
-    if (unit->getCenter().x() - this->pos().x() > 280) return false;
+    if (unit->getCenter().x() - this->pos().x() < 120) scared = true;
     return true;
 }
 
-std::vector<QWeapon*> QPuffShroom::attack()
+std::vector<QWeapon*> QScaredyShroom::attack()
 {
     ++shell;
     std::vector<QWeapon*> weapons;
+    if (scared) return weapons;
+
     QWeapon* wp = new QMushroomWeapon();
-    wp->setAxis(this->pos().x() + this->width() / 3, this->pos().y() + this->height());
+    wp->setAxis(this->pos().x() + this->width() / 3, this->pos().y() + this->height() / 6 * 5);
     weapons.push_back(wp);
     cd = baseCd;
     return weapons;
 }
 
-bool QPuffShroom::canGenerateSunshine()
+bool QScaredyShroom::canGenerateSunshine()
 {
     return false;
 }
 
-QSunshine* QPuffShroom::generateSunshine(int _id)
+QSunshine* QScaredyShroom::generateSunshine(int _id)
 {
     return nullptr;
 }
 
-bool QPuffShroom::isMushroom()
+bool QScaredyShroom::isMushroom()
 {
     return false;
 }
 
-bool QPuffShroom::canLitUp()
+bool QScaredyShroom::canLitUp()
 {
     return false;
 }
 
-void QPuffShroom::updateInfo()
+void QScaredyShroom::updateInfo()
 {
     --cd;
+    if (scared) currentPic = 1; else currentPic = 0;
+    this->setMovie(pics[currentPic]);
+    scared = false;
 }
