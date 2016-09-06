@@ -18,6 +18,7 @@
 #include <QFont>
 #include <QDebug>
 #include <vector>
+#include <set>
 #include <unordered_set>
 #include "qplant.h"
 #include "qzombie.h"
@@ -58,12 +59,12 @@ public:
     ~QGameDayInterface();
 
 private:
-    std::unordered_set<int> plantsID;
-    std::unordered_set<int> enemiesID;
-    std::unordered_set<int> sunshinesID;
+    std::set<int> plantsID;
+    std::set<int> enemiesID;
+    std::set<int> sunshinesID;
 
-    std::unordered_set<QWeapon*> plantWeapons;
-    std::unordered_set<QWeapon*> enemyWeapons;
+    std::set<QWeapon*> plantWeapons;
+    std::set<QWeapon*> enemyWeapons;
     std::vector<QPlant*> plants;
     std::vector<QZombie*> enemies;
     std::vector<QSunshine*> sunshines;

@@ -185,6 +185,7 @@ void QGameDayInterface::mousePressEvent(QMouseEvent *event)
                         plt->setAxis(140 + j * 80, 170 + i * 95);
                         plt->setParent(this);
                         plt->show();
+                        plt->lower();
                         plantsID.insert(plantLabel);
                         plants.push_back(plt);
                         curSunshine -= cardsCanUse[mouseLabel]->sunshineCost;
@@ -313,13 +314,23 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
     {
         giveHP = 1 - giveHP;
     }
+    else if (key == Qt::Key_I)
+    {
+        qDebug() << "here comes an iceshroom";
+        ++plantLabel;
+        QPlant* plant = new QIceShroom(plantLabel);
+        plant->setAxis(140 + 4 * 80, 170 + 2 * 95);
+        plant->setParent(this);
+        plant->show();
+        plantsID.insert(plantLabel);
+        plants.push_back(plant);
+    }
     else if (key == Qt::Key_J)
     {
         qDebug() << "here comes a jalapeno";
         for (int i = 0; i < 5; ++i)
         {
             ++plantLabel;
-            qDebug() << "label = " << plantLabel;
             QPlant* plant = new QJalapeno(plantLabel);
             plant->setAxis(140, 170 + i * 95);
             plant->setParent(this);
@@ -569,13 +580,6 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
             }
         }
 
-        for (QSunshine* sunshine: sunshines) // 处理阳光
-        {
-            sunshine->updateInfo();
-            sunshine->raise();
-            sunshine->show();
-        }
-
         for (int plantID: plantsID) // 处理植物
         {
             QPlant* plant = plants[plantID];
@@ -632,11 +636,37 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
             }
             enemy->updateInfo();
         }
+        for (int i = 0; i < 5; ++i)
+        {
+            for (int enemyID: enemiesID)
+            {
+                //qDebug() << enemies[enemyID]->pos().y() + enemies[enemyID]->height();
+                if (enemies[enemyID]->pos().y() + enemies[enemyID]->height() == 170 + i * 95)
+                {
+                    qDebug() << "enemy raise" << i;
+                    enemies[enemyID]->raise();
+                }
+            }
+        }
+        shovelBack->raise();
+        shovelPic->raise();
+        shovel->raise();
+        up->raise();
+        showSunshineNum->raise();
+        showSunshine->raise();
         for (QCard* card: cardsCanUse)
         {
             card->updateInfo(curSunshine);
             card->raise();
         }
+
+        for (QSunshine* sunshine: sunshines) // 处理阳光
+        {
+            sunshine->updateInfo();
+            sunshine->raise();
+            sunshine->show();
+        }
+        mousePic->raise();
     }
     this->update();
 }
@@ -1025,13 +1055,11 @@ void QGameDayInterface::slotPlant(int label)
 
     mouseShadow->setPixmap(now);
     mouseShadow->resize(now.size());
-    mouseShadow->raise();
 
     mousePic->setPixmap(before);
     mousePic->resize(before.size());
     mousePic->setGeometry(p.x() - mousePic->width() / 2, p.y() - mousePic->height() / 2, mousePic->width(), mousePic->height());
     mousePic->show();
-    mousePic->raise();
 }
 
 void QGameDayInterface::slotShovel()
