@@ -29,6 +29,7 @@
 #include "src_zombies/qconeheadzombie.h"
 #include "src_zombies/qbucketheadzombie.h"
 #include "src_zombies/qfootballzombie.h"
+#include "src_zombies/qpolevaultingzombie.h"
 
 #include "src_cards/qdoublepeacard.h"
 #include "src_cards/qgatlingpeacard.h"
@@ -59,12 +60,12 @@ public:
     ~QGameDayInterface();
 
 private:
-    std::set<int> plantsID;
-    std::set<int> enemiesID;
-    std::set<int> sunshinesID;
+    std::unordered_set<int> plantsID;
+    std::unordered_set<int> enemiesID;
+    std::unordered_set<int> sunshinesID;
 
-    std::set<QWeapon*> plantWeapons;
-    std::set<QWeapon*> enemyWeapons;
+    std::unordered_set<QWeapon*> plantWeapons;
+    std::unordered_set<QWeapon*> enemyWeapons;
     std::vector<QPlant*> plants;
     std::vector<QZombie*> enemies;
     std::vector<QSunshine*> sunshines;

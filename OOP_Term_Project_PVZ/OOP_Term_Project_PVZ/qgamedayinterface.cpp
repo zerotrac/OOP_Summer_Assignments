@@ -294,6 +294,20 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
             enemies.push_back(enemy);
         }
     }
+    else if (key == Qt::Key_5)
+    {
+        qDebug() << "here comes a zombie";
+        for (int i = 0; i < 5; ++i)
+        {
+            ++enemyLabel;
+            QZombie* enemy = new QPoleVaultingZombie(enemyLabel);
+            enemy->setAxis(WINDOW_WIDTH, 170 + i * 95);
+            enemy->setParent(this);
+            enemy->show();
+            enemiesID.insert(enemyLabel);
+            enemies.push_back(enemy);
+        }
+    }
     else if (key == Qt::Key_A)
     {
         curSunshine += 100;
@@ -484,13 +498,13 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
                     weapon->setLit(plantID);
                 }
             }
-            qDebug() << "weapon atk = " << weapon->atk;
+            //qDebug() << "weapon atk = " << weapon->atk;
             for (int enemyID: enemiesID) // 处理武器对僵尸
             {
                 QZombie* enemy = enemies[enemyID];
                 if (!enemy->isDead() && !weapon->outofDuration() && weapon->inRange(enemy))
                 {
-                    qDebug() << "zombie be attacked";
+                    //qDebug() << "zombie be attacked";
                     enemy->beAttacked(weapon->atk);
                     enemy->eatBuff(weapon->getBuff());
                     weapon->decBullet();
@@ -502,11 +516,11 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
             for (int plantID: plantsID)
             {
                 QPlant* plant = plants[plantID];
-                qDebug() << "weapon =" << weapon->x() << weapon->y() << weapon->x() + weapon->width() << weapon->y() + weapon->height();
-                qDebug() << "plant = " << plant->x() << plant->y() << plant->x() + plant->width() << plant->y() + plant->height();
+                //qDebug() << "weapon =" << weapon->x() << weapon->y() << weapon->x() + weapon->width() << weapon->y() + weapon->height();
+                //qDebug() << "plant = " << plant->x() << plant->y() << plant->x() + plant->width() << plant->y() + plant->height();
                 if (!plant->isDead() && !weapon->outofDuration() && weapon->inRange(plant))
                 {
-                    qDebug() << "plant be attacked";
+                    //qDebug() << "plant be attacked";
                     plant->beAttacked(weapon->atk);
                     weapon->decBullet();
                 }
@@ -643,7 +657,6 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
                 //qDebug() << enemies[enemyID]->pos().y() + enemies[enemyID]->height();
                 if (enemies[enemyID]->pos().y() + enemies[enemyID]->height() == 170 + i * 95)
                 {
-                    qDebug() << "enemy raise" << i;
                     enemies[enemyID]->raise();
                 }
             }
@@ -747,8 +760,8 @@ void QGameDayInterface::gamePreparation()
     mouseLabel = -1;
     timerID = -1;
     giveSunshine = qrand() % (1000 / TIME_ELAPSE + 1) + 5000 / TIME_ELAPSE;
-    //playStartAnimation();
-    slotCardSelectAnimation();
+    playStartAnimation();
+    //slotCardSelectAnimation();
 }
 
 void QGameDayInterface::playStartAnimation()

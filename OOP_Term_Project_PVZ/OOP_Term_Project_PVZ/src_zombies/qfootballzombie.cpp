@@ -80,4 +80,3 @@ QPoint QFootballZombie::getCenter() const
 {
     return QPoint(this->pos().x() + this->width() / 3, this->pos().y() + this->height() / 3 * 2);
 }
-
