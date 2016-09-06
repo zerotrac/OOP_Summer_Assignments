@@ -95,6 +95,7 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
     cards[0][7] = new QTallnutCard(7); cards[0][7]->setParent(this);
     cards[1][0] = new QCherryBombCard(8); cards[1][0]->setParent(this);
     cards[1][1] = new QJalapenoCard(9); cards[1][1]->setParent(this);
+    cards[1][2] = new QPuffShroomCard(10); cards[1][2]->setParent(this);
 
     for (int i = 0; i < START_ZOMBIE_COUNT; ++i)
     {

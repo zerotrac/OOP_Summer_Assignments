@@ -52,7 +52,9 @@ SOURCES += main.cpp\
     src_weapons/qjalapenoweapon.cpp \
     src_plants/qjalapeno.cpp \
     src_cards/qjalapenocard.cpp \
-    src_weapons/qmushroomweapon.cpp
+    src_weapons/qmushroomweapon.cpp \
+    src_plants/qpuffshroom.cpp \
+    src_cards/qpuffshroomcard.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
@@ -93,7 +95,9 @@ HEADERS  += mainwindow.h \
     src_weapons/qjalapenoweapon.h \
     src_plants/qjalapeno.h \
     src_cards/qjalapenocard.h \
-    src_weapons/qmushroomweapon.h
+    src_weapons/qmushroomweapon.h \
+    src_plants/qpuffshroom.h \
+    src_cards/qpuffshroomcard.h
 
 FORMS    += mainwindow.ui \
     paireliminate.ui \

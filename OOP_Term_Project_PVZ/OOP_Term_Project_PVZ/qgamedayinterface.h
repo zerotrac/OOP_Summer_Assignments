@@ -38,6 +38,7 @@
 #include "src_cards/qtallnutcard.h"
 #include "src_cards/qcherrybombcard.h"
 #include "src_cards/qjalapenocard.h"
+#include "src_cards/qpuffshroomcard.h"
 
 namespace Ui {
 class QGameDayInterface;

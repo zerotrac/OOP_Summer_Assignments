@@ -31,7 +31,7 @@ QDoublePea::~QDoublePea()
 bool QDoublePea::canAttack(QUnit* unit)
 {
     if (cd > 0) return false;
-    if (unit->pos().x() + unit->width() > WINDOW_WIDTH || unit->pos().x() + unit->width() / 2 < this->pos().x()) return false;
+    if (unit->pos().x() + unit->width() / 2 > WINDOW_WIDTH || unit->pos().x() + unit->width() < this->pos().x()) return false;
     if (abs(this->pos().y() + this->height() - unit->pos().y() - unit->height()) < 1) return true;
     return false;
 }
