@@ -61,7 +61,10 @@ SOURCES += main.cpp\
     src_plants/qscaredyshroom.cpp \
     src_cards/qscaredyshroomcard.cpp \
     src_plants/qpotatomine.cpp \
-    src_cards/qpotatominecard.cpp
+    src_cards/qpotatominecard.cpp \
+    src_weapons/qglobalweapon.cpp \
+    src_plants/qiceshroom.cpp \
+    src_cards/qiceshroomcard.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
@@ -111,7 +114,10 @@ HEADERS  += mainwindow.h \
     src_plants/qscaredyshroom.h \
     src_cards/qscaredyshroomcard.h \
     src_plants/qpotatomine.h \
-    src_cards/qpotatominecard.h
+    src_cards/qpotatominecard.h \
+    src_weapons/qglobalweapon.h \
+    src_plants/qiceshroom.h \
+    src_cards/qiceshroomcard.h
 
 FORMS    += mainwindow.ui \
     paireliminate.ui \

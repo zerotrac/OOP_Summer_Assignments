@@ -97,6 +97,7 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
     cards[1][0] = new QPuffShroomCard(8); cards[1][0]->setParent(this);
 
     cards[1][5] = new QScaredyShroomCard(13); cards[1][5]->setParent(this);
+    cards[1][6] = new QIceShroomCard(14); cards[1][6]->setParent(this);
 
     cards[2][4] = new QJalapenoCard(20); cards[2][4]->setParent(this);
 
@@ -458,6 +459,7 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
                     weapon->setLit(plantID);
                 }
             }
+            qDebug() << "weapon atk = " << weapon->atk;
             for (int enemyID: enemiesID) // 处理武器对僵尸
             {
                 QZombie* enemy = enemies[enemyID];

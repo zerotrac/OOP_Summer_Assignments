@@ -40,18 +40,21 @@ void QZombie::eatBuff(QBuff buff)
 
 void QZombie::updateBuff()
 {
+    //qDebug() << "buff =" << stunDebuff << freezeDebuff;
     if (stunDebuff > 0)
     {
-        pics[currentPic]->setSpeed(0);
+        pics[currentPic]->stop();
         spdX = baseSpdX * 0;
     }
     else if (freezeDebuff > 0)
     {
+        pics[currentPic]->start();
         pics[currentPic]->setSpeed(50);
         spdX = baseSpdX * 0.5;
     }
     else
     {
+        pics[currentPic]->start();
         pics[currentPic]->setSpeed(100);
         spdX = baseSpdX * 1.0;
     }

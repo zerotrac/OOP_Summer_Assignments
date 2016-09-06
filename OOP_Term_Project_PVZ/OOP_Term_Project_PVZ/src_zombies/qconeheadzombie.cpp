@@ -53,6 +53,7 @@ std::vector<QWeapon*> QConeHeadZombie::attack()
 {
     std::vector<QWeapon*> weapons;
     QWeapon* wp = new QHandWeapon(100 / (1000 / TIME_ELAPSE));
+    if (stunDebuff > 0) wp->atk = 0; else if (freezeDebuff > 0) wp->atk /= 2;
     wp->setFixedSize(40, 10);
     QPoint point = this->getCenter();
     wp->setAxis(point.x() - 40, point.y() + 10);
