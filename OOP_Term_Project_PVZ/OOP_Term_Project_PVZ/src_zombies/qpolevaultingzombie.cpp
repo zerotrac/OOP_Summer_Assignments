@@ -12,7 +12,7 @@ QPoleVaultingZombie::QPoleVaultingZombie(int _id)
     weapon = nullptr;
 
     countPic = 7;
-    for (int i = 0; i < 7; ++i)
+    for (int i = 0; i < 8; ++i)
     {
         QMovie* dummy = new QMovie("Resources/zombies/polevaultingzombie/" + QString::number(i) + ".gif");
         if (i != 2 && i != 3) dummy->start();

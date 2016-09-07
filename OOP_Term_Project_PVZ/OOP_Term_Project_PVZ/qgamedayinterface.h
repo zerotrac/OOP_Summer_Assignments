@@ -106,6 +106,14 @@ private:
     int giveSunshine;
     bool giveHP = false;
 
+    int killZombies;
+    int generateZombies;
+    int zombieSelection;
+    int curClick;
+    int maxClick;
+
+    QLabel* zombieWon;
+    bool ifLose = false;
 
 private:
     void mousePressEvent(QMouseEvent* event);

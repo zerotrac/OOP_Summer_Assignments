@@ -120,6 +120,12 @@ QGameDayInterface::QGameDayInterface(QWidget *parent) :
     mouseShadow = new QLabel(this);
     mouseShadow->hide();
 
+    QPixmap won("Resources/interface/zombie_won.png");
+    zombieWon = new QLabel(this);
+    zombieWon->setFixedSize(won.size());
+    zombieWon->setGeometry((WINDOW_WIDTH - won.width()) / 2, (WINDOW_HEIGHT - won.height()) / 2, 0, 0);
+    zombieWon->setPixmap(won);
+
     gamePreparation();
     //playStartAnimation();
 
@@ -286,7 +292,7 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
         for (int i = 0; i < 5; ++i)
         {
             ++enemyLabel;
-            QZombie* enemy = new QFootballZombie(enemyLabel);
+            QZombie* enemy = new QPoleVaultingZombie(enemyLabel);
             enemy->setAxis(WINDOW_WIDTH, 170 + i * 95);
             enemy->setParent(this);
             enemy->show();
@@ -300,7 +306,7 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
         for (int i = 0; i < 5; ++i)
         {
             ++enemyLabel;
-            QZombie* enemy = new QPoleVaultingZombie(enemyLabel);
+            QZombie* enemy = new QFootballZombie(enemyLabel);
             enemy->setAxis(WINDOW_WIDTH, 170 + i * 95);
             enemy->setParent(this);
             enemy->show();
@@ -416,6 +422,87 @@ void QGameDayInterface::paintEvent(QPaintEvent *event)
 
 void QGameDayInterface::timerEvent(QTimerEvent *event)
 {
+    qDebug() << "plt cnt =" << plantsID.size() << "zmb cnt =" << enemiesID.size() << "wp cnt =" << plantWeapons.size() << enemyWeapons.size();
+    ++curClick;
+    if (curClick >= maxClick)
+    {
+        ++generateZombies;
+        int whichZombie = qrand() % zombieSelection;
+        int whichLine = qrand() % 5;
+        QZombie* coming;
+        ++enemyLabel;
+        if (whichZombie == 0) coming = new QCommonZombie(enemyLabel);
+        if (whichZombie == 1) coming = new QConeHeadZombie(enemyLabel);
+        if (whichZombie == 2) coming = new QBucketHeadZombie(enemyLabel);
+        if (whichZombie == 3) coming = new QPoleVaultingZombie(enemyLabel);
+        if (whichZombie == 4) coming = new QFootballZombie(enemyLabel);
+        coming->setAxis(WINDOW_WIDTH, 170 + whichLine * 95);
+        coming->setParent(this);
+        coming->show();
+        enemiesID.insert(enemyLabel);
+        enemies.push_back(coming);
+
+        if (generateZombies == 4)
+        {
+            zombieSelection = 2;
+            maxClick = 512;
+        }
+        if (generateZombies == 8)
+        {
+            zombieSelection = 2;
+            maxClick = 256;
+        }
+        if (generateZombies == 16)
+        {
+            zombieSelection = 3;
+            maxClick = 256;
+        }
+        if (generateZombies == 32)
+        {
+            zombieSelection = 4;
+            maxClick = 256;
+        }
+        if (generateZombies == 64)
+        {
+            zombieSelection = 4;
+            maxClick = 128;
+        }
+        if (generateZombies == 128)
+        {
+            zombieSelection = 5;
+            maxClick = 128;
+        }
+        if (generateZombies == 256)
+        {
+            maxClick = 64;
+        }
+        if (generateZombies == 512)
+        {
+            maxClick = 32;
+        }
+        if (generateZombies == 1024)
+        {
+            maxClick = 16;
+        }
+        if (generateZombies == 2048)
+        {
+            maxClick = 8;
+        }
+        if (generateZombies == 4096)
+        {
+            maxClick = 4;
+        }
+        if (generateZombies == 8192)
+        {
+            maxClick = 2;
+        }
+        if (generateZombies == 16384)
+        {
+            maxClick = 1;
+        }
+        curClick = 0;
+    }
+
     --giveSunshine;
     if (giveSunshine <= 0)
     {
@@ -493,9 +580,10 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
             for (int plantID: plantsID) // 处理火炬树桩对武器的作用
             {
                 QPlant* plant = plants[plantID];
-                if (weapon->inRange(plant) && plant->canLitUp())
+                if (plant->canLitUp() && weapon->inRange(plant))
                 {
                     weapon->setLit(plantID);
+                    break;
                 }
             }
             //qDebug() << "weapon atk = " << weapon->atk;
@@ -516,8 +604,6 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
             for (int plantID: plantsID)
             {
                 QPlant* plant = plants[plantID];
-                //qDebug() << "weapon =" << weapon->x() << weapon->y() << weapon->x() + weapon->width() << weapon->y() + weapon->height();
-                //qDebug() << "plant = " << plant->x() << plant->y() << plant->x() + plant->width() << plant->y() + plant->height();
                 if (!plant->isDead() && !weapon->outofDuration() && weapon->inRange(plant))
                 {
                     //qDebug() << "plant be attacked";
@@ -531,6 +617,7 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
         {
             if (enemies[*iter]->isDead())
             {
+                ++killZombies;
                 delete enemies[*iter];
                 enemiesID.erase(iter++);
             }
@@ -654,10 +741,25 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
         {
             for (int enemyID: enemiesID)
             {
-                //qDebug() << enemies[enemyID]->pos().y() + enemies[enemyID]->height();
                 if (enemies[enemyID]->pos().y() + enemies[enemyID]->height() == 170 + i * 95)
                 {
                     enemies[enemyID]->raise();
+                    if (enemies[enemyID]->x() + enemies[enemyID]->width() / 2 < 0 && !ifLose)
+                    {
+                        zombieWon->raise();
+                        zombieWon->show();
+                        QMessageBox* dieMsg = new QMessageBox(this);
+                        this->killTimer(timerID);
+                        dieMsg->setText("游戏结束！\n一共出现了" + QString::number(generateZombies) + "个僵尸，\n你消灭了" + QString::number(killZombies) + "个僵尸。");
+                        dieMsg->setIcon(QMessageBox::Information);
+                        dieMsg->setStandardButtons(QMessageBox::Ok);
+                        if (dieMsg->exec() == QMessageBox::Ok)
+                        {
+                            ifLose = true;
+                            delete dieMsg;
+                            emit signalWidget(QString("main"));
+                        }
+                    }
                 }
             }
         }
@@ -673,11 +775,22 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
             card->raise();
         }
 
-        for (QSunshine* sunshine: sunshines) // 处理阳光
+        for (auto iter = sunshinesID.begin(); iter != sunshinesID.end();)
         {
-            sunshine->updateInfo();
-            sunshine->raise();
-            sunshine->show();
+            QSunshine* sunshine = sunshines[*iter];
+            if (sunshine->x() == SUNSHINE_DEST_X && sunshine->y() == SUNSHINE_DEST_Y)
+            {
+                //qDebug() << "sunshine delete";
+                delete sunshine;
+                sunshinesID.erase(iter++);
+            }
+            else
+            {
+                sunshine->updateInfo();
+                sunshine->raise();
+                sunshine->show();
+                ++iter;
+            }
         }
         mousePic->raise();
     }
@@ -751,6 +864,7 @@ void QGameDayInterface::gamePreparation()
     shovel->hide();
     shovelBack->hide();
     shovelPic->hide();
+    zombieWon->hide();
 
     for (int i = 0; i < START_ZOMBIE_COUNT; ++i)
     {
@@ -762,6 +876,13 @@ void QGameDayInterface::gamePreparation()
     giveSunshine = qrand() % (1000 / TIME_ELAPSE + 1) + 5000 / TIME_ELAPSE;
     playStartAnimation();
     //slotCardSelectAnimation();
+
+    killZombies = 0;
+    generateZombies = 0;
+    zombieSelection = 1;
+    curClick = 0;
+    maxClick = 1024;
+    ifLose = false;
 }
 
 void QGameDayInterface::playStartAnimation()

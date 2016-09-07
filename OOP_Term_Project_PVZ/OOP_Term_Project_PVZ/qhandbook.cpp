@@ -51,7 +51,6 @@ QHandbook::QHandbook(QWidget *parent) :
     des0 = new QLabel(this);
     des0->setFixedSize(down.width() - 100, down.height());
     des0->setGeometry((WINDOW_WIDTH - down.width() + 100) / 2, WINDOW_HEIGHT - down.height(), 0, 0);
-    //<html><head/><body><p><span style=" color:#ffffff;">123</span></p><p><span style=" color:#ffffff;">456</span></p></body></html>
     QFont font;
     font.setPointSize(16);
     des0->setFont(font);
@@ -109,7 +108,6 @@ QHandbook::QHandbook(QWidget *parent) :
     {
         des[i].append("</body></html>");
     }
-    qDebug() << des[1];
 }
 
 QHandbook::~QHandbook()

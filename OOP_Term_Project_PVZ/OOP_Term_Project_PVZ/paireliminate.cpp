@@ -80,8 +80,8 @@ void PairEliminate::paintEvent(QPaintEvent* event)
     QPainter* painter = new QPainter(this);
     if (ui->label_2->isVisible())
     {
-        double length = 300.0 * timeProgressing / MAX_TIME_DISPLAY;
-        double split = 1.0 * timeProgressing / MAX_TIME_DISPLAY;
+        double length = 300.0 * std::max(timeProgressing, 0) / MAX_TIME_DISPLAY;
+        double split = 1.0 * std::max(timeProgressing, 0) / MAX_TIME_DISPLAY;
         QLinearGradient* linearGrad = new QLinearGradient(80, 565, length, 20);
         QString color = getSplitColor();
         linearGrad->setColorAt(0, "#ff0000");
