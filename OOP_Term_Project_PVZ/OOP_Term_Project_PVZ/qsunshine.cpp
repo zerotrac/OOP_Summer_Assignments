@@ -27,7 +27,7 @@ QSunshine::QSunshine(int _ID)
 
 QSunshine::~QSunshine()
 {
-
+    pics.clear();
 }
 
 void QSunshine::updateInfo()

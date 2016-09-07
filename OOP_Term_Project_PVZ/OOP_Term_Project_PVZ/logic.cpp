@@ -46,6 +46,7 @@ void Logic::slotSetWidget(QString s)
     }
     if (s.toLower() == QString("book"))
     {
+        handbook->gamePreparation();
         mainwindow->setCentralWidget(handbook);
     }
 }

@@ -7,7 +7,12 @@ QUnit::QUnit()
 
 QUnit::~QUnit()
 {
-
+    delete weapon;
+    for (int i = 0; i < countPic; ++i)
+    {
+        delete pics[i];
+    }
+    pics.clear();
 }
 
 void QUnit::move()

@@ -8,7 +8,7 @@ QWeapon::QWeapon()
 
 QWeapon::~QWeapon()
 {
-
+    pics.clear();
 }
 
 bool QWeapon::outofDuration()
