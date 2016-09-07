@@ -816,6 +816,16 @@ void QGameDayInterface::gamePreparation()
     enemiesID.clear();
     sunshinesID.clear();
 
+    for (auto iter = plantWeapons.begin(); iter != plantWeapons.end();)
+    {
+        delete *iter;
+        plantWeapons.erase(iter++);
+    }
+    for (auto iter = enemyWeapons.begin(); iter != enemyWeapons.end();)
+    {
+        delete *iter;
+        enemyWeapons.erase(iter++);
+    }
     plantWeapons.clear();
     enemyWeapons.clear();
     plants.clear();
