@@ -7,11 +7,12 @@ Logic::Logic(QObject *parent) : QObject(parent)
 
     initialInterface = new QInitialInterface();
     gameDayInterface = new QGameDayInterface();
+    handbook = new QHandbook();
     pairEliminate = new PairEliminate();
 
     makeConnections();
 
-    emit signalWidget(QString("day"));
+    emit signalWidget(QString("main"));
 }
 
 void Logic::makeConnections()
@@ -19,6 +20,7 @@ void Logic::makeConnections()
     QObject::connect(this, SIGNAL(signalWidget(QString)), this, SLOT(slotSetWidget(QString)));
     QObject::connect(initialInterface, SIGNAL(signalWidget(QString)), this, SLOT(slotSetWidget(QString)));
     QObject::connect(pairEliminate, SIGNAL(signalWidget(QString)), this, SLOT(slotSetWidget(QString)));
+    QObject::connect(handbook, SIGNAL(signalWidget(QString)), this, SLOT(slotSetWidget(QString)));
     QObject::connect(gameDayInterface, SIGNAL(signalWidget(QString)), this, SLOT(slotSetWidget(QString)));
 }
 
@@ -41,5 +43,9 @@ void Logic::slotSetWidget(QString s)
     {
         gameDayInterface->gamePreparation();
         mainwindow->setCentralWidget(gameDayInterface);
+    }
+    if (s.toLower() == QString("book"))
+    {
+        mainwindow->setCentralWidget(handbook);
     }
 }

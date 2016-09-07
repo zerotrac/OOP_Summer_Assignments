@@ -7,6 +7,7 @@
 #include "mainwindow.h"
 #include "qinitialinterface.h"
 #include "qgamedayinterface.h"
+#include "qhandbook.h"
 #include "paireliminate.h"
 
 class Logic : public QObject
@@ -19,6 +20,7 @@ public:
     MainWindow* mainwindow;
     QInitialInterface* initialInterface;
     QGameDayInterface* gameDayInterface;
+    QHandbook* handbook;
     PairEliminate* pairEliminate;
 
 private:

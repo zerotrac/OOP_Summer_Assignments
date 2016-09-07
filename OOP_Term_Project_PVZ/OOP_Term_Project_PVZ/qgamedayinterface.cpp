@@ -877,6 +877,7 @@ void QGameDayInterface::slotCardSelectAnimation()
                 propAni->setKeyValueAt(1.0, cards[i][j]->pos());
                 selectAni->addAnimation(propAni);
                 cards[i][j]->show();
+                cards[i][j]->raise();
             }
         }
     }

@@ -56,6 +56,7 @@ std::vector<QWeapon*> QPoleVaultingZombie::attack()
             currentPic = 2;
             pics[currentPic]->start();
             this->setMovie(pics[currentPic]);
+            spdX = baseSpdX = 0;
         }
         return weapons;
     }
@@ -112,7 +113,7 @@ void QPoleVaultingZombie::slotFin2()
 {
     currentPic = 3;
     pics[currentPic]->start();
-    posX -= 123;
+    posX -= 125;
     this->setGeometry(posX, posY, 0, 0);
     this->setMovie(pics[currentPic]);
 }

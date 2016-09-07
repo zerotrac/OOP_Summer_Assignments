@@ -51,6 +51,7 @@ private slots:
     void slotReleaseM();
     void slotQuit();
     void slotAdventure();
+    void slotWisdom();
     void slotMini();
 
 private:

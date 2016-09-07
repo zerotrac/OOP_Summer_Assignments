@@ -66,7 +66,8 @@ SOURCES += main.cpp\
     src_plants/qiceshroom.cpp \
     src_cards/qiceshroomcard.cpp \
     src_zombies/qfootballzombie.cpp \
-    src_zombies/qpolevaultingzombie.cpp
+    src_zombies/qpolevaultingzombie.cpp \
+    qhandbook.cpp
 
 HEADERS  += mainwindow.h \
     paireliminate.h \
@@ -121,9 +122,11 @@ HEADERS  += mainwindow.h \
     src_plants/qiceshroom.h \
     src_cards/qiceshroomcard.h \
     src_zombies/qfootballzombie.h \
-    src_zombies/qpolevaultingzombie.h
+    src_zombies/qpolevaultingzombie.h \
+    qhandbook.h
 
 FORMS    += mainwindow.ui \
     paireliminate.ui \
     qinitialinterface.ui \
-    qgamedayinterface.ui
+    qgamedayinterface.ui \
+    qhandbook.ui
