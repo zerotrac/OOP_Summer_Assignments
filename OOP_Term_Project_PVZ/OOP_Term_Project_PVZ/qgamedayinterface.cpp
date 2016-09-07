@@ -246,6 +246,7 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
     if (key == Qt::Key_1)
     {
         qDebug() << "here comes a zombie";
+        generateZombies += 5;
         for (int i = 0; i < 5; ++i)
         {
             ++enemyLabel;
@@ -261,6 +262,7 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
     else if (key == Qt::Key_2)
     {
         qDebug() << "here comes a zombie";
+        generateZombies += 5;
         for (int i = 0; i < 5; ++i)
         {
             ++enemyLabel;
@@ -275,6 +277,7 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
     else if (key == Qt::Key_3)
     {
         qDebug() << "here comes a zombie";
+        generateZombies += 5;
         for (int i = 0; i < 5; ++i)
         {
             ++enemyLabel;
@@ -289,6 +292,7 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
     else if (key == Qt::Key_4)
     {
         qDebug() << "here comes a zombie";
+        generateZombies += 5;
         for (int i = 0; i < 5; ++i)
         {
             ++enemyLabel;
@@ -303,6 +307,7 @@ void QGameDayInterface::keyPressEvent(QKeyEvent *event)
     else if (key == Qt::Key_5)
     {
         qDebug() << "here comes a zombie";
+        generateZombies += 5;
         for (int i = 0; i < 5; ++i)
         {
             ++enemyLabel;
