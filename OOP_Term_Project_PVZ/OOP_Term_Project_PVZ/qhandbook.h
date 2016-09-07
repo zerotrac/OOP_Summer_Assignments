@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QMouseEvent>
 #include <QKeyEvent>
+#include "const.h"
 
 namespace Ui {
 class QHandbook;
@@ -23,10 +24,17 @@ public:
 
 private:
     QLabel* pics[15];
+    QString des[15];
+    QLabel* labelDown;
+    QLabel* des0;
 
 private:
     void mouseMoveEvent(QMouseEvent* event);
     void keyPressEvent(QKeyEvent* event);
+    QString package(QString s);
+
+public:
+    void gamePreparation();
 
 signals:
     void signalWidget(QString);
