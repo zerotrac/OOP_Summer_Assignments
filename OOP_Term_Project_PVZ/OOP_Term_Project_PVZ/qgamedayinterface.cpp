@@ -447,62 +447,69 @@ void QGameDayInterface::timerEvent(QTimerEvent *event)
         enemiesID.insert(enemyLabel);
         enemies.push_back(coming);
 
-        if (generateZombies == 4)
+        if (generateZombies >= 4)
         {
             zombieSelection = 2;
             maxClick = 512;
         }
-        if (generateZombies == 8)
+        if (generateZombies >= 8)
         {
             zombieSelection = 2;
             maxClick = 256;
         }
-        if (generateZombies == 16)
+        if (generateZombies >= 16)
         {
             zombieSelection = 3;
             maxClick = 256;
         }
-        if (generateZombies == 32)
+        if (generateZombies >= 32)
         {
             zombieSelection = 4;
             maxClick = 256;
         }
-        if (generateZombies == 64)
+        if (generateZombies >= 64)
         {
             zombieSelection = 4;
             maxClick = 128;
         }
-        if (generateZombies == 128)
+        if (generateZombies >= 128)
         {
             zombieSelection = 5;
             maxClick = 128;
         }
-        if (generateZombies == 256)
+        if (generateZombies >= 256)
         {
+            zombieSelection = 5;
             maxClick = 64;
         }
-        if (generateZombies == 512)
+        if (generateZombies >= 512)
         {
+            zombieSelection = 5;
             maxClick = 32;
         }
-        if (generateZombies == 1024)
+        if (generateZombies >= 1024)
         {
+            zombieSelection = 5;
             maxClick = 16;
         }
-        if (generateZombies == 2048)
+        if (generateZombies >= 2048)
         {
+            zombieSelection = 5;
             maxClick = 8;
         }
-        if (generateZombies == 4096)
+        if (generateZombies >= 4096)
         {
+            zombieSelection = 5;
             maxClick = 4;
         }
-        if (generateZombies == 8192)
+        if (generateZombies >= 8192)
         {
+            zombieSelection = 5;
             maxClick = 2;
         }
-        if (generateZombies == 16384)
+        if (generateZombies >= 16384)
         {
+            zombieSelection = 5;
             maxClick = 1;
         }
         curClick = 0;
