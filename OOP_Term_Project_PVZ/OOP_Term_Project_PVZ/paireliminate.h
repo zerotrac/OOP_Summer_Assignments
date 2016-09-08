@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QMessageBox>
 #include <QSignalMapper>
+#include <QDebug>
 #include <iostream>
 #include <fstream>
 #include <algorithm>
@@ -36,12 +37,12 @@ private:
     static const int TEMPLATE_COUNT = 10;
     static const int CARD_COUNT = 24;
 
-    static const int MAX_TIME = 60; // 游戏时间
+    static const int MAX_TIME = 50; // 游戏时间
     static const int MAX_TIME_DISPLAY = 1000 / TIME_ELAPSE * MAX_TIME; // 进度条长度
     static const int LINE_TIME = 0.5 * 1000 / TIME_ELAPSE;
 
-    static const int ELIMINATE_PRIZE = 1 * 1000 / TIME_ELAPSE;
-    static const int HINT_COST = 5 * 1000 / TIME_ELAPSE;
+    static const int ELIMINATE_PRIZE = 0.5 * 1000 / TIME_ELAPSE;
+    static const int HINT_COST = 6 * 1000 / TIME_ELAPSE;
     static constexpr double SHUFFLE_COST = 1.0 / 3;
 
 private:
