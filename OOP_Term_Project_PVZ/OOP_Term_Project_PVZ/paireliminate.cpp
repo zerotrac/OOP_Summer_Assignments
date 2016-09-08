@@ -50,7 +50,7 @@ PairEliminate::PairEliminate(QWidget *parent) :
     }
 
     helpMsgbox = new QMessageBox(this);
-    helpMsgbox->setText("将所有的方块成对消除后即可获得胜利。\n游戏时间限制为50秒，\n消除一对方块奖励3秒，\n使用一次提示扣除6秒，\n使用一次重排扣除剩余时间的1/3，\n最少扣除5秒。");
+    helpMsgbox->setText("将所有的方块成对消除后即可获得胜利。\n游戏时间限制为50秒，\n消除一对方块奖励0.5秒，\n使用一次提示扣除5秒，\n使用一次重排扣除剩余时间的1/3，\n最少扣除5秒。");
     helpMsgbox->addButton(QMessageBox::Ok);
     helpMsgbox->setIcon(QMessageBox::Information);
 
